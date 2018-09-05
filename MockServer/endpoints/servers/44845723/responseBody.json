@@ -1,0 +1,19 @@
+{
+  "id": "44845723",
+  "name": "Production node 2",
+  "description": "Europe region server",
+  "os": "Red Hat Linux",
+  "os_version": "6.8",
+  "location": "Berlin",
+  "data_traffic": {
+    "amount": 2.84,
+    "unit": "GB",
+    "label": "2.84 GB"
+  },
+  "server_load": {
+    "amount": 5.7,
+    "unit": "percent",
+    "label": "5.7%"
+  },
+  "enabled": true
+}

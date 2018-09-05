@@ -1,0 +1,14 @@
+use_frameworks!
+
+target 'BitletSynchronizer_Example' do
+  pod 'BitletSynchronizer', :path => '../../'
+  
+  pod 'Toast-Swift', '~> 3.0.1'
+  
+  pod 'Alamofire', '~> 4.7'
+  pod 'AlamofireObjectMapper', '~> 5.1.0'
+
+  target 'BitletSynchronizer_Tests' do
+    inherit! :search_paths
+  end
+end

@@ -1,0 +1,19 @@
+{
+  "id": "98759237",
+  "name": "Old test server",
+  "description": "Uses an old version of the API",
+  "os": "Red Hat Linux",
+  "os_version": "6.5",
+  "location": "San Francisco",
+  "data_traffic": {
+    "amount": 0.0,
+    "unit": "GB",
+    "label": "0.0 GB"
+  },
+  "server_load": {
+    "amount": 0.0,
+    "unit": "percent",
+    "label": "0.0%"
+  },
+  "enabled": false
+}

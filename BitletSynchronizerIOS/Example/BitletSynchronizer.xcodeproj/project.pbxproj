@@ -1,0 +1,754 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04021B712132D9E600B474B2 /* ServerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04021B702132D9E600B474B2 /* ServerDetailViewController.swift */; };
+		04021B732132EDED00B474B2 /* ServerDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04021B722132EDED00B474B2 /* ServerDetailCell.swift */; };
+		04021B762132F04000B474B2 /* LoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04021B752132F04000B474B2 /* LoadingCell.swift */; };
+		04021B782133174400B474B2 /* ErrorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04021B772133174400B474B2 /* ErrorCell.swift */; };
+		04021B7C2133185200B474B2 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04021B7B2133185200B474B2 /* MessageCell.swift */; };
+		040BCB5E213448EC00EA80F7 /* SessionFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB5D213448EC00EA80F7 /* SessionFeatures.swift */; };
+		040BCB602134493E00EA80F7 /* SessionPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB5F2134493E00EA80F7 /* SessionPermission.swift */; };
+		040BCB6421344C4A00EA80F7 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6321344C4900EA80F7 /* Settings.swift */; };
+		040BCB67213488C200EA80F7 /* Usage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB66213488C200EA80F7 /* Usage.swift */; };
+		040BCB6921348C5600EA80F7 /* UsageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6821348C5600EA80F7 /* UsageItem.swift */; };
+		040BCB6B21348DEE00EA80F7 /* UsageUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6A21348DEE00EA80F7 /* UsageUnit.swift */; };
+		040BCB6E21348E9A00EA80F7 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6D21348E9A00EA80F7 /* Server.swift */; };
+		040BCB7021348F9300EA80F7 /* ServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6F21348F9300EA80F7 /* ServerList.swift */; };
+		046063F4212494A800EBADD6 /* BitletSynchronizer.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 046063F2212494A700EBADD6 /* BitletSynchronizer.podspec */; };
+		046063F5212494A800EBADD6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 046063F3212494A700EBADD6 /* README.md */; };
+		046063FA212494CD00EBADD6 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046063F7212494CD00EBADD6 /* Session.swift */; };
+		04606401212496B200EBADD6 /* BitletHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046063FC212494F100EBADD6 /* BitletHandlerTests.swift */; };
+		047B468E21317FE1008E4798 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 047B468C21317FE1008E4798 /* Main.storyboard */; };
+		047B4691213188D4008E4798 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B4690213188D4008E4798 /* CustomTextField.swift */; };
+		047B469321319149008E4798 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B469221319149008E4798 /* LoginViewController.swift */; };
+		047B46962131ADF6008E4798 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 047B46942131ADF6008E4798 /* Localizable.strings */; };
+		047B46982131D8D8008E4798 /* OverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B46972131D8D8008E4798 /* OverviewViewController.swift */; };
+		047B469D2131E7AB008E4798 /* OverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B469C2131E7AB008E4798 /* OverviewCell.swift */; };
+		047B469F2131E897008E4798 /* ServerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B469E2131E897008E4798 /* ServerCell.swift */; };
+		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
+		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
+		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		AB6163A37A8FC972590D3ABD /* Pods_BitletSynchronizer_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71E5697B1D76047AB46E1493 /* Pods_BitletSynchronizer_Example.framework */; };
+		C98E167BE548BED0FCA41612 /* Pods_BitletSynchronizer_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6A16823D8E1F1A900988C2 /* Pods_BitletSynchronizer_Tests.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		607FACE61AFB9204008FA782 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
+			remoteInfo = BitletSynchronizer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		006E6FDA4F32C7F56B3E884B /* Pods-BitletSynchronizer_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitletSynchronizer_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitletSynchronizer_Example/Pods-BitletSynchronizer_Example.release.xcconfig"; sourceTree = "<group>"; };
+		04021B702132D9E600B474B2 /* ServerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerDetailViewController.swift; sourceTree = "<group>"; };
+		04021B722132EDED00B474B2 /* ServerDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerDetailCell.swift; sourceTree = "<group>"; };
+		04021B752132F04000B474B2 /* LoadingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingCell.swift; sourceTree = "<group>"; };
+		04021B772133174400B474B2 /* ErrorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorCell.swift; sourceTree = "<group>"; };
+		04021B7B2133185200B474B2 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		040BCB5D213448EC00EA80F7 /* SessionFeatures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionFeatures.swift; sourceTree = "<group>"; };
+		040BCB5F2134493E00EA80F7 /* SessionPermission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionPermission.swift; sourceTree = "<group>"; };
+		040BCB6321344C4900EA80F7 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		040BCB66213488C200EA80F7 /* Usage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Usage.swift; sourceTree = "<group>"; };
+		040BCB6821348C5600EA80F7 /* UsageItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsageItem.swift; sourceTree = "<group>"; };
+		040BCB6A21348DEE00EA80F7 /* UsageUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsageUnit.swift; sourceTree = "<group>"; };
+		040BCB6D21348E9A00EA80F7 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		040BCB6F21348F9300EA80F7 /* ServerList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerList.swift; sourceTree = "<group>"; };
+		046063F2212494A700EBADD6 /* BitletSynchronizer.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BitletSynchronizer.podspec; path = ../../BitletSynchronizer.podspec; sourceTree = "<group>"; };
+		046063F3212494A700EBADD6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		046063F7212494CD00EBADD6 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		046063FC212494F100EBADD6 /* BitletHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitletHandlerTests.swift; sourceTree = "<group>"; };
+		047B468D21317FE1008E4798 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		047B4690213188D4008E4798 /* CustomTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		047B469221319149008E4798 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		047B46952131ADF6008E4798 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		047B46972131D8D8008E4798 /* OverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewViewController.swift; sourceTree = "<group>"; };
+		047B469C2131E7AB008E4798 /* OverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewCell.swift; sourceTree = "<group>"; };
+		047B469E2131E897008E4798 /* ServerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCell.swift; sourceTree = "<group>"; };
+		1A4ED0844E99946324DD7B26 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		2B16C526ACA47813235B6194 /* Pods-BitletSynchronizer_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitletSynchronizer_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitletSynchronizer_Example/Pods-BitletSynchronizer_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		607FACD01AFB9204008FA782 /* BitletSynchronizer_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BitletSynchronizer_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		607FACE51AFB9204008FA782 /* BitletSynchronizer_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitletSynchronizer_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		71E5697B1D76047AB46E1493 /* Pods_BitletSynchronizer_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitletSynchronizer_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB6A16823D8E1F1A900988C2 /* Pods_BitletSynchronizer_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitletSynchronizer_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F55D2835E31789E5874E0095 /* Pods-BitletSynchronizer_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitletSynchronizer_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitletSynchronizer_Tests/Pods-BitletSynchronizer_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		F7020E9CDA8FBE54FD8A46B5 /* Pods-BitletSynchronizer_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitletSynchronizer_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitletSynchronizer_Tests/Pods-BitletSynchronizer_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		607FACCD1AFB9204008FA782 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB6163A37A8FC972590D3ABD /* Pods_BitletSynchronizer_Example.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		607FACE21AFB9204008FA782 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C98E167BE548BED0FCA41612 /* Pods_BitletSynchronizer_Tests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04021B6F2132D9E600B474B2 /* ServerDetail */ = {
+			isa = PBXGroup;
+			children = (
+				04021B722132EDED00B474B2 /* ServerDetailCell.swift */,
+				04021B702132D9E600B474B2 /* ServerDetailViewController.swift */,
+			);
+			path = ServerDetail;
+			sourceTree = "<group>";
+		};
+		04021B742132F04000B474B2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				04021B772133174400B474B2 /* ErrorCell.swift */,
+				04021B752132F04000B474B2 /* LoadingCell.swift */,
+				04021B7B2133185200B474B2 /* MessageCell.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		040BCB5C213447AF00EA80F7 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				046063F7212494CD00EBADD6 /* Session.swift */,
+				040BCB5D213448EC00EA80F7 /* SessionFeatures.swift */,
+				040BCB5F2134493E00EA80F7 /* SessionPermission.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		040BCB6121344C4900EA80F7 /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				040BCB6221344C4900EA80F7 /* Settings */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		040BCB6221344C4900EA80F7 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				040BCB6321344C4900EA80F7 /* Settings.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		040BCB65213488C200EA80F7 /* Usage */ = {
+			isa = PBXGroup;
+			children = (
+				040BCB66213488C200EA80F7 /* Usage.swift */,
+				040BCB6821348C5600EA80F7 /* UsageItem.swift */,
+				040BCB6A21348DEE00EA80F7 /* UsageUnit.swift */,
+			);
+			path = Usage;
+			sourceTree = "<group>";
+		};
+		040BCB6C21348E9A00EA80F7 /* Servers */ = {
+			isa = PBXGroup;
+			children = (
+				040BCB6D21348E9A00EA80F7 /* Server.swift */,
+				040BCB6F21348F9300EA80F7 /* ServerList.swift */,
+			);
+			path = Servers;
+			sourceTree = "<group>";
+		};
+		046063F6212494CD00EBADD6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				040BCB6C21348E9A00EA80F7 /* Servers */,
+				040BCB5C213447AF00EA80F7 /* Session */,
+				040BCB65213488C200EA80F7 /* Usage */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		046063F8212494CD00EBADD6 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				047B468F213188D4008E4798 /* CustomUIKit */,
+				047B469B2131E68D008E4798 /* Overview */,
+				04021B6F2132D9E600B474B2 /* ServerDetail */,
+				04021B742132F04000B474B2 /* Shared */,
+				047B469221319149008E4798 /* LoginViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		047B468F213188D4008E4798 /* CustomUIKit */ = {
+			isa = PBXGroup;
+			children = (
+				047B4690213188D4008E4798 /* CustomTextField.swift */,
+			);
+			path = CustomUIKit;
+			sourceTree = "<group>";
+		};
+		047B469B2131E68D008E4798 /* Overview */ = {
+			isa = PBXGroup;
+			children = (
+				047B469C2131E7AB008E4798 /* OverviewCell.swift */,
+				047B469E2131E897008E4798 /* ServerCell.swift */,
+				047B46972131D8D8008E4798 /* OverviewViewController.swift */,
+			);
+			path = Overview;
+			sourceTree = "<group>";
+		};
+		213EAEFE61B6CEA88B7A002E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				71E5697B1D76047AB46E1493 /* Pods_BitletSynchronizer_Example.framework */,
+				EB6A16823D8E1F1A900988C2 /* Pods_BitletSynchronizer_Tests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		607FACC71AFB9204008FA782 = {
+			isa = PBXGroup;
+			children = (
+				607FACF51AFB993E008FA782 /* Podspec Metadata */,
+				607FACD21AFB9204008FA782 /* Example for BitletSynchronizer */,
+				607FACE81AFB9204008FA782 /* Tests */,
+				607FACD11AFB9204008FA782 /* Products */,
+				76934CD4D3514DF6B6EB0A0F /* Pods */,
+				213EAEFE61B6CEA88B7A002E /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		607FACD11AFB9204008FA782 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				607FACD01AFB9204008FA782 /* BitletSynchronizer_Example.app */,
+				607FACE51AFB9204008FA782 /* BitletSynchronizer_Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		607FACD21AFB9204008FA782 /* Example for BitletSynchronizer */ = {
+			isa = PBXGroup;
+			children = (
+				040BCB6121344C4900EA80F7 /* Infrastructure */,
+				046063F6212494CD00EBADD6 /* Model */,
+				046063F8212494CD00EBADD6 /* ViewController */,
+				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
+				607FACDC1AFB9204008FA782 /* Images.xcassets */,
+				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
+				047B468C21317FE1008E4798 /* Main.storyboard */,
+				047B46942131ADF6008E4798 /* Localizable.strings */,
+				607FACD31AFB9204008FA782 /* Supporting Files */,
+			);
+			name = "Example for BitletSynchronizer";
+			path = BitletSynchronizer;
+			sourceTree = "<group>";
+		};
+		607FACD31AFB9204008FA782 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				607FACD41AFB9204008FA782 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		607FACE81AFB9204008FA782 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				046063FC212494F100EBADD6 /* BitletHandlerTests.swift */,
+				607FACE91AFB9204008FA782 /* Supporting Files */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		607FACE91AFB9204008FA782 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				607FACEA1AFB9204008FA782 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		607FACF51AFB993E008FA782 /* Podspec Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				046063F2212494A700EBADD6 /* BitletSynchronizer.podspec */,
+				046063F3212494A700EBADD6 /* README.md */,
+				1A4ED0844E99946324DD7B26 /* LICENSE */,
+			);
+			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		76934CD4D3514DF6B6EB0A0F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2B16C526ACA47813235B6194 /* Pods-BitletSynchronizer_Example.debug.xcconfig */,
+				006E6FDA4F32C7F56B3E884B /* Pods-BitletSynchronizer_Example.release.xcconfig */,
+				F7020E9CDA8FBE54FD8A46B5 /* Pods-BitletSynchronizer_Tests.debug.xcconfig */,
+				F55D2835E31789E5874E0095 /* Pods-BitletSynchronizer_Tests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		607FACCF1AFB9204008FA782 /* BitletSynchronizer_Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "BitletSynchronizer_Example" */;
+			buildPhases = (
+				9E6D9882151361999376AB00 /* [CP] Check Pods Manifest.lock */,
+				607FACCC1AFB9204008FA782 /* Sources */,
+				607FACCD1AFB9204008FA782 /* Frameworks */,
+				607FACCE1AFB9204008FA782 /* Resources */,
+				FB0BBBEFDCEAE62AFA191193 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BitletSynchronizer_Example;
+			productName = BitletSynchronizer;
+			productReference = 607FACD01AFB9204008FA782 /* BitletSynchronizer_Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		607FACE41AFB9204008FA782 /* BitletSynchronizer_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "BitletSynchronizer_Tests" */;
+			buildPhases = (
+				DA0876B9687C5163EA60DE01 /* [CP] Check Pods Manifest.lock */,
+				607FACE11AFB9204008FA782 /* Sources */,
+				607FACE21AFB9204008FA782 /* Frameworks */,
+				607FACE31AFB9204008FA782 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				607FACE71AFB9204008FA782 /* PBXTargetDependency */,
+			);
+			name = BitletSynchronizer_Tests;
+			productName = Tests;
+			productReference = 607FACE51AFB9204008FA782 /* BitletSynchronizer_Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		607FACC81AFB9204008FA782 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = CocoaPods;
+				TargetAttributes = {
+					607FACCF1AFB9204008FA782 = {
+						CreatedOnToolsVersion = 6.3.1;
+						LastSwiftMigration = 0900;
+					};
+					607FACE41AFB9204008FA782 = {
+						CreatedOnToolsVersion = 6.3.1;
+						LastSwiftMigration = 0900;
+						TestTargetID = 607FACCF1AFB9204008FA782;
+					};
+				};
+			};
+			buildConfigurationList = 607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "BitletSynchronizer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 607FACC71AFB9204008FA782;
+			productRefGroup = 607FACD11AFB9204008FA782 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				607FACCF1AFB9204008FA782 /* BitletSynchronizer_Example */,
+				607FACE41AFB9204008FA782 /* BitletSynchronizer_Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		607FACCE1AFB9204008FA782 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				046063F4212494A800EBADD6 /* BitletSynchronizer.podspec in Resources */,
+				047B46962131ADF6008E4798 /* Localizable.strings in Resources */,
+				047B468E21317FE1008E4798 /* Main.storyboard in Resources */,
+				046063F5212494A800EBADD6 /* README.md in Resources */,
+				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		607FACE31AFB9204008FA782 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9E6D9882151361999376AB00 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BitletSynchronizer_Example-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA0876B9687C5163EA60DE01 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BitletSynchronizer_Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FB0BBBEFDCEAE62AFA191193 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BitletSynchronizer_Example/Pods-BitletSynchronizer_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/BitletSynchronizer/BitletSynchronizer.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireObjectMapper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BitletSynchronizer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitletSynchronizer_Example/Pods-BitletSynchronizer_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		607FACCC1AFB9204008FA782 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04021B712132D9E600B474B2 /* ServerDetailViewController.swift in Sources */,
+				047B469D2131E7AB008E4798 /* OverviewCell.swift in Sources */,
+				047B4691213188D4008E4798 /* CustomTextField.swift in Sources */,
+				040BCB6E21348E9A00EA80F7 /* Server.swift in Sources */,
+				04021B782133174400B474B2 /* ErrorCell.swift in Sources */,
+				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				040BCB7021348F9300EA80F7 /* ServerList.swift in Sources */,
+				040BCB5E213448EC00EA80F7 /* SessionFeatures.swift in Sources */,
+				04021B7C2133185200B474B2 /* MessageCell.swift in Sources */,
+				04021B762132F04000B474B2 /* LoadingCell.swift in Sources */,
+				04021B732132EDED00B474B2 /* ServerDetailCell.swift in Sources */,
+				040BCB6421344C4A00EA80F7 /* Settings.swift in Sources */,
+				047B46982131D8D8008E4798 /* OverviewViewController.swift in Sources */,
+				040BCB67213488C200EA80F7 /* Usage.swift in Sources */,
+				046063FA212494CD00EBADD6 /* Session.swift in Sources */,
+				040BCB602134493E00EA80F7 /* SessionPermission.swift in Sources */,
+				040BCB6921348C5600EA80F7 /* UsageItem.swift in Sources */,
+				040BCB6B21348DEE00EA80F7 /* UsageUnit.swift in Sources */,
+				047B469F2131E897008E4798 /* ServerCell.swift in Sources */,
+				047B469321319149008E4798 /* LoginViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		607FACE11AFB9204008FA782 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04606401212496B200EBADD6 /* BitletHandlerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		607FACE71AFB9204008FA782 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 607FACCF1AFB9204008FA782 /* BitletSynchronizer_Example */;
+			targetProxy = 607FACE61AFB9204008FA782 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		047B468C21317FE1008E4798 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				047B468D21317FE1008E4798 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		047B46942131ADF6008E4798 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				047B46952131ADF6008E4798 /* Base */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		607FACDE1AFB9204008FA782 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				607FACDF1AFB9204008FA782 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		607FACED1AFB9204008FA782 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		607FACEE1AFB9204008FA782 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		607FACF01AFB9204008FA782 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B16C526ACA47813235B6194 /* Pods-BitletSynchronizer_Example.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BitletSynchronizer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		607FACF11AFB9204008FA782 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 006E6FDA4F32C7F56B3E884B /* Pods-BitletSynchronizer_Example.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BitletSynchronizer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		607FACF31AFB9204008FA782 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F7020E9CDA8FBE54FD8A46B5 /* Pods-BitletSynchronizer_Tests.debug.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitletSynchronizer_Example.app/BitletSynchronizer_Example";
+			};
+			name = Debug;
+		};
+		607FACF41AFB9204008FA782 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F55D2835E31789E5874E0095 /* Pods-BitletSynchronizer_Tests.release.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitletSynchronizer_Example.app/BitletSynchronizer_Example";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "BitletSynchronizer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				607FACED1AFB9204008FA782 /* Debug */,
+				607FACEE1AFB9204008FA782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "BitletSynchronizer_Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				607FACF01AFB9204008FA782 /* Debug */,
+				607FACF11AFB9204008FA782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "BitletSynchronizer_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				607FACF31AFB9204008FA782 /* Debug */,
+				607FACF41AFB9204008FA782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 607FACC81AFB9204008FA782 /* Project object */;
+}

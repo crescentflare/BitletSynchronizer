@@ -1,0 +1,7 @@
+{
+  "name": "Mock server",
+  "description": "Serves API responses for the Bitlet Synchronizer example project",
+  "method": "GET",
+  "responseCode": 200,
+  "generates": "indexPage"
+}

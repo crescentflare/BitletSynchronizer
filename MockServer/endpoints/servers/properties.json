@@ -1,0 +1,7 @@
+{
+  "name": "Virtual server list",
+  "description": "Return a list of virtual servers",
+  "category": "Services",
+  "method": "GET",
+  "responseCode": 200
+}

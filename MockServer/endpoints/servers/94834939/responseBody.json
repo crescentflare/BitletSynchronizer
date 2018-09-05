@@ -1,0 +1,19 @@
+{
+  "id": "94834939",
+  "name": "Production node 3",
+  "description": "Asia region server",
+  "os": "Red Hat Linux",
+  "os_version": "6.8",
+  "location": "Tokyo",
+  "data_traffic": {
+    "amount": 3.63,
+    "unit": "GB",
+    "label": "3.63 GB"
+  },
+  "server_load": {
+    "amount": 8.6,
+    "unit": "percent",
+    "label": "8.6%"
+  },
+  "enabled": true
+}

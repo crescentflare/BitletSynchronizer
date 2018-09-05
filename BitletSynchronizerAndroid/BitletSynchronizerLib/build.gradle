@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'BitletSynchronizerLib'
+
+    publishedGroupId = 'com.crescentflare.bitletsynchronizer'
+    libraryName = 'BitletSynchronizerAndroid'
+    artifact = 'BitletSynchronizerLib'
+
+    libraryDescription = 'BitletSynchronizer makes it easy to handle online data'
+
+    siteUrl = 'https://github.com/crescentflare/BitletSynchronizer'
+    gitUrl = 'https://github.com/crescentflare/BitletSynchronizer.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'crescentflare'
+    developerName = 'Johan Bos'
+    developerEmail = 'johan@crescentflare.com'
+
+    licenseName = 'The MIT License (MIT)'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 22
+        versionCode 1
+        versionName "0.4.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.8.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.json:org.json:2.0'
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

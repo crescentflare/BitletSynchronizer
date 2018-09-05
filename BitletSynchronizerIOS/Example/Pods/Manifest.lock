@@ -1,0 +1,36 @@
+PODS:
+  - Alamofire (4.7.3)
+  - AlamofireObjectMapper (5.1.0):
+    - Alamofire (~> 4.1)
+    - ObjectMapper (~> 3.3)
+  - BitletSynchronizer (0.0.1)
+  - ObjectMapper (3.3.0)
+  - Toast-Swift (3.0.1)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.7)
+  - AlamofireObjectMapper (~> 5.1.0)
+  - BitletSynchronizer (from `../../`)
+  - Toast-Swift (~> 3.0.1)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - AlamofireObjectMapper
+    - ObjectMapper
+    - Toast-Swift
+
+EXTERNAL SOURCES:
+  BitletSynchronizer:
+    :path: "../../"
+
+SPEC CHECKSUMS:
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  AlamofireObjectMapper: 3395e698901d8b0e6f48b7d0c43bd47875325102
+  BitletSynchronizer: 366b861a9d57ee8544e1659a8a3c113580ff9810
+  ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
+  Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
+
+PODFILE CHECKSUM: 8dd997040b82d43cd6afb12cd57b1a567e85f60e
+
+COCOAPODS: 1.5.3

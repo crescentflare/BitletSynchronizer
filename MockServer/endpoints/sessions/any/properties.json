@@ -1,0 +1,7 @@
+{
+  "name": "Delete session",
+  "description": "Log out of an active session, include the cookie in the request path (of the session to delete)",
+  "category": "Authentication",
+  "method": "DELETE",
+  "responseCode": 204
+}

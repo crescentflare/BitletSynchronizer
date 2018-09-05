@@ -1,0 +1,46 @@
+<resources>
+    <!-- App -->
+    <string name="app_name">Example Bitlet Synchronizer</string>
+
+    <!-- Login -->
+    <string name="login_title">Login</string>
+    <string name="login_more_info">More info</string>
+    <string name="login_more_info_title">Mock information</string>
+    <string name="login_more_info_text">There is a NodeJS mock server available. It can be found in the root folder of the library.\n\nWhen running the mock server, enter the ip address or localhost in the mock server field. When not specified, it falls back to internal mock data. Any username and password will be accepted.</string>
+    <string name="login_more_info_button">OK</string>
+    <string name="login_server_address">Mock server</string>
+    <string name="login_server_address_hint">Server address (optional)</string>
+    <string name="login_credentials">Username and password</string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_continue">Continue</string>
+
+    <!-- Overview -->
+    <string name="overview_title">Overview</string>
+    <string name="overview_usage_section">Usage overview</string>
+    <string name="overview_usage_loading">Loading usage...</string>
+    <string name="overview_usage_error">An error occured while loading usage data, please try again</string>
+    <string name="overview_usage_data_traffic">Data traffic</string>
+    <string name="overview_usage_server_load">Server load</string>
+    <string name="overview_servers_section">Virtual servers</string>
+    <string name="overview_servers_loading">Loading servers...</string>
+    <string name="overview_servers_error">An error occured while loading the virtual server list, please try again</string>
+    <string name="overview_servers_enabled">Enabled</string>
+    <string name="overview_servers_disabled">Disabled</string>
+
+    <!-- Server details -->
+    <string name="server_details_error">An error occured while loading the server details, please try again</string>
+    <string name="server_details_loading">Loading details...</string>
+    <string name="server_details_name">Name</string>
+    <string name="server_details_description">Description</string>
+    <string name="server_details_operating_system">Operating system</string>
+    <string name="server_details_location">Location</string>
+    <string name="server_details_data_traffic">Data traffic</string>
+    <string name="server_details_server_load">Server load</string>
+    <string name="server_details_enabled">Enabled</string>
+    <string name="server_details_enabled_on">Yes</string>
+    <string name="server_details_enabled_off">No</string>
+
+    <!-- Errors -->
+    <string name="error_generic_title">An error occurred</string>
+</resources>

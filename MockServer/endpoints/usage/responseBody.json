@@ -1,0 +1,13 @@
+{
+  "data_traffic": {
+    "amount": 12.37,
+    "unit": "GB",
+    "label": "12.37 GB"
+  },
+  "server_load": {
+    "amount": 24,
+    "unit": "percent",
+    "label": "24%"
+  },
+  "last_update": "2018-08-21T13:16:11.256Z"
+}

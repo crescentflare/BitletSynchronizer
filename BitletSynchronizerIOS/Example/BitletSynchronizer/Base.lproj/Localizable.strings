@@ -1,0 +1,41 @@
+//
+//  Localizable.strings
+//  Bitlet Synchronizer example
+//
+//  The strings table of the example application
+//
+
+// Login screen
+"LOGIN_INFORMATION_TITLE" = "Mock information";
+"LOGIN_INFORMATION_TEXT" = "There is a NodeJS mock server available. It can be found in the root folder of the library.\n\nWhen running the mock server, enter the ip address or localhost in the mock server field. When not specified, it falls back to internal mock data. Any username and password will be accepted.";
+
+// Overview
+"OVERVIEW_USAGE_SECTION" = "Usage overview";
+"OVERVIEW_USAGE_ERROR" = "An error occured while loading usage data, please try again";
+"OVERVIEW_USAGE_LOADING" = "Loading usage...";
+"OVERVIEW_USAGE_DATA_TRAFFIC" = "Data traffic";
+"OVERVIEW_USAGE_SERVER_LOAD" = "Server load";
+"OVERVIEW_SERVER_SECTION" = "Virtual servers";
+"OVERVIEW_SERVER_ERROR" = "An error occured while loading the virtual server list, please try again";
+"OVERVIEW_SERVER_LOADING" = "Loading servers...";
+"OVERVIEW_SERVER_ENABLED" = "Enabled";
+"OVERVIEW_SERVER_DISABLED" = "Disabled";
+
+// Server details
+"SERVER_DETAILS_ERROR" = "An error occured while loading the server details, please try again";
+"SERVER_DETAILS_LOADING" = "Loading details...";
+"SERVER_DETAILS_NAME" = "Name";
+"SERVER_DETAILS_DESCRIPTION" = "Description";
+"SERVER_DETAILS_OPERATING_SYSTEM" = "Operating system";
+"SERVER_DETAILS_LOCATION" = "Location";
+"SERVER_DETAILS_DATA_TRAFFIC" = "Data traffic";
+"SERVER_DETAILS_SERVER_LOAD" = "Server load";
+"SERVER_DETAILS_ENABLED" = "Enabled";
+"SERVER_DETAILS_ENABLED_ON" = "Yes";
+"SERVER_DETAILS_ENABLED_OFF" = "No";
+
+// Errors
+"ERROR_GENERIC_TITLE" = "An error occurred";
+
+// General
+"DIALOG_OK" = "OK";
