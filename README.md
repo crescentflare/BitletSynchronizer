@@ -43,4 +43,4 @@ The provided example will show how to integrate the library with a popular netwo
 
 ### Status
 
-The library is new and provides a very limited amount of functionality. In the future there will be features to support caching and prevent concurrency issues, along with potential other new features.
+The library is new and provides a very limited amount of functionality. In the future there will be features to support memory caching and help prevent concurrency issues, along with potential other new features.
