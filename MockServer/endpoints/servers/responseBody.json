@@ -1,0 +1,32 @@
+[
+  {
+    "id": "02954958",
+    "name": "Test server",
+    "location": "San Jose",
+    "enabled": true
+  },
+  {
+    "id": "19483729",
+    "name": "Production node 1",
+    "location": "New York",
+    "enabled": true
+  },
+  {
+    "id": "44845723",
+    "name": "Production node 2",
+    "location": "Berlin",
+    "enabled": true
+  },
+  {
+    "id": "94834939",
+    "name": "Production node 3",
+    "location": "Tokyo",
+    "enabled": true
+  },
+  {
+    "id": "98759237",
+    "name": "Old test server",
+    "location": "San Francisco",
+    "enabled": false
+  }
+]

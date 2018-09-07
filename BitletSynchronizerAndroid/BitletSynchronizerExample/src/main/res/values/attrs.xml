@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ListItem">
+        <attr name="item_label" format="string"/>
+        <attr name="item_additional" format="string"/>
+        <attr name="item_value" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="LoadingItem">
+        <attr name="loading_label" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="ErrorItem">
+        <attr name="error_label" format="string"/>
+    </declare-styleable>
+</resources>

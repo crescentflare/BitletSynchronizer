@@ -1,0 +1,7 @@
+{
+  "name": "Virtual server details (Production node 3)",
+  "description": "Return more details about a virtual server",
+  "category": "Services",
+  "method": "GET",
+  "responseCode": 200
+}

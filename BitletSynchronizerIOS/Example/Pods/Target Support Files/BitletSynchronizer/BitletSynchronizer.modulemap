@@ -1,0 +1,6 @@
+framework module BitletSynchronizer {
+  umbrella header "BitletSynchronizer-umbrella.h"
+
+  export *
+  module * { export * }
+}

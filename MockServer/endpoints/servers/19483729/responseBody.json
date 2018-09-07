@@ -1,0 +1,19 @@
+{
+  "id": "19483729",
+  "name": "Production node 1",
+  "description": "America region server",
+  "os": "Red Hat Linux",
+  "os_version": "6.8",
+  "location": "New York",
+  "data_traffic": {
+    "amount": 5.69,
+    "unit": "GB",
+    "label": "5.69 GB"
+  },
+  "server_load": {
+    "amount": 9.5,
+    "unit": "percent",
+    "label": "9.5%"
+  },
+  "enabled": true
+}

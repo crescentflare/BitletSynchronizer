@@ -1,0 +1,19 @@
+{
+  "id": "02954958",
+  "name": "Test server",
+  "description": "Used before deploying to production",
+  "os": "Red Hat Linux",
+  "os_version": "6.8",
+  "location": "San Jose",
+  "data_traffic": {
+    "amount": 0.21,
+    "unit": "GB",
+    "label": "0.21 GB"
+  },
+  "server_load": {
+    "amount": 0.2,
+    "unit": "percent",
+    "label": "0.2%"
+  },
+  "enabled": true
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Create authenticated session",
+  "description": "Log in with username and password",
+  "category": "Authentication",
+  "method": "POST",
+  "responseCode": 200,
+  "postParameters": {
+    "user": "username",
+    "password": "password"
+  }
+}

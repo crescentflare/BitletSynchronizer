@@ -1,0 +1,6 @@
+framework module Pods_BitletSynchronizer_Tests {
+  umbrella header "Pods-BitletSynchronizer_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
