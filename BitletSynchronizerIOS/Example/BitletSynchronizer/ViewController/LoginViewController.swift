@@ -38,6 +38,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidDisappear(_ animated: Bool) {
         enableView(true)
         passwordField?.text = nil
+        loginButton?.isEnabled = false
     }
 
     

@@ -33,6 +33,8 @@ class ServerList {
 
         typealias BitletData = ServerList
         
+        let cacheKey = "/servers"
+
         func load(observer: BitletObserver<BitletData>) {
             if let serverAddress = Settings.serverAddress, serverAddress.count > 0 {
                 Alamofire.request(serverAddress + "/servers").responseArray { (response: DataResponse<[Server]>) in
@@ -40,6 +42,7 @@ class ServerList {
                         let serverList = ServerList()
                         serverList.servers = servers
                         observer.bitlet = serverList
+                        observer.bitletExpireTime = .minutesFromNow(10)
                     } else if let error = response.error {
                         observer.error = error
                     }
@@ -56,6 +59,7 @@ class ServerList {
                     let serverList = ServerList()
                     serverList.servers = [server]
                     observer.bitlet = serverList
+                    observer.bitletExpireTime = .minutesFromNow(10)
                 }
                 observer.finish()
             }

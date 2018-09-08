@@ -6,10 +6,11 @@
 //  A class and protocol to receive notifications during a bitlet transfer (like receiving a bitlet, an error, etc.)
 //
 
-public protocol BaseBitletObserver {
+public protocol BaseBitletObserver: AnyObject {
     
-    var bitletData: Any { get set }
+    var bitletData: Any? { get set }
     var bitletHash: String? { get set }
+    var bitletExpireTime: BitletExpireTime? { get set }
     var error: Error? { get set }
     
     func finish()
@@ -20,6 +21,7 @@ open class BitletObserver<BitletData>: BaseBitletObserver {
     
     open var bitlet: BitletData?
     open var bitletHash: String?
+    open var bitletExpireTime: BitletExpireTime?
     open var error: Error?
     
     public init() {
@@ -34,7 +36,7 @@ open class BitletObserver<BitletData>: BaseBitletObserver {
 
 extension BitletObserver {
     
-    public var bitletData: Any {
+    public var bitletData: Any? {
         get {
             return bitlet as Any
         }

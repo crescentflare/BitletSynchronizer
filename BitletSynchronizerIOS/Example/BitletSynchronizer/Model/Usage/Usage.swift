@@ -51,11 +51,14 @@ class Usage: Mappable {
 
         typealias BitletData = Usage
         
+        let cacheKey = "/usage"
+        
         func load(observer: BitletObserver<BitletData>) {
             if let serverAddress = Settings.serverAddress, serverAddress.count > 0 {
                 Alamofire.request(serverAddress + "/usage").responseObject { (response: DataResponse<Usage>) in
                     if let usage = response.value {
                         observer.bitlet = usage
+                        observer.bitletExpireTime = .secondsFromNow(30)
                     } else if let error = response.error {
                         observer.error = error
                     }
@@ -77,6 +80,7 @@ class Usage: Mappable {
                 ]
                 if let usage = Mapper<Usage>().map(JSONObject: mockedJson) {
                     observer.bitlet = usage
+                    observer.bitletExpireTime = .secondsFromNow(30)
                 }
                 observer.finish()
             }

@@ -60,6 +60,7 @@ class Session: Mappable {
                 Alamofire.request(serverAddress + "/sessions", method: .post, parameters: [ "user": username, "password": password ]).responseObject { (response: DataResponse<Session>) in
                     if let session = response.value {
                         observer.bitlet = session
+                        observer.bitletExpireTime = .distantFuture
                     } else if let error = response.error {
                         observer.error = error
                     }
@@ -75,6 +76,7 @@ class Session: Mappable {
                 ]
                 if let session = Mapper<Session>().map(JSONObject: mockedJson) {
                     observer.bitlet = session
+                    observer.bitletExpireTime = .distantFuture
                 }
                 observer.finish()
             }

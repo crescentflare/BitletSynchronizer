@@ -61,9 +61,12 @@ class Server: Mappable {
         
         typealias BitletData = Server
         
+        let cacheKey: String
+        
         private let serverId: String
         
         init(_ serverId: String) {
+            cacheKey = "/servers/" + serverId
             self.serverId = serverId
         }
         
@@ -72,6 +75,7 @@ class Server: Mappable {
                 Alamofire.request(serverAddress + "/servers/" + serverId).responseObject { (response: DataResponse<Server>) in
                     if let server = response.value {
                         observer.bitlet = server
+                        observer.bitletExpireTime = .minutesFromNow(10)
                     } else if let error = response.error {
                         observer.error = error
                     }
@@ -99,6 +103,7 @@ class Server: Mappable {
                 ]
                 if let server = Mapper<Server>().map(JSONObject: mockedJson) {
                     observer.bitlet = server
+                    observer.bitletExpireTime = .minutesFromNow(10)
                 }
                 observer.finish()
             }

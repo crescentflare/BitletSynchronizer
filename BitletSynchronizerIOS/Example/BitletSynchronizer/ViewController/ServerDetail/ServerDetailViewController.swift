@@ -35,7 +35,6 @@ class ServerDetailViewController: UITableViewController {
     // --
     
     private var loading = true
-    private var server: Server?
     var serverId: String?
 
     
@@ -45,23 +44,40 @@ class ServerDetailViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        loading = cachedServer() == nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if loading {
-            BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), completion: { server, error in
-                self.loading = false
-                if let error = error {
-                    ToastManager.shared.position = .top
-                    ToastManager.shared.duration = 4
-                    if let toast = try? self.view.toastViewForMessage(error.localizedDescription, title: NSLocalizedString("ERROR_GENERIC_TITLE", comment: ""), image: nil, style: ToastManager.shared.style) {
-                        UIApplication.shared.keyWindow?.showToast(toast)
-                    }
-                } else if server != nil {
-                    self.server = server
-                }
-                self.tableView.reloadData()
-            })
+        loadData(forced: false)
+    }
+
+    
+    // --
+    // MARK: Data loading
+    // --
+    
+    private func cachedServer() -> Server? {
+        return BitletSynchronizer.shared.cache.getEntry(key: Server.bitlet(serverId: serverId ?? "").cacheKey)?.bitletData as? Server
+    }
+
+    private func loadData(forced: Bool) {
+        BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), cacheKey: Server.bitlet(serverId: serverId ?? "").cacheKey, forced: forced, completion: { server, error in
+            self.loading = false
+            if let error = error {
+                self.showErrorToast(error)
+            }
+            self.tableView.reloadData()
+            if forced {
+                self.refreshControl?.endRefreshing()
+            }
+        })
+    }
+    
+    private func showErrorToast(_ error: Error) {
+        ToastManager.shared.position = .top
+        ToastManager.shared.duration = 4
+        if let toast = try? self.view.toastViewForMessage(error.localizedDescription, title: NSLocalizedString("ERROR_GENERIC_TITLE", comment: ""), image: nil, style: ToastManager.shared.style) {
+            UIApplication.shared.keyWindow?.showToast(toast)
         }
     }
 
@@ -75,19 +91,7 @@ class ServerDetailViewController: UITableViewController {
     }
     
     @objc @IBAction func pulledToRefresh() {
-        BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), completion: { server, error in
-            if let error = error {
-                ToastManager.shared.position = .top
-                ToastManager.shared.duration = 4
-                if let toast = try? self.view.toastViewForMessage(error.localizedDescription, title: NSLocalizedString("ERROR_GENERIC_TITLE", comment: ""), image: nil, style: ToastManager.shared.style) {
-                    UIApplication.shared.keyWindow?.showToast(toast)
-                }
-            } else if server != nil {
-                self.server = server
-            }
-            self.tableView.reloadData()
-            self.refreshControl?.endRefreshing()
-        })
+        loadData(forced: true)
     }
 
     
@@ -100,14 +104,14 @@ class ServerDetailViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return loading || server == nil ? 1 : 7
+        return loading || cachedServer() == nil ? 1 : 7
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
             cell.label = NSLocalizedString("SERVER_DETAILS_LOADING", comment: "")
             return cell
-        } else if server == nil, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
+        } else if cachedServer() == nil, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
             cell.selectionStyle = .none
             cell.label = NSLocalizedString("SERVER_DETAILS_ERROR", comment: "")
             return cell
@@ -116,25 +120,25 @@ class ServerDetailViewController: UITableViewController {
                 switch row {
                 case .name:
                     cell.label = NSLocalizedString("SERVER_DETAILS_NAME", comment: "")
-                    cell.value = server?.name ?? ""
+                    cell.value = cachedServer()?.name ?? ""
                 case .description:
                     cell.label = NSLocalizedString("SERVER_DETAILS_DESCRIPTION", comment: "")
-                    cell.value = server?.description ?? ""
+                    cell.value = cachedServer()?.description ?? ""
                 case .operatingSystem:
                     cell.label = NSLocalizedString("SERVER_DETAILS_OPERATING_SYSTEM", comment: "")
-                    cell.value = (server?.os ?? "") + " " + (server?.osVersion ?? "")
+                    cell.value = (cachedServer()?.os ?? "") + " " + (cachedServer()?.osVersion ?? "")
                 case .location:
                     cell.label = NSLocalizedString("SERVER_DETAILS_LOCATION", comment: "")
-                    cell.value = server?.location ?? ""
+                    cell.value = cachedServer()?.location ?? ""
                 case .dataTraffic:
                     cell.label = NSLocalizedString("SERVER_DETAILS_DATA_TRAFFIC", comment: "")
-                    cell.value = server?.dataTraffic?.label ?? ""
+                    cell.value = cachedServer()?.dataTraffic?.label ?? ""
                 case .serverLoad:
                     cell.label = NSLocalizedString("SERVER_DETAILS_SERVER_LOAD", comment: "")
-                    cell.value = server?.serverLoad?.label ?? ""
+                    cell.value = cachedServer()?.serverLoad?.label ?? ""
                 case .enabled:
                     cell.label = NSLocalizedString("SERVER_DETAILS_ENABLED", comment: "")
-                    cell.value = NSLocalizedString((server?.enabled ?? false) ? "SERVER_DETAILS_ENABLED_ON" : "SERVER_DETAILS_ENABLED_OFF", comment: "")
+                    cell.value = NSLocalizedString((cachedServer()?.enabled ?? false) ? "SERVER_DETAILS_ENABLED_ON" : "SERVER_DETAILS_ENABLED_OFF", comment: "")
                 }
             }
             return cell
