@@ -10,7 +10,7 @@ public protocol BitletCache {
     
     func createEntryIfNeeded(key: String, handler: BaseBitletHandler)
     func getEntry(key: String, createIfNeeded: Bool) -> BitletCacheEntry?
-    func clear()
+    func clear(filter: String, recursive: Bool)
     
 }
 
@@ -37,8 +37,33 @@ public class BitletMemoryCache: BitletCache {
         return cacheEntries[key]
     }
     
-    public func clear() {
-        cacheEntries = [String: BitletCacheEntry]()
+    public func clear(filter: String = "*", recursive: Bool = true) {
+        var entriesToDelete = [String]()
+        let filterComponents = filter.split(separator: "/").map(String.init)
+        for key in cacheEntries.keys {
+            if matchesFilter(filterComponents, item: key, recursive: recursive) {
+                entriesToDelete.append(key)
+            }
+        }
+        for key in entriesToDelete {
+            cacheEntries.removeValue(forKey: key)
+        }
+    }
+    
+    private func matchesFilter(_ filter: [String], item: String, recursive: Bool) -> Bool {
+        let itemComponents = item.split(separator: "/").map(String.init)
+        for index in itemComponents.indices {
+            if index < filter.count {
+                if filter[index] != "*" && itemComponents[index] != filter[index] {
+                    return false
+                }
+            } else if recursive {
+                break
+            } else {
+                return false
+            }
+        }
+        return true
     }
     
 }

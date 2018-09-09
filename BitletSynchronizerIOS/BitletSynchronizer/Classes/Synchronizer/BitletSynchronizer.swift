@@ -69,8 +69,8 @@ public class BitletSynchronizer {
     // MARK: Cache control
     // --
     
-    public func clearCache() {
-        cache.clear()
+    public func clearCache(filter: String = "*", recursive: Bool = true) {
+        cache.clear(filter: filter, recursive: recursive)
     }
 
 }
