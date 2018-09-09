@@ -40,7 +40,7 @@ class Session: Mappable {
     // --
     
     class func bitlet(username: String, password: String) -> BitletClass {
-        return BitletClass(username: username, password: password)
+        return Settings.serverAddress?.count ?? 0 > 0 ? BitletClass(username: username, password: password) : MockedBitletClass(username: username, password: password)
     }
 
     class BitletClass: BitletHandler {
@@ -66,22 +66,28 @@ class Session: Mappable {
                     }
                     observer.finish()
                 }
-            } else {
-                let mockedJson: [String: Any] = [
-                    "cookie": "mocked",
-                    "features": [
-                        "usage": "view",
-                        "servers": "view"
-                    ]
-                ]
-                if let session = Mapper<Session>().map(JSONObject: mockedJson) {
-                    observer.bitlet = session
-                    observer.bitletExpireTime = .distantFuture
-                }
-                observer.finish()
             }
         }
 
     }
     
+    class MockedBitletClass: BitletClass {
+        
+        override func load(observer: BitletObserver<BitletData>) {
+            let mockedJson: [String: Any] = [
+                "cookie": "mocked",
+                "features": [
+                    "usage": "view",
+                    "servers": "view"
+                ]
+            ]
+            if let session = Mapper<Session>().map(JSONObject: mockedJson) {
+                observer.bitlet = session
+                observer.bitletExpireTime = .distantFuture
+            }
+            observer.finish()
+        }
+        
+    }
+
 }

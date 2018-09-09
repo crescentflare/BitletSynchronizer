@@ -26,7 +26,7 @@ class ServerList {
     // --
     
     class func bitlet() -> BitletClass {
-        return BitletClass()
+        return Settings.serverAddress?.count ?? 0 > 0 ? BitletClass() : MockedBitletClass()
     }
     
     class BitletClass: BitletHandler {
@@ -48,23 +48,29 @@ class ServerList {
                     }
                     observer.finish()
                 }
-            } else {
-                let mockedJson: [String: Any] = [
-                    "id": "mocked",
-                    "name": "Mock server",
-                    "location": "Home",
-                    "enabled": true
-                ]
-                if let server = Mapper<Server>().map(JSONObject: mockedJson) {
-                    let serverList = ServerList()
-                    serverList.servers = [server]
-                    observer.bitlet = serverList
-                    observer.bitletExpireTime = .minutesFromNow(10)
-                }
-                observer.finish()
             }
         }
         
     }
     
+    class MockedBitletClass: BitletClass {
+        
+        override func load(observer: BitletObserver<BitletData>) {
+            let mockedJson: [String: Any] = [
+                "id": "mocked",
+                "name": "Mock server",
+                "location": "Home",
+                "enabled": true
+            ]
+            if let server = Mapper<Server>().map(JSONObject: mockedJson) {
+                let serverList = ServerList()
+                serverList.servers = [server]
+                observer.bitlet = serverList
+                observer.bitletExpireTime = .minutesFromNow(10)
+            }
+            observer.finish()
+        }
+        
+    }
+
 }

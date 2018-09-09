@@ -54,7 +54,7 @@ class Server: Mappable {
     // --
     
     class func bitlet(serverId: String) -> BitletClass {
-        return BitletClass(serverId)
+        return Settings.serverAddress?.count ?? 0 > 0 ? BitletClass(serverId) : MockedBitletClass(serverId)
     }
     
     class BitletClass: BitletHandler {
@@ -81,32 +81,38 @@ class Server: Mappable {
                     }
                     observer.finish()
                 }
-            } else {
-                let mockedJson: [String: Any] = [
-                    "id": "mocked",
-                    "name": "Mock server",
-                    "description": "Internal mocked data",
-                    "os": "Unknown",
-                    "os_version": "1.0",
-                    "location": "Home",
-                    "data_traffic": [
-                        "amount": 2.0,
-                        "unit": "GB",
-                        "label": "2.0 GB"
-                    ],
-                    "server_load": [
-                        "amount": 10,
-                        "unit": "percent",
-                        "label": "10%"
-                    ],
-                    "enabled": true
-                ]
-                if let server = Mapper<Server>().map(JSONObject: mockedJson) {
-                    observer.bitlet = server
-                    observer.bitletExpireTime = .minutesFromNow(10)
-                }
-                observer.finish()
             }
+        }
+        
+    }
+
+    class MockedBitletClass: BitletClass {
+        
+        override func load(observer: BitletObserver<BitletData>) {
+            let mockedJson: [String: Any] = [
+                "id": "mocked",
+                "name": "Mock server",
+                "description": "Internal mocked data",
+                "os": "Unknown",
+                "os_version": "1.0",
+                "location": "Home",
+                "data_traffic": [
+                    "amount": 2.0,
+                    "unit": "GB",
+                    "label": "2.0 GB"
+                ],
+                "server_load": [
+                    "amount": 10,
+                    "unit": "percent",
+                    "label": "10%"
+                ],
+                "enabled": true
+            ]
+            if let server = Mapper<Server>().map(JSONObject: mockedJson) {
+                observer.bitlet = server
+                observer.bitletExpireTime = .minutesFromNow(10)
+            }
+            observer.finish()
         }
         
     }
