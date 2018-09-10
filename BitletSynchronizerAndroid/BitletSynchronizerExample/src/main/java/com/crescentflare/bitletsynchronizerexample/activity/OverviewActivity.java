@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
+import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
 import com.crescentflare.bitletsynchronizer.synchronizer.BitletSynchronizer;
 import com.crescentflare.bitletsynchronizerexample.R;
 import com.crescentflare.bitletsynchronizerexample.Settings;
@@ -35,8 +36,6 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     // ---
 
     private SwipeRefreshLayout refresher = null;
-    private Usage usage = null;
-    private ServerList serverList = null;
     private int refreshCallsBusy = 0;
     private boolean loadingUsage = true;
     private boolean loadingServers = true;
@@ -71,6 +70,18 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
                 refresher.setEnabled(y == 0);
             }
         });
+
+        // Set initial state
+        loadingUsage = cachedUsage() == null;
+        loadingServers = cachedServerList() == null;
+        if (!loadingUsage)
+        {
+            supplyUsage(cachedUsage());
+        }
+        if (!loadingServers)
+        {
+            supplyServerList(cachedServerList());
+        }
     }
 
 
@@ -88,60 +99,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     protected void onResume()
     {
         super.onResume();
-        if (loadingUsage)
-        {
-            BitletSynchronizer.instance.load(Usage.bitletInstance(), Usage.cacheKey(), false, new BitletResultObserver.SimpleCompletionListener<Usage>()
-            {
-                @Override
-                public void onFinish(Usage usage, Throwable exception)
-                {
-                    if (!isFinishing())
-                    {
-                        loadingUsage = false;
-                        if (exception != null)
-                        {
-                            Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        if (usage != null)
-                        {
-                            OverviewActivity.this.usage = usage;
-                        }
-                        supplyUsage(OverviewActivity.this.usage);
-                    }
-                }
-            });
-        }
-        else
-        {
-            supplyUsage(usage);
-        }
-        if (loadingServers)
-        {
-            BitletSynchronizer.instance.load(ServerList.bitletInstance(), ServerList.cacheKey(), false, new BitletResultObserver.SimpleCompletionListener<ServerList>()
-            {
-                @Override
-                public void onFinish(ServerList serverList, Throwable exception)
-                {
-                    if (!isFinishing())
-                    {
-                        loadingServers = false;
-                        if (exception != null)
-                        {
-                            Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        if (serverList != null)
-                        {
-                            OverviewActivity.this.serverList = serverList;
-                        }
-                        supplyServerList(OverviewActivity.this.serverList);
-                    }
-                }
-            });
-        }
-        else
-        {
-            supplyServerList(serverList);
-        }
+        loadData(false);
     }
 
     @Override
@@ -168,52 +126,87 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
         Settings.instance.setSessionCookie("");
     }
 
+
+    // ---
+    // Data loading
+    // ---
+
+    private Usage cachedUsage()
+    {
+        BitletCacheEntry cacheEntry = BitletSynchronizer.instance.getCache().getEntry(Usage.cacheKey());
+        if (cacheEntry != null)
+        {
+            Object cachedObject = cacheEntry.getBitletData();
+            if (cachedObject instanceof Usage)
+            {
+                return (Usage)cachedObject;
+            }
+        }
+        return null;
+    }
+
+    private ServerList cachedServerList()
+    {
+        BitletCacheEntry cacheEntry = BitletSynchronizer.instance.getCache().getEntry(ServerList.cacheKey());
+        if (cacheEntry != null)
+        {
+            Object cachedObject = cacheEntry.getBitletData();
+            if (cachedObject instanceof ServerList)
+            {
+                return (ServerList)cachedObject;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onRefresh()
     {
+        loadData(true);
+    }
+
+    private void loadData(final boolean forced)
+    {
+        // Load usage
         refreshCallsBusy = 2;
-        BitletSynchronizer.instance.load(Usage.bitletInstance(), Usage.cacheKey(), true, new BitletResultObserver.SimpleCompletionListener<Usage>()
+        BitletSynchronizer.instance.load(Usage.bitletInstance(), Usage.cacheKey(), forced, new BitletResultObserver.SimpleCompletionListener<Usage>()
         {
             @Override
             public void onFinish(Usage usage, Throwable exception)
             {
                 if (!isFinishing())
                 {
+                    loadingUsage = false;
                     if (exception != null)
                     {
                         Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                    if (usage != null)
-                    {
-                        OverviewActivity.this.usage = usage;
-                    }
-                    supplyUsage(OverviewActivity.this.usage);
+                    supplyUsage(cachedUsage());
                     refreshCallsBusy--;
-                    if (refreshCallsBusy <= 0)
+                    if (refreshCallsBusy <= 0 && forced)
                     {
                         refresher.setRefreshing(false);
                     }
                 }
             }
         });
-        BitletSynchronizer.instance.load(ServerList.bitletInstance(), ServerList.cacheKey(), true, new BitletResultObserver.SimpleCompletionListener<ServerList>()
+
+        // Load server list
+        BitletSynchronizer.instance.load(ServerList.bitletInstance(), ServerList.cacheKey(), forced, new BitletResultObserver.SimpleCompletionListener<ServerList>()
         {
             @Override
             public void onFinish(ServerList serverList, Throwable exception)
             {
                 if (!isFinishing())
                 {
+                    loadingServers = false;
                     if (exception != null)
                     {
                         Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                    if (serverList != null)
-                    {
-                        OverviewActivity.this.serverList = serverList;
-                    }
-                    supplyServerList(OverviewActivity.this.serverList);
+                    supplyServerList(cachedServerList());
                     refreshCallsBusy--;
-                    if (refreshCallsBusy <= 0)
+                    if (refreshCallsBusy <= 0 && forced)
                     {
                         refresher.setRefreshing(false);
                     }
