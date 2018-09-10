@@ -56,6 +56,11 @@ public class Server
     // Bitlet instance
     // ---
 
+    public static String cacheKey(String serverId)
+    {
+        return "/servers/" + serverId;
+    }
+
     public static BitletHandler<Server> bitletInstance(final String serverId)
     {
         return new BitletHandler<Server>()
@@ -71,6 +76,7 @@ public class Server
                         public void onResponse(Call<Server> call, Response<Server> response)
                         {
                             observer.setBitlet(response.body());
+                            observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
                             observer.finish();
                         }
 
@@ -106,6 +112,7 @@ public class Server
 
                     // Inform observer
                     observer.setBitlet(server);
+                    observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
                     observer.finish();
                 }
             }

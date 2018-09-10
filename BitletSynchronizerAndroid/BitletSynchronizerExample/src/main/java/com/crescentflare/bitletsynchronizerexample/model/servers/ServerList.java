@@ -31,6 +31,11 @@ public class ServerList
     // Bitlet instance
     // ---
 
+    public static String cacheKey()
+    {
+        return "/servers";
+    }
+
     public static BitletHandler<ServerList> bitletInstance()
     {
         return new BitletHandler<ServerList>()
@@ -48,6 +53,7 @@ public class ServerList
                             ServerList serverList = new ServerList();
                             serverList.setServers(response.body());
                             observer.setBitlet(serverList);
+                            observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
                             observer.finish();
                         }
 
@@ -74,6 +80,7 @@ public class ServerList
 
                     // Inform observer
                     observer.setBitlet(serverList);
+                    observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
                     observer.finish();
                 }
             }

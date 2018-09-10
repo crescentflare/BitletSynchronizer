@@ -12,6 +12,7 @@ public class BitletResultObserver<T> implements BitletObserver<T>
 
     private T bitletData;
     private String bitletHash;
+    private long bitletExpireTime;
     private Throwable exception;
     private CompletionListener<T> completionListener;
     private SimpleCompletionListener<T> simpleCompletionListener;
@@ -46,6 +47,12 @@ public class BitletResultObserver<T> implements BitletObserver<T>
     public void setBitletHash(String hash)
     {
         this.bitletHash = hash;
+    }
+
+    @Override
+    public void setBitletExpireTime(long expireTime)
+    {
+        this.bitletExpireTime = expireTime;
     }
 
     @Override

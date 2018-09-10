@@ -38,6 +38,11 @@ public class Usage
     // Bitlet instance
     // ---
 
+    public static String cacheKey()
+    {
+        return "/usage";
+    }
+
     public static BitletHandler<Usage> bitletInstance()
     {
         return new BitletHandler<Usage>()
@@ -52,6 +57,7 @@ public class Usage
                         @Override
                         public void onResponse(Call<Usage> call, Response<Usage> response)
                         {
+                            observer.setBitletExpireTime(System.currentTimeMillis() + 30 * 1000);
                             observer.setBitlet(response.body());
                             observer.finish();
                         }
@@ -81,6 +87,7 @@ public class Usage
                     usage.setServerLoad(serverLoad);
 
                     // Inform observer
+                    observer.setBitletExpireTime(System.currentTimeMillis() + 30 * 1000);
                     observer.setBitlet(usage);
                     observer.finish();
                 }

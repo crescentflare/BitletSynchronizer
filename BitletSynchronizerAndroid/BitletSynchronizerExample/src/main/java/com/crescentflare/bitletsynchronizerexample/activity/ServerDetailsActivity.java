@@ -104,7 +104,7 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
         super.onResume();
         if (loading)
         {
-            BitletSynchronizer.instance.load(Server.bitletInstance(serverId), new BitletResultObserver.SimpleCompletionListener<Server>()
+            BitletSynchronizer.instance.load(Server.bitletInstance(serverId), Server.cacheKey(serverId), false, new BitletResultObserver.SimpleCompletionListener<Server>()
             {
                 @Override
                 public void onFinish(Server server, Throwable exception)
@@ -134,7 +134,7 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
     @Override
     public void onRefresh()
     {
-        BitletSynchronizer.instance.load(Server.bitletInstance(serverId), new BitletResultObserver.SimpleCompletionListener<Server>()
+        BitletSynchronizer.instance.load(Server.bitletInstance(serverId), Server.cacheKey(serverId), true, new BitletResultObserver.SimpleCompletionListener<Server>()
         {
             @Override
             public void onFinish(Server server, Throwable exception)

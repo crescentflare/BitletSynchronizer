@@ -90,7 +90,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
         super.onResume();
         if (loadingUsage)
         {
-            BitletSynchronizer.instance.load(Usage.bitletInstance(), new BitletResultObserver.SimpleCompletionListener<Usage>()
+            BitletSynchronizer.instance.load(Usage.bitletInstance(), Usage.cacheKey(), false, new BitletResultObserver.SimpleCompletionListener<Usage>()
             {
                 @Override
                 public void onFinish(Usage usage, Throwable exception)
@@ -117,7 +117,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
         }
         if (loadingServers)
         {
-            BitletSynchronizer.instance.load(ServerList.bitletInstance(), new BitletResultObserver.SimpleCompletionListener<ServerList>()
+            BitletSynchronizer.instance.load(ServerList.bitletInstance(), ServerList.cacheKey(), false, new BitletResultObserver.SimpleCompletionListener<ServerList>()
             {
                 @Override
                 public void onFinish(ServerList serverList, Throwable exception)
@@ -163,6 +163,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
                 // No implementation
             }
         });
+        BitletSynchronizer.instance.clearCache();
         apiInstance.clearCookie();
         Settings.instance.setSessionCookie("");
     }
@@ -171,7 +172,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     public void onRefresh()
     {
         refreshCallsBusy = 2;
-        BitletSynchronizer.instance.load(Usage.bitletInstance(), new BitletResultObserver.SimpleCompletionListener<Usage>()
+        BitletSynchronizer.instance.load(Usage.bitletInstance(), Usage.cacheKey(), true, new BitletResultObserver.SimpleCompletionListener<Usage>()
         {
             @Override
             public void onFinish(Usage usage, Throwable exception)
@@ -195,7 +196,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
                 }
             }
         });
-        BitletSynchronizer.instance.load(ServerList.bitletInstance(), new BitletResultObserver.SimpleCompletionListener<ServerList>()
+        BitletSynchronizer.instance.load(ServerList.bitletInstance(), ServerList.cacheKey(), true, new BitletResultObserver.SimpleCompletionListener<ServerList>()
         {
             @Override
             public void onFinish(ServerList serverList, Throwable exception)

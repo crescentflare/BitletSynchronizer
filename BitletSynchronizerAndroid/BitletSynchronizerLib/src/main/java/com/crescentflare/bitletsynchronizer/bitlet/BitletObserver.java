@@ -8,6 +8,7 @@ public interface BitletObserver<T>
 {
     void setBitlet(T data);
     void setBitletHash(String hash);
+    void setBitletExpireTime(long expireTime);
     void setException(Throwable exception);
     void finish();
 }

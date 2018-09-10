@@ -44,6 +44,7 @@ public class Session
                         public void onResponse(Call<Session> call, Response<Session> response)
                         {
                             observer.setBitlet(response.body());
+                            observer.setBitletExpireTime(-1);
                             observer.finish();
                         }
 
@@ -67,6 +68,7 @@ public class Session
 
                     // Inform observer
                     observer.setBitlet(session);
+                    observer.setBitletExpireTime(-1);
                     observer.finish();
                 }
             }
