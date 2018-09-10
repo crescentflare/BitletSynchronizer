@@ -63,58 +63,67 @@ public class Server
 
     public static BitletHandler<Server> bitletInstance(final String serverId)
     {
+        if (TextUtils.isEmpty(Settings.instance.getServerAddress()))
+        {
+            return mockedBitletInstance(serverId);
+        }
         return new BitletHandler<Server>()
         {
             @Override
             public void load(final BitletObserver<Server> observer)
             {
-                if (!TextUtils.isEmpty(Settings.instance.getServerAddress()))
+                Api.getInstance(Settings.instance.getServerAddress()).servers().getServerDetails(serverId).enqueue(new Callback<Server>()
                 {
-                    Api.getInstance(Settings.instance.getServerAddress()).servers().getServerDetails(serverId).enqueue(new Callback<Server>()
+                    @Override
+                    public void onResponse(Call<Server> call, Response<Server> response)
                     {
-                        @Override
-                        public void onResponse(Call<Server> call, Response<Server> response)
-                        {
-                            observer.setBitlet(response.body());
-                            observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
-                            observer.finish();
-                        }
+                        observer.setBitlet(response.body());
+                        observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
+                        observer.finish();
+                    }
 
-                        @Override
-                        public void onFailure(Call<Server> call, Throwable exception)
-                        {
-                            observer.setException(exception);
-                            observer.finish();
-                        }
-                    });
-                }
-                else
-                {
-                    // Mock object
-                    Server server = new Server();
-                    UsageItem dataTraffic = new UsageItem();
-                    UsageItem serverLoad = new UsageItem();
-                    dataTraffic.setAmount(2.0f);
-                    dataTraffic.setUnit(UsageUnit.GB);
-                    dataTraffic.setLabel("2.0 GB");
-                    serverLoad.setAmount(10.0f);
-                    serverLoad.setUnit(UsageUnit.Percent);
-                    serverLoad.setLabel("10%");
-                    server.setServerId("mocked");
-                    server.setName("Mock server");
-                    server.setDescription("Internal mocked data");
-                    server.setOs("Unknown");
-                    server.setOsVersion("1.0");
-                    server.setLocation("Home");
-                    server.setDataTraffic(dataTraffic);
-                    server.setServerLoad(serverLoad);
-                    server.setEnabled(true);
+                    @Override
+                    public void onFailure(Call<Server> call, Throwable exception)
+                    {
+                        observer.setException(exception);
+                        observer.finish();
+                    }
+                });
+            }
+        };
+    }
 
-                    // Inform observer
-                    observer.setBitlet(server);
-                    observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
-                    observer.finish();
-                }
+    private static BitletHandler<Server> mockedBitletInstance(final String serverId)
+    {
+        return new BitletHandler<Server>()
+        {
+            @Override
+            public void load(final BitletObserver<Server> observer)
+            {
+                // Mock object
+                Server server = new Server();
+                UsageItem dataTraffic = new UsageItem();
+                UsageItem serverLoad = new UsageItem();
+                dataTraffic.setAmount(2.0f);
+                dataTraffic.setUnit(UsageUnit.GB);
+                dataTraffic.setLabel("2.0 GB");
+                serverLoad.setAmount(10.0f);
+                serverLoad.setUnit(UsageUnit.Percent);
+                serverLoad.setLabel("10%");
+                server.setServerId("mocked");
+                server.setName("Mock server");
+                server.setDescription("Internal mocked data");
+                server.setOs("Unknown");
+                server.setOsVersion("1.0");
+                server.setLocation("Home");
+                server.setDataTraffic(dataTraffic);
+                server.setServerLoad(serverLoad);
+                server.setEnabled(true);
+
+                // Inform observer
+                observer.setBitlet(server);
+                observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
+                observer.finish();
             }
         };
     }

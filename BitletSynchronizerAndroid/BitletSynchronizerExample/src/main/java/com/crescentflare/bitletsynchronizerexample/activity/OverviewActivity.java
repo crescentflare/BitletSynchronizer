@@ -3,6 +3,7 @@ package com.crescentflare.bitletsynchronizerexample.activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,23 +107,26 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     public void finish()
     {
         super.finish();
-        Api apiInstance = Api.getInstance(Settings.instance.getServerAddress());
-        apiInstance.session().endSession(Settings.instance.getSessionCookie()).enqueue(new Callback<Session>()
+        if (!TextUtils.isEmpty(Settings.instance.getServerAddress()))
         {
-            @Override
-            public void onResponse(Call<Session> call, Response<Session> response)
+            Api apiInstance = Api.getInstance(Settings.instance.getServerAddress());
+            apiInstance.session().endSession(Settings.instance.getSessionCookie()).enqueue(new Callback<Session>()
             {
-                // No implementation
-            }
+                @Override
+                public void onResponse(Call<Session> call, Response<Session> response)
+                {
+                    // No implementation
+                }
 
-            @Override
-            public void onFailure(Call<Session> call, Throwable t)
-            {
-                // No implementation
-            }
-        });
+                @Override
+                public void onFailure(Call<Session> call, Throwable t)
+                {
+                    // No implementation
+                }
+            });
+            apiInstance.clearCookie();
+        }
         BitletSynchronizer.instance.clearCache();
-        apiInstance.clearCookie();
         Settings.instance.setSessionCookie("");
     }
 
