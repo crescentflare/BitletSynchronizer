@@ -26,13 +26,15 @@ class ServerList {
     // --
     
     class func bitlet() -> BitletClass {
-        return BitletClass()
+        return Settings.serverAddress?.count ?? 0 > 0 ? BitletClass() : MockedBitletClass()
     }
     
     class BitletClass: BitletHandler {
 
         typealias BitletData = ServerList
         
+        let cacheKey = "/servers"
+
         func load(observer: BitletObserver<BitletData>) {
             if let serverAddress = Settings.serverAddress, serverAddress.count > 0 {
                 Alamofire.request(serverAddress + "/servers").responseArray { (response: DataResponse<[Server]>) in
@@ -40,27 +42,35 @@ class ServerList {
                         let serverList = ServerList()
                         serverList.servers = servers
                         observer.bitlet = serverList
+                        observer.bitletExpireTime = .minutesFromNow(10)
                     } else if let error = response.error {
                         observer.error = error
                     }
                     observer.finish()
                 }
-            } else {
-                let mockedJson: [String: Any] = [
-                    "id": "mocked",
-                    "name": "Mock server",
-                    "location": "Home",
-                    "enabled": true
-                ]
-                if let server = Mapper<Server>().map(JSONObject: mockedJson) {
-                    let serverList = ServerList()
-                    serverList.servers = [server]
-                    observer.bitlet = serverList
-                }
-                observer.finish()
             }
         }
         
     }
     
+    class MockedBitletClass: BitletClass {
+        
+        override func load(observer: BitletObserver<BitletData>) {
+            let mockedJson: [String: Any] = [
+                "id": "mocked",
+                "name": "Mock server",
+                "location": "Home",
+                "enabled": true
+            ]
+            if let server = Mapper<Server>().map(JSONObject: mockedJson) {
+                let serverList = ServerList()
+                serverList.servers = [server]
+                observer.bitlet = serverList
+                observer.bitletExpireTime = .minutesFromNow(10)
+            }
+            observer.finish()
+        }
+        
+    }
+
 }

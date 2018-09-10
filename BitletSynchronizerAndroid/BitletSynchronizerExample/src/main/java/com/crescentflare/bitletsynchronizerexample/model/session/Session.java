@@ -31,44 +31,55 @@ public class Session
 
     public static BitletHandler<Session> bitletInstance(final String username, final String password)
     {
+        if (TextUtils.isEmpty(Settings.instance.getServerAddress()))
+        {
+            return mockedBitletInstance(username, password);
+        }
         return new BitletHandler<Session>()
         {
             @Override
             public void load(final BitletObserver<Session> observer)
             {
-                if (!TextUtils.isEmpty(Settings.instance.getServerAddress()))
+                Api.getInstance(Settings.instance.getServerAddress()).session().createSession(username, password).enqueue(new Callback<Session>()
                 {
-                    Api.getInstance(Settings.instance.getServerAddress()).session().createSession(username, password).enqueue(new Callback<Session>()
+                    @Override
+                    public void onResponse(Call<Session> call, Response<Session> response)
                     {
-                        @Override
-                        public void onResponse(Call<Session> call, Response<Session> response)
-                        {
-                            observer.setBitlet(response.body());
-                            observer.finish();
-                        }
+                        observer.setBitlet(response.body());
+                        observer.setBitletExpireTime(-1);
+                        observer.finish();
+                    }
 
-                        @Override
-                        public void onFailure(Call<Session> call, Throwable exception)
-                        {
-                            observer.setException(exception);
-                            observer.finish();
-                        }
-                    });
-                }
-                else
-                {
-                    // Mock object
-                    Session session = new Session();
-                    SessionFeatures features = new SessionFeatures();
-                    features.setUsage(SessionPermission.View);
-                    features.setServers(SessionPermission.View);
-                    session.setCookie("mocked");
-                    session.setFeatures(features);
+                    @Override
+                    public void onFailure(Call<Session> call, Throwable exception)
+                    {
+                        observer.setException(exception);
+                        observer.finish();
+                    }
+                });
+            }
+        };
+    }
 
-                    // Inform observer
-                    observer.setBitlet(session);
-                    observer.finish();
-                }
+    private static BitletHandler<Session> mockedBitletInstance(final String username, final String password)
+    {
+        return new BitletHandler<Session>()
+        {
+            @Override
+            public void load(final BitletObserver<Session> observer)
+            {
+                // Mock object
+                Session session = new Session();
+                SessionFeatures features = new SessionFeatures();
+                features.setUsage(SessionPermission.View);
+                features.setServers(SessionPermission.View);
+                session.setCookie("mocked");
+                session.setFeatures(features);
+
+                // Inform observer
+                observer.setBitlet(session);
+                observer.setBitletExpireTime(-1);
+                observer.finish();
             }
         };
     }

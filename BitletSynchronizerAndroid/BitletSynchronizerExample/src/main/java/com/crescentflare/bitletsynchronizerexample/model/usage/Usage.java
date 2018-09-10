@@ -38,52 +38,68 @@ public class Usage
     // Bitlet instance
     // ---
 
+    public static String cacheKey()
+    {
+        return "/usage";
+    }
+
     public static BitletHandler<Usage> bitletInstance()
+    {
+        if (TextUtils.isEmpty(Settings.instance.getServerAddress()))
+        {
+            return mockedBitletInstance();
+        }
+        return new BitletHandler<Usage>()
+        {
+            @Override
+            public void load(final BitletObserver<Usage> observer)
+            {
+                Api.getInstance(Settings.instance.getServerAddress()).usage().getUsage().enqueue(new Callback<Usage>()
+                {
+                    @Override
+                    public void onResponse(Call<Usage> call, Response<Usage> response)
+                    {
+                        observer.setBitletExpireTime(System.currentTimeMillis() + 30 * 1000);
+                        observer.setBitlet(response.body());
+                        observer.finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Usage> call, Throwable exception)
+                    {
+                        observer.setException(exception);
+                        observer.finish();
+                    }
+                });
+            }
+        };
+    }
+
+    private static BitletHandler<Usage> mockedBitletInstance()
     {
         return new BitletHandler<Usage>()
         {
             @Override
             public void load(final BitletObserver<Usage> observer)
             {
-                if (!TextUtils.isEmpty(Settings.instance.getServerAddress()))
-                {
-                    Api.getInstance(Settings.instance.getServerAddress()).usage().getUsage().enqueue(new Callback<Usage>()
-                    {
-                        @Override
-                        public void onResponse(Call<Usage> call, Response<Usage> response)
-                        {
-                            observer.setBitlet(response.body());
-                            observer.finish();
-                        }
+                // Mock object
+                Usage usage = new Usage();
+                UsageItem dataTraffic = new UsageItem();
+                UsageItem serverLoad = new UsageItem();
+                dataTraffic.setAmount(2.0f);
+                dataTraffic.setUnit(UsageUnit.GB);
+                dataTraffic.setLabel("2.0 GB");
+                serverLoad.setAmount(10.0f);
+                serverLoad.setUnit(UsageUnit.Percent);
+                serverLoad.setLabel("10%");
+                usage.setLastUpdate(new Date());
+                usage.setDataTraffic(dataTraffic);
+                usage.setServerLoad(serverLoad);
 
-                        @Override
-                        public void onFailure(Call<Usage> call, Throwable exception)
-                        {
-                            observer.setException(exception);
-                            observer.finish();
-                        }
-                    });
-                }
-                else
-                {
-                    // Mock object
-                    Usage usage = new Usage();
-                    UsageItem dataTraffic = new UsageItem();
-                    UsageItem serverLoad = new UsageItem();
-                    dataTraffic.setAmount(2.0f);
-                    dataTraffic.setUnit(UsageUnit.GB);
-                    dataTraffic.setLabel("2.0 GB");
-                    serverLoad.setAmount(10.0f);
-                    serverLoad.setUnit(UsageUnit.Percent);
-                    serverLoad.setLabel("10%");
-                    usage.setLastUpdate(new Date());
-                    usage.setDataTraffic(dataTraffic);
-                    usage.setServerLoad(serverLoad);
-
-                    // Inform observer
-                    observer.setBitlet(usage);
-                    observer.finish();
-                }
+                // Inform observer
+                observer.setBitletExpireTime(System.currentTimeMillis() + 30 * 1000);
+                observer.setBitlet(usage);
+                observer.finish();
             }
         };
     }

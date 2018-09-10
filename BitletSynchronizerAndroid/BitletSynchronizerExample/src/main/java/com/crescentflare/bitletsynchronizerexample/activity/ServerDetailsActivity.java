@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
+import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
 import com.crescentflare.bitletsynchronizer.synchronizer.BitletSynchronizer;
 import com.crescentflare.bitletsynchronizerexample.R;
 import com.crescentflare.bitletsynchronizerexample.model.servers.Server;
@@ -37,7 +38,6 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
     // ---
 
     private SwipeRefreshLayout refresher = null;
-    private Server server = null;
     private String serverId = "undefined";
     private boolean loading = true;
 
@@ -85,6 +85,13 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
                 refresher.setEnabled(y == 0);
             }
         });
+
+        // Set initial state
+        loading = cachedServer() == null;
+        if (!loading)
+        {
+            supplyServerDetails(cachedServer());
+        }
     }
 
 
@@ -102,55 +109,53 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
     protected void onResume()
     {
         super.onResume();
-        if (loading)
+        loadData(false);
+    }
+
+
+    // ---
+    // Data loading
+    // ---
+
+    private Server cachedServer()
+    {
+        BitletCacheEntry cacheEntry = BitletSynchronizer.instance.getCache().getEntry(Server.cacheKey(serverId));
+        if (cacheEntry != null)
         {
-            BitletSynchronizer.instance.load(Server.bitletInstance(serverId), new BitletResultObserver.SimpleCompletionListener<Server>()
+            Object cachedObject = cacheEntry.getBitletData();
+            if (cachedObject instanceof Server)
             {
-                @Override
-                public void onFinish(Server server, Throwable exception)
-                {
-                    if (!isFinishing())
-                    {
-                        loading = false;
-                        if (exception != null)
-                        {
-                            Toast.makeText(ServerDetailsActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        if (server != null)
-                        {
-                            ServerDetailsActivity.this.server = server;
-                        }
-                        supplyServerDetails(ServerDetailsActivity.this.server);
-                    }
-                }
-            });
+                return (Server)cachedObject;
+            }
         }
-        else
-        {
-            supplyServerDetails(server);
-        }
+        return null;
     }
 
     @Override
     public void onRefresh()
     {
-        BitletSynchronizer.instance.load(Server.bitletInstance(serverId), new BitletResultObserver.SimpleCompletionListener<Server>()
+        loadData(true);
+    }
+
+    private void loadData(final boolean forced)
+    {
+        BitletSynchronizer.instance.load(Server.bitletInstance(serverId), Server.cacheKey(serverId), forced, new BitletResultObserver.SimpleCompletionListener<Server>()
         {
             @Override
             public void onFinish(Server server, Throwable exception)
             {
                 if (!isFinishing())
                 {
+                    loading = false;
                     if (exception != null)
                     {
                         Toast.makeText(ServerDetailsActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                    if (server != null)
+                    supplyServerDetails(cachedServer());
+                    if (forced)
                     {
-                        ServerDetailsActivity.this.server = server;
+                        refresher.setRefreshing(false);
                     }
-                    supplyServerDetails(ServerDetailsActivity.this.server);
-                    refresher.setRefreshing(false);
                 }
             }
         });

@@ -31,51 +31,67 @@ public class ServerList
     // Bitlet instance
     // ---
 
+    public static String cacheKey()
+    {
+        return "/servers";
+    }
+
     public static BitletHandler<ServerList> bitletInstance()
+    {
+        if (TextUtils.isEmpty(Settings.instance.getServerAddress()))
+        {
+            return mockedBitletInstance();
+        }
+        return new BitletHandler<ServerList>()
+        {
+            @Override
+            public void load(final BitletObserver<ServerList> observer)
+            {
+                Api.getInstance(Settings.instance.getServerAddress()).servers().getServerList().enqueue(new Callback<List<Server>>()
+                {
+                    @Override
+                    public void onResponse(Call<List<Server>> call, Response<List<Server>> response)
+                    {
+                        ServerList serverList = new ServerList();
+                        serverList.setServers(response.body());
+                        observer.setBitlet(serverList);
+                        observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
+                        observer.finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Server>> call, Throwable exception)
+                    {
+                        observer.setException(exception);
+                        observer.finish();
+                    }
+                });
+            }
+        };
+    }
+
+    private static BitletHandler<ServerList> mockedBitletInstance()
     {
         return new BitletHandler<ServerList>()
         {
             @Override
             public void load(final BitletObserver<ServerList> observer)
             {
-                if (!TextUtils.isEmpty(Settings.instance.getServerAddress()))
-                {
-                    Api.getInstance(Settings.instance.getServerAddress()).servers().getServerList().enqueue(new Callback<List<Server>>()
-                    {
-                        @Override
-                        public void onResponse(Call<List<Server>> call, Response<List<Server>> response)
-                        {
-                            ServerList serverList = new ServerList();
-                            serverList.setServers(response.body());
-                            observer.setBitlet(serverList);
-                            observer.finish();
-                        }
+                // Mock object
+                ServerList serverList = new ServerList();
+                List<Server> servers = new ArrayList<>();
+                Server server = new Server();
+                server.setServerId("mocked");
+                server.setName("Mock server");
+                server.setLocation("Home");
+                server.setEnabled(true);
+                servers.add(server);
+                serverList.setServers(servers);
 
-                        @Override
-                        public void onFailure(Call<List<Server>> call, Throwable exception)
-                        {
-                            observer.setException(exception);
-                            observer.finish();
-                        }
-                    });
-                }
-                else
-                {
-                    // Mock object
-                    ServerList serverList = new ServerList();
-                    List<Server> servers = new ArrayList<>();
-                    Server server = new Server();
-                    server.setServerId("mocked");
-                    server.setName("Mock server");
-                    server.setLocation("Home");
-                    server.setEnabled(true);
-                    servers.add(server);
-                    serverList.setServers(servers);
-
-                    // Inform observer
-                    observer.setBitlet(serverList);
-                    observer.finish();
-                }
+                // Inform observer
+                observer.setBitlet(serverList);
+                observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
+                observer.finish();
             }
         };
     }

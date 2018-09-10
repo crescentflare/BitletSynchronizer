@@ -13,7 +13,9 @@ The library has been designed to be generic, and not depend on any existing libr
 ### Features
 
 * Provides a Bitlet protocol (iOS) or interface (Android) to integrate the library with your domain layer (data models)
-* A synchronizer singleton to easily start the bitlet loading process 
+* A synchronizer singleton to easily start the bitlet loading process
+* Supports data caching in memory with cache expire times that can be specified per bitlet
+* When loading the same resource multiple times, the synchronizer will combine them and makes only 1 actual load call
 
 
 ### iOS integration guide
@@ -21,7 +23,7 @@ The library has been designed to be generic, and not depend on any existing libr
 The library is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod "BitletSynchronizer", '~> 0.0.1'
+pod "BitletSynchronizer", '~> 0.1.0'
 ```
 
 
@@ -30,7 +32,7 @@ pod "BitletSynchronizer", '~> 0.0.1'
 When using gradle, the library can easily be imported into the build.gradle file of your project. Add the following dependency:
 
 ```
-compile 'com.crescentflare.bitletsynchronizer:BitletSynchronizerLib:0.0.1'
+compile 'com.crescentflare.bitletsynchronizer:BitletSynchronizerLib:0.1.0'
 ```
 
 Make sure that jcenter is added as a repository.
@@ -38,9 +40,9 @@ Make sure that jcenter is added as a repository.
 
 ### Example
 
-The provided example will show how to integrate the library with a popular networking library and a domain layer featuring models. It will show fetching and serializing data.
+The provided example will show how to integrate the library with a popular networking library and a domain layer featuring models. It will demonstrate fetching, serializing and caching data (including error handling).
 
 
 ### Status
 
-The library is new and provides a very limited amount of functionality. In the future there will be features to support memory caching and help prevent concurrency issues, along with potential other new features.
+The library is new and provides a limited amount of functionality, but can already be useful. New features may be added in the future.
