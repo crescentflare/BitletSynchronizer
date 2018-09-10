@@ -40,15 +40,36 @@ public struct BitletExpireTime: Comparable {
     }
 
     public static func secondsFromNow(_ seconds: Int) -> BitletExpireTime {
-        return BitletExpireTime(rawValue: now().rawValue + Double(seconds) * 1000)
+        return now() + seconds
     }
 
     public static func minutesFromNow(_ minutes: Int) -> BitletExpireTime {
-        return BitletExpireTime(rawValue: now().rawValue + Double(minutes) * 1000 * 60)
+        return now() + minutes * 60
     }
 
     public static func hoursFromNow(_ hours: Int) -> BitletExpireTime {
-        return BitletExpireTime(rawValue: now().rawValue + Double(hours) * 1000 * 60 * 60)
+        return now() + hours * 3600
+    }
+
+
+    // --
+    // MARK: Operator overloads
+    // --
+
+    public static func +(left: BitletExpireTime, right: Int) -> BitletExpireTime {
+        return BitletExpireTime(rawValue: left.rawValue + Double(right))
+    }
+
+    public static func +(left: BitletExpireTime, right: Double) -> BitletExpireTime {
+        return BitletExpireTime(rawValue: left.rawValue + right)
+    }
+    
+    public static func -(left: BitletExpireTime, right: Int) -> BitletExpireTime {
+        return BitletExpireTime(rawValue: left.rawValue - Double(right))
+    }
+    
+    public static func -(left: BitletExpireTime, right: Double) -> BitletExpireTime {
+        return BitletExpireTime(rawValue: left.rawValue - right)
     }
 
     
