@@ -9,7 +9,7 @@
 public protocol BitletCache {
     
     func createEntryIfNeeded(key: String, handler: BaseBitletHandler)
-    func getEntry(key: String, createIfNeeded: Bool) -> BitletCacheEntry?
+    func getEntry(key: String) -> BitletCacheEntry?
     func clear(filter: String, recursive: Bool)
     
 }
@@ -33,7 +33,7 @@ public class BitletMemoryCache: BitletCache {
         }
     }
     
-    public func getEntry(key: String, createIfNeeded: Bool = false) -> BitletCacheEntry? {
+    public func getEntry(key: String) -> BitletCacheEntry? {
         return cacheEntries[key]
     }
     
@@ -50,6 +50,11 @@ public class BitletMemoryCache: BitletCache {
         }
     }
     
+
+    // --
+    // MARK: Helper
+    // --
+
     private func matchesFilter(_ filter: [String], item: String, recursive: Bool) -> Bool {
         let itemComponents = item.split(separator: "/").map(String.init)
         for index in itemComponents.indices {
