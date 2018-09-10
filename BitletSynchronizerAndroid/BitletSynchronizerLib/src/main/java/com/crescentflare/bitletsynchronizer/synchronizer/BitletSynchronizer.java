@@ -40,18 +40,26 @@ public class BitletSynchronizer
         load(bitletHandler, cacheKey, false, completionListener);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> void load(BitletHandler<T> bitletHandler, String cacheKey, boolean forced, final BitletResultObserver.CompletionListener<T> completionListener)
     {
         if (cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
-            entry.load(forced, new BitletResultObserver<>(new BitletResultObserver.CompletionListener<T>()
+            entry.load(forced, new BitletResultObserver<>(new BitletResultObserver.CompletionListener<Object>()
             {
                 @Override
-                public void onSuccess(T bitlet)
+                public void onSuccess(Object bitlet)
                 {
-                    completionListener.onSuccess(bitlet);
+                    try
+                    {
+                        completionListener.onSuccess((T)bitlet);
+                    }
+                    catch (ClassCastException e)
+                    {
+                        completionListener.onError(new Exception("Unknown bitlet error"));
+                    }
                 }
 
                 @Override
@@ -77,18 +85,30 @@ public class BitletSynchronizer
         load(bitletHandler, cacheKey, false, completionListener);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> void load(BitletHandler<T> bitletHandler, String cacheKey, boolean forced, final BitletResultObserver.SimpleCompletionListener<T> completionListener)
     {
         if (cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
-            entry.load(forced, new BitletResultObserver<>(new BitletResultObserver.SimpleCompletionListener<T>()
+            entry.load(forced, new BitletResultObserver<>(new BitletResultObserver.SimpleCompletionListener<Object>()
             {
                 @Override
-                public void onFinish(T bitlet, Throwable exception)
+                public void onFinish(Object bitlet, Throwable exception)
                 {
-                    completionListener.onFinish(bitlet, exception);
+                    try
+                    {
+                        completionListener.onFinish((T)bitlet, exception);
+                    }
+                    catch (ClassCastException e)
+                    {
+                        if (exception == null)
+                        {
+                            exception = new Exception("Unknown bitlet error");
+                        }
+                        completionListener.onFinish(null, exception);
+                    }
                 }
             }));
         }

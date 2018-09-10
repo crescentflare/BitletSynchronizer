@@ -19,7 +19,7 @@ public class BitletCacheEntry
     private State state = State.Unavailable;
     private Object bitletData;
     private long bitletExpireTime = -1;
-    private BitletHandler handler;
+    private BitletHandler<Object> handler;
     private BitletCacheObserver loadingObserver;
 
 
@@ -27,7 +27,7 @@ public class BitletCacheEntry
     // Initialization
     // ---
 
-    public BitletCacheEntry(BitletHandler handler)
+    public BitletCacheEntry(BitletHandler<Object> handler)
     {
         this.handler = handler;
     }
@@ -37,12 +37,12 @@ public class BitletCacheEntry
     // Loading
     // ---
 
-    public void load(BitletObserver observer)
+    public void load(BitletObserver<Object> observer)
     {
         load(false, observer);
     }
 
-    public void load(boolean forced, BitletObserver observer)
+    public void load(boolean forced, BitletObserver<Object> observer)
     {
         if (!forced && bitletData != null && !isExpired())
         {
@@ -136,13 +136,13 @@ public class BitletCacheEntry
     // Custom cache observer
     // ---
 
-    private static class BitletCacheObserver implements BitletObserver
+    private static class BitletCacheObserver implements BitletObserver<Object>
     {
         private Object bitletData = null;
         private String bitletHash = null;
         private long bitletExpireTime = -1;
         private Throwable exception = null;
-        private List<BitletObserver> includedObservers = new ArrayList<>();
+        private List<BitletObserver<Object>> includedObservers = new ArrayList<>();
         private Runnable completionRunnable;
 
         public BitletCacheObserver(Runnable completionRunnable)
@@ -154,7 +154,7 @@ public class BitletCacheEntry
         public void setBitlet(Object data)
         {
             bitletData = data;
-            for (BitletObserver observer : includedObservers)
+            for (BitletObserver<Object> observer : includedObservers)
             {
                 observer.setBitlet(data);
             }
@@ -164,7 +164,7 @@ public class BitletCacheEntry
         public void setBitletHash(String hash)
         {
             bitletHash = hash;
-            for (BitletObserver observer : includedObservers)
+            for (BitletObserver<Object> observer : includedObservers)
             {
                 observer.setBitletHash(hash);
             }
@@ -174,7 +174,7 @@ public class BitletCacheEntry
         public void setBitletExpireTime(long expireTime)
         {
             bitletExpireTime = expireTime;
-            for (BitletObserver observer : includedObservers)
+            for (BitletObserver<Object> observer : includedObservers)
             {
                 observer.setBitletExpireTime(expireTime);
             }
@@ -184,7 +184,7 @@ public class BitletCacheEntry
         public void setException(Throwable exception)
         {
             this.exception = exception;
-            for (BitletObserver observer : includedObservers)
+            for (BitletObserver<Object> observer : includedObservers)
             {
                 observer.setException(exception);
             }
@@ -194,13 +194,13 @@ public class BitletCacheEntry
         public void finish()
         {
             completionRunnable.run();
-            for (BitletObserver observer : includedObservers)
+            for (BitletObserver<Object> observer : includedObservers)
             {
                 observer.finish();
             }
         }
 
-        public void includeObserver(BitletObserver observer)
+        public void includeObserver(BitletObserver<Object> observer)
         {
             includedObservers.add(observer);
             if (bitletData != null)
