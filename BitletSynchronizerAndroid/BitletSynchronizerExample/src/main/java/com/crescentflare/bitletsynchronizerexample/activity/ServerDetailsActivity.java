@@ -59,7 +59,7 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
         // Set up action bar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_details);
-        setTitle(getString(R.string.overview_title));
+        setTitle(getString(R.string.server_details_title));
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
