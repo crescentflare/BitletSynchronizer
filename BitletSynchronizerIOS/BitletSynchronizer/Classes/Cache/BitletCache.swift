@@ -8,8 +8,8 @@
 
 public protocol BitletCache {
     
-    func createEntryIfNeeded(key: String, handler: BaseBitletHandler)
-    func getEntry(key: String) -> BitletCacheEntry?
+    func createEntryIfNeeded(forKey: String, handler: BaseBitletHandler)
+    func getEntry(forKey: String) -> BitletCacheEntry?
     func clear(filter: String, recursive: Bool)
     
 }
@@ -27,14 +27,14 @@ public class BitletMemoryCache: BitletCache {
     // MARK: Cache access
     // --
 
-    public func createEntryIfNeeded(key: String, handler: BaseBitletHandler) {
-        if cacheEntries[key] == nil {
-            cacheEntries[key] = BitletCacheEntry(handler: handler)
+    public func createEntryIfNeeded(forKey: String, handler: BaseBitletHandler) {
+        if cacheEntries[forKey] == nil {
+            cacheEntries[forKey] = BitletCacheEntry(handler: handler)
         }
     }
     
-    public func getEntry(key: String) -> BitletCacheEntry? {
-        return cacheEntries[key]
+    public func getEntry(forKey: String) -> BitletCacheEntry? {
+        return cacheEntries[forKey]
     }
     
     public func clear(filter: String = "*", recursive: Bool = true) {

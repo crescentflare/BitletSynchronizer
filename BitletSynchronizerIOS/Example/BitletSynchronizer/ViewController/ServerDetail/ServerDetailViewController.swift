@@ -34,7 +34,6 @@ class ServerDetailViewController: UITableViewController {
     // MARK: Members
     // --
     
-    private var loading = true
     var serverId: String?
 
     
@@ -42,12 +41,8 @@ class ServerDetailViewController: UITableViewController {
     // MARK: Lifecycle
     // --
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        loading = cachedServer() == nil
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         loadData(forced: false)
     }
 
@@ -57,12 +52,11 @@ class ServerDetailViewController: UITableViewController {
     // --
     
     private func cachedServer() -> Server? {
-        return BitletSynchronizer.shared.cache.getEntry(key: Server.bitlet(serverId: serverId ?? "").cacheKey)?.bitletData as? Server
+        return BitletSynchronizer.shared.cachedBitlet(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) as? Server
     }
 
     private func loadData(forced: Bool) {
         BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), cacheKey: Server.bitlet(serverId: serverId ?? "").cacheKey, forced: forced, completion: { server, error in
-            self.loading = false
             if let error = error {
                 self.showErrorToast(error)
             }
@@ -92,6 +86,9 @@ class ServerDetailViewController: UITableViewController {
     
     @objc @IBAction func pulledToRefresh() {
         loadData(forced: true)
+        if BitletSynchronizer.shared.cacheState(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) == .loading {
+            self.tableView.reloadData()
+        }
     }
 
     
@@ -104,11 +101,11 @@ class ServerDetailViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return loading || cachedServer() == nil ? 1 : 7
+        return cachedServer() == nil ? 1 : 7
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
+        if BitletSynchronizer.shared.cacheState(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
             cell.label = NSLocalizedString("SERVER_DETAILS_LOADING", comment: "")
             return cell
         } else if cachedServer() == nil, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {

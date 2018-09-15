@@ -37,8 +37,6 @@ class OverviewViewController: UITableViewController {
     // MARK: Members
     // --
     
-    private var loadingUsage = true
-    private var loadingServers = true
     private var lastSelectedServerId: String?
 
     
@@ -46,18 +44,8 @@ class OverviewViewController: UITableViewController {
     // MARK: Lifecycle
     // --
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        loadingUsage = cachedUsage() == nil
-        loadingServers = cachedServerList() == nil
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         loadData(forced: false)
     }
     
@@ -88,6 +76,9 @@ class OverviewViewController: UITableViewController {
     
     @objc @IBAction func pulledToRefresh() {
         loadData(forced: true)
+        if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading || BitletSynchronizer.shared.cacheState(forKey: ServerList.bitlet().cacheKey) == .loading {
+            self.tableView.reloadData()
+        }
     }
     
     
@@ -96,18 +87,17 @@ class OverviewViewController: UITableViewController {
     // --
     
     private func cachedUsage() -> Usage? {
-        return BitletSynchronizer.shared.cache.getEntry(key: Usage.bitlet().cacheKey)?.bitletData as? Usage
+        return BitletSynchronizer.shared.cachedBitlet(forKey: Usage.bitlet().cacheKey) as? Usage
     }
     
     private func cachedServerList() -> ServerList? {
-        return BitletSynchronizer.shared.cache.getEntry(key: ServerList.bitlet().cacheKey)?.bitletData as? ServerList
+        return BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.bitlet().cacheKey) as? ServerList
     }
     
     private func loadData(forced: Bool) {
         // Load usage
         var callsBusy = 2
         BitletSynchronizer.shared.loadBitlet(Usage.bitlet(), cacheKey: Usage.bitlet().cacheKey, forced: forced, completion: { usage, error in
-            self.loadingUsage = false
             if let error = error {
                 self.showErrorToast(error)
             }
@@ -120,7 +110,6 @@ class OverviewViewController: UITableViewController {
         
         // Load server list
         BitletSynchronizer.shared.loadBitlet(ServerList.bitlet(), cacheKey: ServerList.bitlet().cacheKey, forced: forced, completion: { serverList, error in
-            self.loadingServers = false
             if let error = error {
                 self.showErrorToast(error)
             }
@@ -176,12 +165,12 @@ class OverviewViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let section = OverviewSection(rawValue: section) {
             if section == .usage {
-                if loadingUsage || cachedUsage() == nil {
+                if cachedUsage() == nil {
                     return 1
                 }
                 return 2
             } else if section == .server {
-                if loadingServers || cachedServerList() == nil {
+                if cachedServerList() == nil {
                     return 1
                 }
                 return cachedServerList()?.servers.count ?? 0
@@ -193,7 +182,7 @@ class OverviewViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let section = OverviewSection(rawValue: indexPath.section) {
             if section == .usage {
-                if loadingUsage, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
+                if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
                     cell.selectionStyle = .none
                     cell.label = NSLocalizedString("OVERVIEW_USAGE_LOADING", comment: "")
                     return cell
@@ -215,7 +204,7 @@ class OverviewViewController: UITableViewController {
                     return cell
                 }
             } else if section == .server {
-                if loadingServers, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
+                if BitletSynchronizer.shared.cacheState(forKey: ServerList.bitlet().cacheKey) == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
                     cell.selectionStyle = .none
                     cell.label = NSLocalizedString("OVERVIEW_SERVER_LOADING", comment: "")
                     return cell
