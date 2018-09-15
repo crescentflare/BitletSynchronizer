@@ -9,18 +9,6 @@ import UIKit
 import Toast_Swift
 import BitletSynchronizer
 
-private enum DetailItemRow: Int {
-    
-    case name = 0
-    case description = 1
-    case operatingSystem = 2
-    case location = 3
-    case dataTraffic = 4
-    case serverLoad = 5
-    case enabled = 6
-
-}
-
 class ServerDetailViewController: UITableViewController {
 
     // --

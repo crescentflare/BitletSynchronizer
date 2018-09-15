@@ -17,13 +17,6 @@ private enum OverviewSection: Int {
     
 }
 
-private enum OverviewUsageRow: Int {
-    
-    case traffic = 0
-    case load = 1
-    
-}
-
 class OverviewViewController: UITableViewController {
 
     // --
