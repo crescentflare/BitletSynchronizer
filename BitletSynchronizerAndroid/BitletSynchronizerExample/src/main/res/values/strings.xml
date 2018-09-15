@@ -29,6 +29,7 @@
     <string name="overview_servers_disabled">Disabled</string>
 
     <!-- Server details -->
+    <string name="server_details_title">Server details</string>
     <string name="server_details_error">An error occured while loading the server details, please try again</string>
     <string name="server_details_loading">Loading details...</string>
     <string name="server_details_name">Name</string>

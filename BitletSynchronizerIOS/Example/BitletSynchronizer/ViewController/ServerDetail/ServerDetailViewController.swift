@@ -9,18 +9,6 @@ import UIKit
 import Toast_Swift
 import BitletSynchronizer
 
-private enum DetailItemRow: Int {
-    
-    case name = 0
-    case description = 1
-    case operatingSystem = 2
-    case location = 3
-    case dataTraffic = 4
-    case serverLoad = 5
-    case enabled = 6
-
-}
-
 class ServerDetailViewController: UITableViewController {
 
     // --
@@ -34,21 +22,18 @@ class ServerDetailViewController: UITableViewController {
     // MARK: Members
     // --
     
-    private var loading = true
     var serverId: String?
+    private var cellItems = [ServerDetailCellItem]()
 
     
     // --
     // MARK: Lifecycle
     // --
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        loading = cachedServer() == nil
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         loadData(forced: false)
+        refreshCellItems()
     }
 
     
@@ -56,17 +41,12 @@ class ServerDetailViewController: UITableViewController {
     // MARK: Data loading
     // --
     
-    private func cachedServer() -> Server? {
-        return BitletSynchronizer.shared.cache.getEntry(key: Server.bitlet(serverId: serverId ?? "").cacheKey)?.bitletData as? Server
-    }
-
     private func loadData(forced: Bool) {
         BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), cacheKey: Server.bitlet(serverId: serverId ?? "").cacheKey, forced: forced, completion: { server, error in
-            self.loading = false
             if let error = error {
                 self.showErrorToast(error)
             }
-            self.tableView.reloadData()
+            self.refreshCellItems()
             if forced {
                 self.refreshControl?.endRefreshing()
             }
@@ -80,6 +60,24 @@ class ServerDetailViewController: UITableViewController {
             UIApplication.shared.keyWindow?.showToast(toast)
         }
     }
+    
+    private func refreshCellItems() {
+        cellItems = []
+        if let server = BitletSynchronizer.shared.cachedBitlet(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) as? Server {
+            cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_NAME", comment: ""), andValue: server.name ?? ""))
+            cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_DESCRIPTION", comment: ""), andValue: server.description ?? ""))
+            cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_OPERATING_SYSTEM", comment: ""), andValue: (server.os ?? "") + " " + (server.osVersion ?? "")))
+            cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_LOCATION", comment: ""), andValue: server.location ?? ""))
+            cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_DATA_TRAFFIC", comment: ""), andValue: server.dataTraffic?.label ?? ""))
+            cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_SERVER_LOAD", comment: ""), andValue: server.serverLoad?.label ?? ""))
+            cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_ENABLED", comment: ""), andValue: NSLocalizedString((server.enabled ?? false) ? "SERVER_DETAILS_ENABLED_ON" : "SERVER_DETAILS_ENABLED_OFF", comment: "")))
+        } else if BitletSynchronizer.shared.cacheState(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) == .loading {
+            cellItems.append(ServerDetailCellItem(withLoadingText: NSLocalizedString("SERVER_DETAILS_LOADING", comment: "")))
+        } else {
+            cellItems.append(ServerDetailCellItem(withErrorText: NSLocalizedString("SERVER_DETAILS_ERROR", comment: "")))
+        }
+        self.tableView.reloadData()
+    }
 
     
     // --
@@ -92,6 +90,9 @@ class ServerDetailViewController: UITableViewController {
     
     @objc @IBAction func pulledToRefresh() {
         loadData(forced: true)
+        if BitletSynchronizer.shared.cacheState(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) == .loading {
+            refreshCellItems()
+        }
     }
 
     
@@ -104,43 +105,21 @@ class ServerDetailViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return loading || cachedServer() == nil ? 1 : 7
+        return cellItems.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
-            cell.label = NSLocalizedString("SERVER_DETAILS_LOADING", comment: "")
+        let cellItem = cellItems[indexPath.row]
+        if cellItem.type == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
+            cell.label = cellItem.label
             return cell
-        } else if cachedServer() == nil, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
+        } else if cellItem.type == .error, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
             cell.selectionStyle = .none
-            cell.label = NSLocalizedString("SERVER_DETAILS_ERROR", comment: "")
+            cell.label = cellItem.label
             return cell
-        } else if let cell = tableView.dequeueReusableCell(withIdentifier: ServerDetailCell.cellIdentifier) as? ServerDetailCell {
-            if let row = DetailItemRow(rawValue: indexPath.row) {
-                switch row {
-                case .name:
-                    cell.label = NSLocalizedString("SERVER_DETAILS_NAME", comment: "")
-                    cell.value = cachedServer()?.name ?? ""
-                case .description:
-                    cell.label = NSLocalizedString("SERVER_DETAILS_DESCRIPTION", comment: "")
-                    cell.value = cachedServer()?.description ?? ""
-                case .operatingSystem:
-                    cell.label = NSLocalizedString("SERVER_DETAILS_OPERATING_SYSTEM", comment: "")
-                    cell.value = (cachedServer()?.os ?? "") + " " + (cachedServer()?.osVersion ?? "")
-                case .location:
-                    cell.label = NSLocalizedString("SERVER_DETAILS_LOCATION", comment: "")
-                    cell.value = cachedServer()?.location ?? ""
-                case .dataTraffic:
-                    cell.label = NSLocalizedString("SERVER_DETAILS_DATA_TRAFFIC", comment: "")
-                    cell.value = cachedServer()?.dataTraffic?.label ?? ""
-                case .serverLoad:
-                    cell.label = NSLocalizedString("SERVER_DETAILS_SERVER_LOAD", comment: "")
-                    cell.value = cachedServer()?.serverLoad?.label ?? ""
-                case .enabled:
-                    cell.label = NSLocalizedString("SERVER_DETAILS_ENABLED", comment: "")
-                    cell.value = NSLocalizedString((cachedServer()?.enabled ?? false) ? "SERVER_DETAILS_ENABLED_ON" : "SERVER_DETAILS_ENABLED_OFF", comment: "")
-                }
-            }
+        } else if cellItem.type == .info, let cell = tableView.dequeueReusableCell(withIdentifier: ServerDetailCell.cellIdentifier) as? ServerDetailCell {
+            cell.label = cellItem.label
+            cell.value = cellItem.value
             return cell
         }
         return UITableViewCell()

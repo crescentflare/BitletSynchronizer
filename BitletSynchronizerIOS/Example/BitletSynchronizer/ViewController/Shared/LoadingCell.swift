@@ -21,6 +21,7 @@ class LoadingCell: UITableViewCell {
     // --
     
     @objc @IBOutlet weak var labelView: UILabel?
+    @objc @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView?
 
 
     // --
@@ -32,6 +33,15 @@ class LoadingCell: UITableViewCell {
             labelView?.text = newValue
         }
         get { return labelView?.text }
+    }
+    
+    
+    // --
+    // MARK: Fix for animating activity indicator
+    // --
+    
+    override func prepareForReuse() {
+        activityIndicatorView?.startAnimating()
     }
     
 }

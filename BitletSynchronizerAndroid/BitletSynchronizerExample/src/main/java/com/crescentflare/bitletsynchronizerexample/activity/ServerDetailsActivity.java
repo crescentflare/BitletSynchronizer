@@ -7,8 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
@@ -16,8 +14,6 @@ import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
 import com.crescentflare.bitletsynchronizer.synchronizer.BitletSynchronizer;
 import com.crescentflare.bitletsynchronizerexample.R;
 import com.crescentflare.bitletsynchronizerexample.model.servers.Server;
-import com.crescentflare.bitletsynchronizerexample.model.servers.ServerList;
-import com.crescentflare.bitletsynchronizerexample.model.usage.Usage;
 import com.crescentflare.bitletsynchronizerexample.view.ListItem;
 import com.crescentflare.bitletsynchronizerexample.view.NotifyingScrollView;
 
@@ -39,7 +35,6 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
 
     private SwipeRefreshLayout refresher = null;
     private String serverId = "undefined";
-    private boolean loading = true;
 
 
     // ---
@@ -59,7 +54,7 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
         // Set up action bar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_details);
-        setTitle(getString(R.string.overview_title));
+        setTitle(getString(R.string.server_details_title));
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,13 +80,6 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
                 refresher.setEnabled(y == 0);
             }
         });
-
-        // Set initial state
-        loading = cachedServer() == null;
-        if (!loading)
-        {
-            supplyServerDetails(cachedServer());
-        }
     }
 
 
@@ -110,6 +98,7 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
     {
         super.onResume();
         loadData(false);
+        refreshView();
     }
 
 
@@ -117,24 +106,14 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
     // Data loading
     // ---
 
-    private Server cachedServer()
-    {
-        BitletCacheEntry cacheEntry = BitletSynchronizer.instance.getCache().getEntry(Server.cacheKey(serverId));
-        if (cacheEntry != null)
-        {
-            Object cachedObject = cacheEntry.getBitletData();
-            if (cachedObject instanceof Server)
-            {
-                return (Server)cachedObject;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void onRefresh()
     {
         loadData(true);
+        if (BitletSynchronizer.instance.getCacheState(Server.cacheKey(serverId)) == BitletCacheEntry.State.Loading)
+        {
+            refreshView();
+        }
     }
 
     private void loadData(final boolean forced)
@@ -146,12 +125,11 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
             {
                 if (!isFinishing())
                 {
-                    loading = false;
                     if (exception != null)
                     {
                         Toast.makeText(ServerDetailsActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                    supplyServerDetails(cachedServer());
+                    refreshView();
                     if (forced)
                     {
                         refresher.setRefreshing(false);
@@ -182,20 +160,22 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
     // Data handling
     // ---
 
-    public void supplyServerDetails(Server server)
+    public void refreshView()
     {
-        findViewById(R.id.activity_server_details_loading).setVisibility(View.GONE);
-        findViewById(R.id.activity_server_details_error).setVisibility(server == null ? View.VISIBLE : View.GONE);
-        findViewById(R.id.activity_server_details_list_container).setVisibility(server != null ? View.VISIBLE : View.GONE);
-        if (server != null)
+        Server cachedServer = BitletSynchronizer.instance.getCachedBitlet(Server.cacheKey(serverId), Server.class);
+        BitletCacheEntry.State cacheState = BitletSynchronizer.instance.getCacheState(Server.cacheKey(serverId));
+        findViewById(R.id.activity_server_details_loading).setVisibility(cachedServer == null && cacheState == BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
+        findViewById(R.id.activity_server_details_error).setVisibility(cachedServer == null && cacheState != BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
+        findViewById(R.id.activity_server_details_list_container).setVisibility(cachedServer != null ? View.VISIBLE : View.GONE);
+        if (cachedServer != null)
         {
-            ((ListItem)findViewById(R.id.activity_server_details_name)).setValue(server.getName());
-            ((ListItem)findViewById(R.id.activity_server_details_description)).setValue(server.getDescription());
-            ((ListItem)findViewById(R.id.activity_server_details_operating_system)).setValue(server.getOs() + " " + server.getOsVersion());
-            ((ListItem)findViewById(R.id.activity_server_details_location)).setValue(server.getLocation());
-            ((ListItem)findViewById(R.id.activity_server_details_data_traffic)).setValue(server.getDataTraffic().getLabel());
-            ((ListItem)findViewById(R.id.activity_server_details_server_load)).setValue(server.getServerLoad().getLabel());
-            ((ListItem)findViewById(R.id.activity_server_details_enabled)).setValue(getString(server.isEnabled() ? R.string.server_details_enabled_on : R.string.server_details_enabled_off));
+            ((ListItem)findViewById(R.id.activity_server_details_name)).setValue(cachedServer.getName());
+            ((ListItem)findViewById(R.id.activity_server_details_description)).setValue(cachedServer.getDescription());
+            ((ListItem)findViewById(R.id.activity_server_details_operating_system)).setValue(cachedServer.getOs() + " " + cachedServer.getOsVersion());
+            ((ListItem)findViewById(R.id.activity_server_details_location)).setValue(cachedServer.getLocation());
+            ((ListItem)findViewById(R.id.activity_server_details_data_traffic)).setValue(cachedServer.getDataTraffic().getLabel());
+            ((ListItem)findViewById(R.id.activity_server_details_server_load)).setValue(cachedServer.getServerLoad().getLabel());
+            ((ListItem)findViewById(R.id.activity_server_details_enabled)).setValue(getString(cachedServer.isEnabled() ? R.string.server_details_enabled_on : R.string.server_details_enabled_off));
         }
     }
 }

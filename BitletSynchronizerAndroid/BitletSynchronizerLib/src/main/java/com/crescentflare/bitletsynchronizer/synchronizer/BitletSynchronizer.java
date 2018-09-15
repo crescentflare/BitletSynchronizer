@@ -43,7 +43,7 @@ public class BitletSynchronizer
     @SuppressWarnings("unchecked")
     public <T> void load(BitletHandler<T> bitletHandler, String cacheKey, boolean forced, final BitletResultObserver.CompletionListener<T> completionListener)
     {
-        if (cacheKey != null)
+        if (cache != null && cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
@@ -52,14 +52,7 @@ public class BitletSynchronizer
                 @Override
                 public void onSuccess(Object bitlet)
                 {
-                    try
-                    {
-                        completionListener.onSuccess((T)bitlet);
-                    }
-                    catch (ClassCastException e)
-                    {
-                        completionListener.onError(new Exception("Unknown bitlet error"));
-                    }
+                    completionListener.onSuccess((T)bitlet);
                 }
 
                 @Override
@@ -88,7 +81,7 @@ public class BitletSynchronizer
     @SuppressWarnings("unchecked")
     public <T> void load(BitletHandler<T> bitletHandler, String cacheKey, boolean forced, final BitletResultObserver.SimpleCompletionListener<T> completionListener)
     {
-        if (cacheKey != null)
+        if (cache != null && cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
@@ -97,18 +90,7 @@ public class BitletSynchronizer
                 @Override
                 public void onFinish(Object bitlet, Throwable exception)
                 {
-                    try
-                    {
-                        completionListener.onFinish((T)bitlet, exception);
-                    }
-                    catch (ClassCastException e)
-                    {
-                        if (exception == null)
-                        {
-                            exception = new Exception("Unknown bitlet error");
-                        }
-                        completionListener.onFinish(null, exception);
-                    }
+                    completionListener.onFinish((T)bitlet, exception);
                 }
             }));
         }
@@ -123,19 +105,51 @@ public class BitletSynchronizer
     // Cache control
     // ---
 
+    public Object getCachedBitlet(String cacheKey)
+    {
+        if (cache != null && cache.getEntry(cacheKey) != null)
+        {
+            return cache.getEntry(cacheKey).getBitletData();
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getCachedBitlet(String cacheKey, Class<T> classType)
+    {
+        Object bitlet = getCachedBitlet(cacheKey);
+        if (classType.isInstance(bitlet))
+        {
+            return (T)bitlet;
+        }
+        return null;
+    }
+
+    public BitletCacheEntry.State getCacheState(String cacheKey)
+    {
+        if (cache != null && cache.getEntry(cacheKey) != null && cache.getEntry(cacheKey).getState() != null)
+        {
+            return cache.getEntry(cacheKey).getState();
+        }
+        return BitletCacheEntry.State.Unavailable;
+    }
+
     public void clearCache()
     {
-        cache.clear("*", true);
+        clearCache("*", true);
     }
 
     public void clearCache(String filter)
     {
-        cache.clear(filter, true);
+        clearCache(filter, true);
     }
 
     public void clearCache(String filter, boolean recursive)
     {
-        cache.clear(filter, recursive);
+        if (cache != null)
+        {
+            cache.clear(filter, recursive);
+        }
     }
 
     public BitletCache getCache()

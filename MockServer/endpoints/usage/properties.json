@@ -3,5 +3,6 @@
   "description": "Return totals of data traffic and server load",
   "category": "Services",
   "method": "GET",
+  "delay": 1000,
   "responseCode": 200
 }

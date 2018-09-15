@@ -38,8 +38,6 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
 
     private SwipeRefreshLayout refresher = null;
     private int refreshCallsBusy = 0;
-    private boolean loadingUsage = true;
-    private boolean loadingServers = true;
 
 
     // ---
@@ -71,18 +69,6 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
                 refresher.setEnabled(y == 0);
             }
         });
-
-        // Set initial state
-        loadingUsage = cachedUsage() == null;
-        loadingServers = cachedServerList() == null;
-        if (!loadingUsage)
-        {
-            supplyUsage(cachedUsage());
-        }
-        if (!loadingServers)
-        {
-            supplyServerList(cachedServerList());
-        }
     }
 
 
@@ -101,6 +87,8 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     {
         super.onResume();
         loadData(false);
+        refreshUsage();
+        refreshServerList();
     }
 
     @Override
@@ -135,38 +123,18 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     // Data loading
     // ---
 
-    private Usage cachedUsage()
-    {
-        BitletCacheEntry cacheEntry = BitletSynchronizer.instance.getCache().getEntry(Usage.cacheKey());
-        if (cacheEntry != null)
-        {
-            Object cachedObject = cacheEntry.getBitletData();
-            if (cachedObject instanceof Usage)
-            {
-                return (Usage)cachedObject;
-            }
-        }
-        return null;
-    }
-
-    private ServerList cachedServerList()
-    {
-        BitletCacheEntry cacheEntry = BitletSynchronizer.instance.getCache().getEntry(ServerList.cacheKey());
-        if (cacheEntry != null)
-        {
-            Object cachedObject = cacheEntry.getBitletData();
-            if (cachedObject instanceof ServerList)
-            {
-                return (ServerList)cachedObject;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void onRefresh()
     {
         loadData(true);
+        if (BitletSynchronizer.instance.getCacheState(Usage.cacheKey()) == BitletCacheEntry.State.Loading)
+        {
+            refreshUsage();
+        }
+        if (BitletSynchronizer.instance.getCacheState(ServerList.cacheKey()) == BitletCacheEntry.State.Loading)
+        {
+            refreshServerList();
+        }
     }
 
     private void loadData(final boolean forced)
@@ -180,12 +148,11 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
             {
                 if (!isFinishing())
                 {
-                    loadingUsage = false;
                     if (exception != null)
                     {
                         Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                    supplyUsage(cachedUsage());
+                    refreshUsage();
                     refreshCallsBusy--;
                     if (refreshCallsBusy <= 0 && forced)
                     {
@@ -203,12 +170,11 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
             {
                 if (!isFinishing())
                 {
-                    loadingServers = false;
                     if (exception != null)
                     {
                         Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                    supplyServerList(cachedServerList());
+                    refreshServerList();
                     refreshCallsBusy--;
                     if (refreshCallsBusy <= 0 && forced)
                     {
@@ -240,24 +206,28 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     // Data handling
     // ---
 
-    public void supplyUsage(Usage usage)
+    public void refreshUsage()
     {
-        findViewById(R.id.activity_overview_usage_loading).setVisibility(View.GONE);
-        findViewById(R.id.activity_overview_usage_error).setVisibility(usage == null ? View.VISIBLE : View.GONE);
-        findViewById(R.id.activity_overview_usage_list_container).setVisibility(usage != null ? View.VISIBLE : View.GONE);
-        if (usage != null)
+        Usage cachedUsage = BitletSynchronizer.instance.getCachedBitlet(Usage.cacheKey(), Usage.class);
+        BitletCacheEntry.State cacheState = BitletSynchronizer.instance.getCacheState(Usage.cacheKey());
+        findViewById(R.id.activity_overview_usage_loading).setVisibility(cachedUsage == null && cacheState == BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
+        findViewById(R.id.activity_overview_usage_error).setVisibility(cachedUsage == null && cacheState != BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
+        findViewById(R.id.activity_overview_usage_list_container).setVisibility(cachedUsage != null ? View.VISIBLE : View.GONE);
+        if (cachedUsage != null)
         {
-            ((ListItem)findViewById(R.id.activity_overview_usage_data_traffic)).setValue(usage.getDataTraffic().getLabel());
-            ((ListItem)findViewById(R.id.activity_overview_usage_server_load)).setValue(usage.getServerLoad().getLabel());
+            ((ListItem)findViewById(R.id.activity_overview_usage_data_traffic)).setValue(cachedUsage.getDataTraffic().getLabel());
+            ((ListItem)findViewById(R.id.activity_overview_usage_server_load)).setValue(cachedUsage.getServerLoad().getLabel());
         }
     }
 
-    public void supplyServerList(ServerList serverList)
+    public void refreshServerList()
     {
-        findViewById(R.id.activity_overview_servers_loading).setVisibility(View.GONE);
-        findViewById(R.id.activity_overview_servers_error).setVisibility(serverList == null ? View.VISIBLE : View.GONE);
-        findViewById(R.id.activity_overview_servers_list_container).setVisibility(serverList != null ? View.VISIBLE : View.GONE);
-        if (serverList != null)
+        ServerList cachedServerList = BitletSynchronizer.instance.getCachedBitlet(ServerList.cacheKey(), ServerList.class);
+        BitletCacheEntry.State cacheState = BitletSynchronizer.instance.getCacheState(ServerList.cacheKey());
+        findViewById(R.id.activity_overview_servers_loading).setVisibility(cachedServerList == null && cacheState == BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
+        findViewById(R.id.activity_overview_servers_error).setVisibility(cachedServerList == null && cacheState != BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
+        findViewById(R.id.activity_overview_servers_list_container).setVisibility(cachedServerList != null ? View.VISIBLE : View.GONE);
+        if (cachedServerList != null)
         {
             LinearLayout listContainer = (LinearLayout)findViewById(R.id.activity_overview_servers_list_container);
             int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.activity_margin);
@@ -265,7 +235,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
             int minHeight = getResources().getDimensionPixelOffset(R.dimen.item_min_height);
             boolean firstItem = true;
             listContainer.removeAllViews();
-            for (Server server : serverList.getServers())
+            for (Server server : cachedServerList.getServers())
             {
                 // Add dividers in between item views
                 if (!firstItem)
