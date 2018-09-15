@@ -3,5 +3,6 @@
   "description": "Return more details about a virtual server",
   "category": "Services",
   "method": "GET",
+  "delay": 200,
   "responseCode": 200
 }

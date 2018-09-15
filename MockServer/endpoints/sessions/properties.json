@@ -4,6 +4,7 @@
   "category": "Authentication",
   "method": "POST",
   "responseCode": 200,
+  "delay": 500,
   "postParameters": {
     "user": "username",
     "password": "password"
