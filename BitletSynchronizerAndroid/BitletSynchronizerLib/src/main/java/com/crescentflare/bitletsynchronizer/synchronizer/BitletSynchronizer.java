@@ -52,14 +52,7 @@ public class BitletSynchronizer
                 @Override
                 public void onSuccess(Object bitlet)
                 {
-                    try
-                    {
-                        completionListener.onSuccess((T)bitlet);
-                    }
-                    catch (ClassCastException e)
-                    {
-                        completionListener.onError(new Exception("Unknown bitlet error"));
-                    }
+                    completionListener.onSuccess((T)bitlet);
                 }
 
                 @Override
@@ -97,18 +90,7 @@ public class BitletSynchronizer
                 @Override
                 public void onFinish(Object bitlet, Throwable exception)
                 {
-                    try
-                    {
-                        completionListener.onFinish((T)bitlet, exception);
-                    }
-                    catch (ClassCastException e)
-                    {
-                        if (exception == null)
-                        {
-                            exception = new Exception("Unknown bitlet error");
-                        }
-                        completionListener.onFinish(null, exception);
-                    }
+                    completionListener.onFinish((T)bitlet, exception);
                 }
             }));
         }

@@ -24,6 +24,7 @@ public class BitletMemoryCache implements BitletCache
     // Implementation
     // ---
 
+    @SuppressWarnings("unchecked")
     @Override
     public void createEntryIfNeeded(String key, BitletHandler handler)
     {
