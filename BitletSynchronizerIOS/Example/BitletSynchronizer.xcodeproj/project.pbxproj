@@ -32,6 +32,7 @@
 		047B469D2131E7AB008E4798 /* OverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B469C2131E7AB008E4798 /* OverviewCell.swift */; };
 		047B469F2131E897008E4798 /* ServerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B469E2131E897008E4798 /* ServerCell.swift */; };
 		04CD63E0214D3CE600D5B240 /* ServerDetailCellItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CD63DF214D3CE600D5B240 /* ServerDetailCellItem.swift */; };
+		04CD63E2214D414A00D5B240 /* OverviewCellItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CD63E1214D414A00D5B240 /* OverviewCellItem.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
@@ -76,6 +77,7 @@
 		047B469C2131E7AB008E4798 /* OverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewCell.swift; sourceTree = "<group>"; };
 		047B469E2131E897008E4798 /* ServerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCell.swift; sourceTree = "<group>"; };
 		04CD63DF214D3CE600D5B240 /* ServerDetailCellItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerDetailCellItem.swift; sourceTree = "<group>"; };
+		04CD63E1214D414A00D5B240 /* OverviewCellItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewCellItem.swift; sourceTree = "<group>"; };
 		1A4ED0844E99946324DD7B26 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		2B16C526ACA47813235B6194 /* Pods-BitletSynchronizer_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitletSynchronizer_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitletSynchronizer_Example/Pods-BitletSynchronizer_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* BitletSynchronizer_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BitletSynchronizer_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -210,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				047B469C2131E7AB008E4798 /* OverviewCell.swift */,
+				04CD63E1214D414A00D5B240 /* OverviewCellItem.swift */,
 				047B469E2131E897008E4798 /* ServerCell.swift */,
 				047B46972131D8D8008E4798 /* OverviewViewController.swift */,
 			);
@@ -492,6 +495,7 @@
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				040BCB7021348F9300EA80F7 /* ServerList.swift in Sources */,
 				040BCB5E213448EC00EA80F7 /* SessionFeatures.swift in Sources */,
+				04CD63E2214D414A00D5B240 /* OverviewCellItem.swift in Sources */,
 				04021B7C2133185200B474B2 /* MessageCell.swift in Sources */,
 				04021B762132F04000B474B2 /* LoadingCell.swift in Sources */,
 				04021B732132EDED00B474B2 /* ServerDetailCell.swift in Sources */,

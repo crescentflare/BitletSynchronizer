@@ -35,7 +35,7 @@ class ServerDetailViewController: UITableViewController {
     // --
     
     var serverId: String?
-    var cellItems = [ServerDetailCellItem]()
+    private var cellItems = [ServerDetailCellItem]()
 
     
     // --

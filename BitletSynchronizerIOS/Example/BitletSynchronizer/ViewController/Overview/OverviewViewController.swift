@@ -38,6 +38,8 @@ class OverviewViewController: UITableViewController {
     // --
     
     private var lastSelectedServerId: String?
+    private var usageCellItems = [OverviewCellItem]()
+    private var serverCellItems = [OverviewCellItem]()
 
     
     // --
@@ -47,6 +49,7 @@ class OverviewViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadData(forced: false)
+        refreshCellItems()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -69,7 +72,35 @@ class OverviewViewController: UITableViewController {
         }
     }
 
+    private func refreshCellItems() {
+        // Refresh usage
+        usageCellItems = []
+        if let usage = cachedUsage() {
+            usageCellItems.append(OverviewCellItem(withUsageLabel: NSLocalizedString("OVERVIEW_USAGE_DATA_TRAFFIC", comment: ""), andValue: usage.dataTraffic?.label ?? ""))
+            usageCellItems.append(OverviewCellItem(withUsageLabel: NSLocalizedString("OVERVIEW_USAGE_SERVER_LOAD", comment: ""), andValue: usage.serverLoad?.label ?? ""))
+        } else if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading {
+            usageCellItems.append(OverviewCellItem(withLoadingText: NSLocalizedString("OVERVIEW_USAGE_LOADING", comment: "")))
+        } else {
+            usageCellItems.append(OverviewCellItem(withErrorText: NSLocalizedString("OVERVIEW_USAGE_ERROR", comment: "")))
+        }
 
+        // Refresh server list
+        serverCellItems = []
+        if let serverList = cachedServerList() {
+            for server in serverList.servers {
+                serverCellItems.append(OverviewCellItem(withServerName: server.name ?? "", andLocation: server.location ?? "", enabled: server.enabled ?? false))
+            }
+        } else if BitletSynchronizer.shared.cacheState(forKey: ServerList.bitlet().cacheKey) == .loading {
+            serverCellItems.append(OverviewCellItem(withLoadingText: NSLocalizedString("OVERVIEW_SERVER_LOADING", comment: "")))
+        } else {
+            serverCellItems.append(OverviewCellItem(withErrorText: NSLocalizedString("OVERVIEW_SERVER_ERROR", comment: "")))
+        }
+        
+        // Refresh table view
+        self.tableView.reloadData()
+    }
+
+    
     // --
     // MARK: IB Actions
     // --
@@ -77,7 +108,7 @@ class OverviewViewController: UITableViewController {
     @objc @IBAction func pulledToRefresh() {
         loadData(forced: true)
         if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading || BitletSynchronizer.shared.cacheState(forKey: ServerList.bitlet().cacheKey) == .loading {
-            self.tableView.reloadData()
+            refreshCellItems()
         }
     }
     
@@ -101,7 +132,7 @@ class OverviewViewController: UITableViewController {
             if let error = error {
                 self.showErrorToast(error)
             }
-            self.tableView.reloadData()
+            self.refreshCellItems()
             callsBusy -= 1
             if callsBusy <= 0 && forced {
                 self.refreshControl?.endRefreshing()
@@ -113,7 +144,7 @@ class OverviewViewController: UITableViewController {
             if let error = error {
                 self.showErrorToast(error)
             }
-            self.tableView.reloadData()
+            self.refreshCellItems()
             callsBusy -= 1
             if callsBusy <= 0 && forced {
                 self.refreshControl?.endRefreshing()
@@ -165,15 +196,9 @@ class OverviewViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let section = OverviewSection(rawValue: section) {
             if section == .usage {
-                if cachedUsage() == nil {
-                    return 1
-                }
-                return 2
+                return usageCellItems.count
             } else if section == .server {
-                if cachedServerList() == nil {
-                    return 1
-                }
-                return cachedServerList()?.servers.count ?? 0
+                return serverCellItems.count
             }
         }
         return 0
@@ -181,45 +206,24 @@ class OverviewViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let section = OverviewSection(rawValue: indexPath.section) {
-            if section == .usage {
-                if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
-                    cell.selectionStyle = .none
-                    cell.label = NSLocalizedString("OVERVIEW_USAGE_LOADING", comment: "")
-                    return cell
-                } else if cachedUsage() == nil, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
-                    cell.selectionStyle = .none
-                    cell.label = NSLocalizedString("OVERVIEW_USAGE_ERROR", comment: "")
-                    return cell
-                } else if let cell = tableView.dequeueReusableCell(withIdentifier: OverviewCell.cellIdentifier) as? OverviewCell {
-                    cell.selectionStyle = .none
-                    if let row = OverviewUsageRow(rawValue: indexPath.row) {
-                        if row == .traffic {
-                            cell.label = NSLocalizedString("OVERVIEW_USAGE_DATA_TRAFFIC", comment: "")
-                            cell.value = cachedUsage()?.dataTraffic?.label ?? ""
-                        } else if row == .load {
-                            cell.label = NSLocalizedString("OVERVIEW_USAGE_SERVER_LOAD", comment: "")
-                            cell.value = cachedUsage()?.serverLoad?.label ?? ""
-                        }
-                    }
-                    return cell
-                }
-            } else if section == .server {
-                if BitletSynchronizer.shared.cacheState(forKey: ServerList.bitlet().cacheKey) == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
-                    cell.selectionStyle = .none
-                    cell.label = NSLocalizedString("OVERVIEW_SERVER_LOADING", comment: "")
-                    return cell
-                } else if cachedServerList() == nil, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
-                    cell.selectionStyle = .none
-                    cell.label = NSLocalizedString("OVERVIEW_SERVER_ERROR", comment: "")
-                    return cell
-                } else if let cell = tableView.dequeueReusableCell(withIdentifier: ServerCell.cellIdentifier) as? ServerCell {
-                    if indexPath.row < cachedServerList()?.servers.count ?? 0, let server = cachedServerList()?.servers[indexPath.row] {
-                        cell.label = server.name ?? ""
-                        cell.additional = server.location ?? ""
-                        cell.value = NSLocalizedString((server.enabled ?? false) ? "OVERVIEW_SERVER_ENABLED" : "OVERVIEW_SERVER_DISABLED", comment: "")
-                    }
-                    return cell
-                }
+            let cellItems = section == .server ? serverCellItems : usageCellItems
+            let cellItem = cellItems[indexPath.row]
+            if cellItem.type == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
+                cell.label = cellItem.label
+                return cell
+            } else if cellItem.type == .error, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
+                cell.selectionStyle = .none
+                cell.label = cellItem.label
+                return cell
+            } else if cellItem.type == .usage, let cell = tableView.dequeueReusableCell(withIdentifier: OverviewCell.cellIdentifier) as? OverviewCell {
+                cell.label = cellItem.label
+                cell.value = cellItem.value
+                return cell
+            } else if cellItem.type == .server, let cell = tableView.dequeueReusableCell(withIdentifier: ServerCell.cellIdentifier) as? ServerCell {
+                cell.label = cellItem.label
+                cell.additional = cellItem.additional
+                cell.value = cellItem.value
+                return cell
             }
         }
         return UITableViewCell()
