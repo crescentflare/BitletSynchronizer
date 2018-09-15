@@ -53,10 +53,6 @@ class ServerDetailViewController: UITableViewController {
     // MARK: Data loading
     // --
     
-    private func cachedServer() -> Server? {
-        return BitletSynchronizer.shared.cachedBitlet(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) as? Server
-    }
-
     private func loadData(forced: Bool) {
         BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), cacheKey: Server.bitlet(serverId: serverId ?? "").cacheKey, forced: forced, completion: { server, error in
             if let error = error {
@@ -79,7 +75,7 @@ class ServerDetailViewController: UITableViewController {
     
     private func refreshCellItems() {
         cellItems = []
-        if let server = cachedServer() {
+        if let server = BitletSynchronizer.shared.cachedBitlet(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) as? Server {
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_NAME", comment: ""), andValue: server.name ?? ""))
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_DESCRIPTION", comment: ""), andValue: server.description ?? ""))
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_OPERATING_SYSTEM", comment: ""), andValue: (server.os ?? "") + " " + (server.osVersion ?? "")))

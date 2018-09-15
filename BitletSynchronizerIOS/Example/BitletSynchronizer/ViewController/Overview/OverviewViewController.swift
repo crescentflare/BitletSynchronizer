@@ -75,7 +75,7 @@ class OverviewViewController: UITableViewController {
     private func refreshCellItems() {
         // Refresh usage
         usageCellItems = []
-        if let usage = cachedUsage() {
+        if let usage = BitletSynchronizer.shared.cachedBitlet(forKey: Usage.bitlet().cacheKey) as? Usage {
             usageCellItems.append(OverviewCellItem(withUsageLabel: NSLocalizedString("OVERVIEW_USAGE_DATA_TRAFFIC", comment: ""), andValue: usage.dataTraffic?.label ?? ""))
             usageCellItems.append(OverviewCellItem(withUsageLabel: NSLocalizedString("OVERVIEW_USAGE_SERVER_LOAD", comment: ""), andValue: usage.serverLoad?.label ?? ""))
         } else if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading {
@@ -86,7 +86,7 @@ class OverviewViewController: UITableViewController {
 
         // Refresh server list
         serverCellItems = []
-        if let serverList = cachedServerList() {
+        if let serverList = BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.bitlet().cacheKey) as? ServerList {
             for server in serverList.servers {
                 serverCellItems.append(OverviewCellItem(withServerName: server.name ?? "", andLocation: server.location ?? "", enabled: server.enabled ?? false))
             }
@@ -116,14 +116,6 @@ class OverviewViewController: UITableViewController {
     // --
     // MARK: Data loading
     // --
-    
-    private func cachedUsage() -> Usage? {
-        return BitletSynchronizer.shared.cachedBitlet(forKey: Usage.bitlet().cacheKey) as? Usage
-    }
-    
-    private func cachedServerList() -> ServerList? {
-        return BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.bitlet().cacheKey) as? ServerList
-    }
     
     private func loadData(forced: Bool) {
         // Load usage
@@ -166,7 +158,7 @@ class OverviewViewController: UITableViewController {
     // --
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let serverList = cachedServerList(), indexPath.section == OverviewSection.server.rawValue {
+        if let serverList = BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.bitlet().cacheKey) as? ServerList, indexPath.section == OverviewSection.server.rawValue {
             lastSelectedServerId = serverList.servers[indexPath.row].serverId
             performSegue(withIdentifier: ServerDetailViewController.segueIdentifier, sender: self)
         }
@@ -209,6 +201,7 @@ class OverviewViewController: UITableViewController {
             let cellItems = section == .server ? serverCellItems : usageCellItems
             let cellItem = cellItems[indexPath.row]
             if cellItem.type == .loading, let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.cellIdentifier) as? LoadingCell {
+                cell.selectionStyle = .none
                 cell.label = cellItem.label
                 return cell
             } else if cellItem.type == .error, let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.cellIdentifier) as? ErrorCell {
@@ -216,6 +209,7 @@ class OverviewViewController: UITableViewController {
                 cell.label = cellItem.label
                 return cell
             } else if cellItem.type == .usage, let cell = tableView.dequeueReusableCell(withIdentifier: OverviewCell.cellIdentifier) as? OverviewCell {
+                cell.selectionStyle = .none
                 cell.label = cellItem.label
                 cell.value = cellItem.value
                 return cell
