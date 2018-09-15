@@ -236,6 +236,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="activityIndicatorView" destination="ckF-eC-unY" id="tS7-ca-IQp"/>
                                     <outlet property="labelView" destination="hsm-tQ-0Ss" id="CHV-Sb-Rzh"/>
                                 </connections>
                             </tableViewCell>
@@ -407,6 +408,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="activityIndicatorView" destination="8oa-aL-yXT" id="dyk-BK-p6a"/>
                                     <outlet property="labelView" destination="fRe-DU-c2j" id="ziG-KH-qwC"/>
                                 </connections>
                             </tableViewCell>
