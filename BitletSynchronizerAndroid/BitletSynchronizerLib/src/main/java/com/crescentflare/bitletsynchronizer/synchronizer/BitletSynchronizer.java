@@ -43,7 +43,7 @@ public class BitletSynchronizer
     @SuppressWarnings("unchecked")
     public <T> void load(BitletHandler<T> bitletHandler, String cacheKey, boolean forced, final BitletResultObserver.CompletionListener<T> completionListener)
     {
-        if (cacheKey != null)
+        if (cache != null && cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
@@ -88,7 +88,7 @@ public class BitletSynchronizer
     @SuppressWarnings("unchecked")
     public <T> void load(BitletHandler<T> bitletHandler, String cacheKey, boolean forced, final BitletResultObserver.SimpleCompletionListener<T> completionListener)
     {
-        if (cacheKey != null)
+        if (cache != null && cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
@@ -123,19 +123,40 @@ public class BitletSynchronizer
     // Cache control
     // ---
 
+    public Object getCachedBitlet(String cacheKey)
+    {
+        if (cache != null && cache.getEntry(cacheKey) != null)
+        {
+            return cache.getEntry(cacheKey).getBitletData();
+        }
+        return null;
+    }
+
+    public BitletCacheEntry.State getCacheState(String cacheKey)
+    {
+        if (cache != null && cache.getEntry(cacheKey) != null && cache.getEntry(cacheKey).getState() != null)
+        {
+            return cache.getEntry(cacheKey).getState();
+        }
+        return BitletCacheEntry.State.Unavailable;
+    }
+
     public void clearCache()
     {
-        cache.clear("*", true);
+        clearCache("*", true);
     }
 
     public void clearCache(String filter)
     {
-        cache.clear(filter, true);
+        clearCache(filter, true);
     }
 
     public void clearCache(String filter, boolean recursive)
     {
-        cache.clear(filter, recursive);
+        if (cache != null)
+        {
+            cache.clear(filter, recursive);
+        }
     }
 
     public BitletCache getCache()
