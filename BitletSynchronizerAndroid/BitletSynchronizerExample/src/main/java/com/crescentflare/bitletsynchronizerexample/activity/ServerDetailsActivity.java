@@ -106,16 +106,6 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
     // Data loading
     // ---
 
-    private Server cachedServer()
-    {
-        Object cachedObject = BitletSynchronizer.instance.getCachedBitlet(Server.cacheKey(serverId));
-        if (cachedObject instanceof Server)
-        {
-            return (Server)cachedObject;
-        }
-        return null;
-    }
-
     @Override
     public void onRefresh()
     {
@@ -172,7 +162,7 @@ public class ServerDetailsActivity extends AppCompatActivity implements SwipeRef
 
     public void refreshView()
     {
-        Server cachedServer = cachedServer();
+        Server cachedServer = BitletSynchronizer.instance.getCachedBitlet(Server.cacheKey(serverId), Server.class);
         BitletCacheEntry.State cacheState = BitletSynchronizer.instance.getCacheState(Server.cacheKey(serverId));
         findViewById(R.id.activity_server_details_loading).setVisibility(cachedServer == null && cacheState == BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
         findViewById(R.id.activity_server_details_error).setVisibility(cachedServer == null && cacheState != BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);

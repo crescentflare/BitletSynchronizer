@@ -123,26 +123,6 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     // Data loading
     // ---
 
-    private Usage getCachedUsage()
-    {
-        Object cachedObject = BitletSynchronizer.instance.getCachedBitlet(Usage.cacheKey());
-        if (cachedObject instanceof Usage)
-        {
-            return (Usage)cachedObject;
-        }
-        return null;
-    }
-
-    private ServerList getCachedServerList()
-    {
-        Object cachedObject = BitletSynchronizer.instance.getCachedBitlet(ServerList.cacheKey());
-        if (cachedObject instanceof ServerList)
-        {
-            return (ServerList)cachedObject;
-        }
-        return null;
-    }
-
     @Override
     public void onRefresh()
     {
@@ -228,7 +208,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
 
     public void refreshUsage()
     {
-        Usage cachedUsage = getCachedUsage();
+        Usage cachedUsage = BitletSynchronizer.instance.getCachedBitlet(Usage.cacheKey(), Usage.class);
         BitletCacheEntry.State cacheState = BitletSynchronizer.instance.getCacheState(Usage.cacheKey());
         findViewById(R.id.activity_overview_usage_loading).setVisibility(cachedUsage == null && cacheState == BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
         findViewById(R.id.activity_overview_usage_error).setVisibility(cachedUsage == null && cacheState != BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
@@ -242,7 +222,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
 
     public void refreshServerList()
     {
-        ServerList cachedServerList = getCachedServerList();
+        ServerList cachedServerList = BitletSynchronizer.instance.getCachedBitlet(ServerList.cacheKey(), ServerList.class);
         BitletCacheEntry.State cacheState = BitletSynchronizer.instance.getCacheState(ServerList.cacheKey());
         findViewById(R.id.activity_overview_servers_loading).setVisibility(cachedServerList == null && cacheState == BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);
         findViewById(R.id.activity_overview_servers_error).setVisibility(cachedServerList == null && cacheState != BitletCacheEntry.State.Loading ? View.VISIBLE : View.GONE);

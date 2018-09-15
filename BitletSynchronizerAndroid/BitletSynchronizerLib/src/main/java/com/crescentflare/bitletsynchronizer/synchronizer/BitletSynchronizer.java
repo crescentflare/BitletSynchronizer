@@ -114,6 +114,17 @@ public class BitletSynchronizer
         return null;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getCachedBitlet(String cacheKey, Class<T> classType)
+    {
+        Object bitlet = getCachedBitlet(cacheKey);
+        if (classType.isInstance(bitlet))
+        {
+            return (T)bitlet;
+        }
+        return null;
+    }
+
     public BitletCacheEntry.State getCacheState(String cacheKey)
     {
         if (cache != null && cache.getEntry(cacheKey) != null && cache.getEntry(cacheKey).getState() != null)
