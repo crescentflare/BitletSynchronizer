@@ -42,8 +42,6 @@ public class Api
 
     private Retrofit retrofit = null;
     private SessionService sessionService = null;
-    private UsageService usage = null;
-    private ServersService servers = null;
     private ModelService model = null;
     private String cookie = null;
 
@@ -74,8 +72,6 @@ public class Api
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         sessionService = retrofit.create(SessionService.class);
-        usage = retrofit.create(UsageService.class);
-        servers = retrofit.create(ServersService.class);
         model = retrofit.create(ModelService.class);
     }
 
@@ -87,16 +83,6 @@ public class Api
     public SessionService session()
     {
         return sessionService;
-    }
-
-    public UsageService usage()
-    {
-        return usage;
-    }
-
-    public ServersService servers()
-    {
-        return servers;
     }
 
     public ModelService model()
