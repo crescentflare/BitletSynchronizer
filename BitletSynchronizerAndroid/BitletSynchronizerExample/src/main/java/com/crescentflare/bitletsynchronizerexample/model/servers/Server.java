@@ -4,11 +4,15 @@ import android.text.TextUtils;
 
 import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
 import com.crescentflare.bitletsynchronizer.bitlet.BitletObserver;
+import com.crescentflare.bitletsynchronizerexample.MapUtil;
 import com.crescentflare.bitletsynchronizerexample.Settings;
+import com.crescentflare.bitletsynchronizerexample.model.shared.SimpleBitlet;
 import com.crescentflare.bitletsynchronizerexample.model.usage.UsageItem;
 import com.crescentflare.bitletsynchronizerexample.model.usage.UsageUnit;
 import com.crescentflare.bitletsynchronizerexample.network.Api;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,71 +65,28 @@ public class Server
         return "/servers/" + serverId;
     }
 
-    public static BitletHandler<Server> bitletInstance(final String serverId)
+    public static SimpleBitlet<Server> bitletInstance(final String serverId)
     {
-        if (TextUtils.isEmpty(Settings.instance.getServerAddress()))
-        {
-            return mockedBitletInstance(serverId);
-        }
-        return new BitletHandler<Server>()
-        {
-            @Override
-            public void load(final BitletObserver<Server> observer)
-            {
-                Api.getInstance(Settings.instance.getServerAddress()).servers().getServerDetails(serverId).enqueue(new Callback<Server>()
-                {
-                    @Override
-                    public void onResponse(Call<Server> call, Response<Server> response)
-                    {
-                        observer.setBitlet(response.body());
-                        observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
-                        observer.finish();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Server> call, Throwable exception)
-                    {
-                        observer.setException(exception);
-                        observer.finish();
-                    }
-                });
-            }
-        };
-    }
-
-    private static BitletHandler<Server> mockedBitletInstance(final String serverId)
-    {
-        return new BitletHandler<Server>()
-        {
-            @Override
-            public void load(final BitletObserver<Server> observer)
-            {
-                // Mock object
-                Server server = new Server();
-                UsageItem dataTraffic = new UsageItem();
-                UsageItem serverLoad = new UsageItem();
-                dataTraffic.setAmount(2.0f);
-                dataTraffic.setUnit(UsageUnit.GB);
-                dataTraffic.setLabel("2.0 GB");
-                serverLoad.setAmount(10.0f);
-                serverLoad.setUnit(UsageUnit.Percent);
-                serverLoad.setLabel("10%");
-                server.setServerId("mocked");
-                server.setName("Mock server");
-                server.setDescription("Internal mocked data");
-                server.setOs("Unknown");
-                server.setOsVersion("1.0");
-                server.setLocation("Home");
-                server.setDataTraffic(dataTraffic);
-                server.setServerLoad(serverLoad);
-                server.setEnabled(true);
-
-                // Inform observer
-                observer.setBitlet(server);
-                observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
-                observer.finish();
-            }
-        };
+        Map<String, Object> mockedData = MapUtil.newMap(
+                "id", "mocked",
+                "name", "Mock server",
+                "description", "Internal mocked data",
+                "os", "Unknown",
+                "os_version", "1.0",
+                "location", "Home",
+                "data_traffic", MapUtil.newMap(
+                        "amount", 2.0,
+                        "unit", "GB",
+                        "label", "2.0 GB"
+                ),
+                "server_load", MapUtil.newMap(
+                        "amount", 10,
+                        "unit", "percent",
+                        "label", "10%"
+                ),
+                "enabled", true
+        );
+        return new SimpleBitlet<>("/servers/" + serverId, 10 * 60 * 1000, mockedData, Server.class);
     }
 
 
