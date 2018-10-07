@@ -1,6 +1,7 @@
 package com.crescentflare.bitletsynchronizer.synchronizer;
 
 import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
+import com.crescentflare.bitletsynchronizer.bitlet.BitletObserver;
 import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
 import com.crescentflare.bitletsynchronizer.cache.BitletCache;
 import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
@@ -123,6 +124,30 @@ public class BitletSynchronizer
             return (T)bitlet;
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> BitletCacheEntry<T> getCacheEntry(String cacheKey, Class<T> classType)
+    {
+        BitletCacheEntry<T> cacheEntry = new BitletCacheEntry<>(new BitletHandler<T>()
+        {
+            @Override
+            public void load(BitletObserver<T> observer)
+            {
+                // No implementation
+            }
+        });
+        if (cache != null)
+        {
+            BitletCacheEntry<Object> checkEntry = cache.getEntry(cacheKey);
+            if (checkEntry != null && classType.isInstance(checkEntry.getBitletData()))
+            {
+                cacheEntry.setState(checkEntry.getState());
+                cacheEntry.setBitletData((T)checkEntry.getBitletData());
+                cacheEntry.setBitletExpireTime(checkEntry.getBitletExpireTime());
+            }
+        }
+        return cacheEntry;
     }
 
     public BitletCacheEntry.State getCacheState(String cacheKey)
