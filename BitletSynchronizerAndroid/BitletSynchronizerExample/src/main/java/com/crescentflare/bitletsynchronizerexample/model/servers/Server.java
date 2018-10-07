@@ -1,22 +1,11 @@
 package com.crescentflare.bitletsynchronizerexample.model.servers;
 
-import android.text.TextUtils;
-
-import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
-import com.crescentflare.bitletsynchronizer.bitlet.BitletObserver;
 import com.crescentflare.bitletsynchronizerexample.MapUtil;
-import com.crescentflare.bitletsynchronizerexample.Settings;
 import com.crescentflare.bitletsynchronizerexample.model.shared.SimpleBitlet;
 import com.crescentflare.bitletsynchronizerexample.model.usage.UsageItem;
-import com.crescentflare.bitletsynchronizerexample.model.usage.UsageUnit;
-import com.crescentflare.bitletsynchronizerexample.network.Api;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Server model: a server

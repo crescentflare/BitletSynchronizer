@@ -1,30 +1,24 @@
 package com.crescentflare.bitletsynchronizerexample.model.servers;
 
-import android.text.TextUtils;
+import com.crescentflare.bitletsynchronizerexample.MapUtil;
+import com.crescentflare.bitletsynchronizerexample.model.shared.SimpleArrayBitlet;
+import com.google.gson.reflect.TypeToken;
 
-import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
-import com.crescentflare.bitletsynchronizer.bitlet.BitletObserver;
-import com.crescentflare.bitletsynchronizerexample.Settings;
-import com.crescentflare.bitletsynchronizerexample.network.Api;
-
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Map;
 
 /**
  * Server model: simple server list
  * Stores an overview of all servers without details
  */
-public class ServerList
+public class ServerList implements SimpleArrayBitlet.ArrayModel<Server>
 {
     // ---
     // Members
     // ---
 
-    private List<Server> servers;
+    private List<Server> items;
 
 
     // ---
@@ -36,64 +30,17 @@ public class ServerList
         return "/servers";
     }
 
-    public static BitletHandler<ServerList> bitletInstance()
+    public static SimpleArrayBitlet<ServerList, Server> bitletInstance()
     {
-        if (TextUtils.isEmpty(Settings.instance.getServerAddress()))
+        List<Map<String, Object>> mockedData = Collections.singletonList(MapUtil.newMap(
+                "id", "mocked",
+                "name", "Mock server",
+                "location", "Home",
+                "enabled", true
+        ));
+        return new SimpleArrayBitlet<>("/servers", 10 * 60 * 1000, mockedData, ServerList.class, new TypeToken<List<Server>>()
         {
-            return mockedBitletInstance();
-        }
-        return new BitletHandler<ServerList>()
-        {
-            @Override
-            public void load(final BitletObserver<ServerList> observer)
-            {
-                Api.getInstance(Settings.instance.getServerAddress()).servers().getServerList().enqueue(new Callback<List<Server>>()
-                {
-                    @Override
-                    public void onResponse(Call<List<Server>> call, Response<List<Server>> response)
-                    {
-                        ServerList serverList = new ServerList();
-                        serverList.setServers(response.body());
-                        observer.setBitlet(serverList);
-                        observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
-                        observer.finish();
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Server>> call, Throwable exception)
-                    {
-                        observer.setException(exception);
-                        observer.finish();
-                    }
-                });
-            }
-        };
-    }
-
-    private static BitletHandler<ServerList> mockedBitletInstance()
-    {
-        return new BitletHandler<ServerList>()
-        {
-            @Override
-            public void load(final BitletObserver<ServerList> observer)
-            {
-                // Mock object
-                ServerList serverList = new ServerList();
-                List<Server> servers = new ArrayList<>();
-                Server server = new Server();
-                server.setServerId("mocked");
-                server.setName("Mock server");
-                server.setLocation("Home");
-                server.setEnabled(true);
-                servers.add(server);
-                serverList.setServers(servers);
-
-                // Inform observer
-                observer.setBitlet(serverList);
-                observer.setBitletExpireTime(System.currentTimeMillis() + 10 * 60 * 1000);
-                observer.finish();
-            }
-        };
+        }.getType());
     }
 
 
@@ -101,21 +48,21 @@ public class ServerList
     // Generated code
     // ---
 
-    public List<Server> getServers()
+    public List<Server> getItemList()
     {
-        return servers;
+        return items;
     }
 
-    public void setServers(List<Server> servers)
+    public void setItemList(List<Server> items)
     {
-        this.servers = servers;
+        this.items = items;
     }
 
     @Override
     public String toString()
     {
         return "ServerList{" +
-                "servers=" + servers +
+                "items=" + items +
                 '}';
     }
 }

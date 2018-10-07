@@ -232,7 +232,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
             int minHeight = getResources().getDimensionPixelOffset(R.dimen.item_min_height);
             boolean firstItem = true;
             listContainer.removeAllViews();
-            for (Server server : cachedServerList.getServers())
+            for (Server server : cachedServerList.getItemList())
             {
                 // Add dividers in between item views
                 if (!firstItem)
