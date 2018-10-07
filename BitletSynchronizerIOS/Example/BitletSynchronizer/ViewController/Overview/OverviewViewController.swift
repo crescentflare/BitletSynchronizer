@@ -47,7 +47,7 @@ class OverviewViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if isMovingFromParentViewController {
+        if isMovingFromParent {
             if let serverAddress = Settings.serverAddress {
                 Alamofire.request(serverAddress + "/sessions/" + (Settings.sessionCookie ?? ""), method: .delete).response { response in
                     // No implementation
@@ -61,7 +61,7 @@ class OverviewViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ServerDetailViewController.segueIdentifier {
-            (segue.destination.childViewControllers[0] as? ServerDetailViewController)?.serverId = lastSelectedServerId
+            (segue.destination.children[0] as? ServerDetailViewController)?.serverId = lastSelectedServerId
         }
     }
 
