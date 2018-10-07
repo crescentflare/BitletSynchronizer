@@ -68,10 +68,10 @@ class OverviewViewController: UITableViewController {
     private func refreshCellItems() {
         // Refresh usage
         usageCellItems = []
-        if let usage = BitletSynchronizer.shared.cachedBitlet(forKey: Usage.bitlet().cacheKey) as? Usage {
+        if let usage = BitletSynchronizer.shared.cachedBitlet(forKey: Usage.cacheKey) as? Usage {
             usageCellItems.append(OverviewCellItem(withUsageLabel: NSLocalizedString("OVERVIEW_USAGE_DATA_TRAFFIC", comment: ""), andValue: usage.dataTraffic?.label ?? ""))
             usageCellItems.append(OverviewCellItem(withUsageLabel: NSLocalizedString("OVERVIEW_USAGE_SERVER_LOAD", comment: ""), andValue: usage.serverLoad?.label ?? ""))
-        } else if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading {
+        } else if BitletSynchronizer.shared.cacheState(forKey: Usage.cacheKey) == .loading {
             usageCellItems.append(OverviewCellItem(withLoadingText: NSLocalizedString("OVERVIEW_USAGE_LOADING", comment: "")))
         } else {
             usageCellItems.append(OverviewCellItem(withErrorText: NSLocalizedString("OVERVIEW_USAGE_ERROR", comment: "")))
@@ -79,11 +79,11 @@ class OverviewViewController: UITableViewController {
 
         // Refresh server list
         serverCellItems = []
-        if let serverList = BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.bitlet().cacheKey) as? ServerList {
-            for server in serverList.servers {
+        if let serverList = BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.cacheKey) as? ServerList {
+            for server in serverList.itemList {
                 serverCellItems.append(OverviewCellItem(withServerName: server.name ?? "", andLocation: server.location ?? "", enabled: server.enabled ?? false))
             }
-        } else if BitletSynchronizer.shared.cacheState(forKey: ServerList.bitlet().cacheKey) == .loading {
+        } else if BitletSynchronizer.shared.cacheState(forKey: ServerList.cacheKey) == .loading {
             serverCellItems.append(OverviewCellItem(withLoadingText: NSLocalizedString("OVERVIEW_SERVER_LOADING", comment: "")))
         } else {
             serverCellItems.append(OverviewCellItem(withErrorText: NSLocalizedString("OVERVIEW_SERVER_ERROR", comment: "")))
@@ -100,7 +100,7 @@ class OverviewViewController: UITableViewController {
     
     @objc @IBAction func pulledToRefresh() {
         loadData(forced: true)
-        if BitletSynchronizer.shared.anyCacheInState(.loading, forKeys: [Usage.bitlet().cacheKey, ServerList.bitlet().cacheKey]) {
+        if BitletSynchronizer.shared.anyCacheInState(.loading, forKeys: [Usage.cacheKey, ServerList.cacheKey]) {
             refreshCellItems()
         }
     }
@@ -112,8 +112,8 @@ class OverviewViewController: UITableViewController {
     
     private func loadData(forced: Bool) {
         // Load usage
-        let checkCaches = [Usage.bitlet().cacheKey, ServerList.bitlet().cacheKey]
-        BitletSynchronizer.shared.loadBitlet(Usage.bitlet(), cacheKey: Usage.bitlet().cacheKey, forced: forced, completion: { usage, error in
+        let checkCaches = [Usage.cacheKey, ServerList.cacheKey]
+        BitletSynchronizer.shared.loadBitlet(Usage.bitlet(), cacheKey: Usage.cacheKey, forced: forced, completion: { usage, error in
             if let error = error {
                 self.showErrorToast(error)
             }
@@ -124,7 +124,7 @@ class OverviewViewController: UITableViewController {
         })
         
         // Load server list
-        BitletSynchronizer.shared.loadBitlet(ServerList.bitlet(), cacheKey: ServerList.bitlet().cacheKey, forced: forced, completion: { serverList, error in
+        BitletSynchronizer.shared.loadBitlet(ServerList.bitlet(), cacheKey: ServerList.cacheKey, forced: forced, completion: { serverList, error in
             if let error = error {
                 self.showErrorToast(error)
             }
@@ -149,8 +149,8 @@ class OverviewViewController: UITableViewController {
     // --
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let serverList = BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.bitlet().cacheKey) as? ServerList, indexPath.section == OverviewSection.server.rawValue {
-            lastSelectedServerId = serverList.servers[indexPath.row].serverId
+        if let serverList = BitletSynchronizer.shared.cachedBitlet(forKey: ServerList.cacheKey) as? ServerList, indexPath.section == OverviewSection.server.rawValue {
+            lastSelectedServerId = serverList.itemList[indexPath.row].serverId
             performSegue(withIdentifier: ServerDetailViewController.segueIdentifier, sender: self)
         }
         tableView.deselectRow(at: indexPath, animated: false)

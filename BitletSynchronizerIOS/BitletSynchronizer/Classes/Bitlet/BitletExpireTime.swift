@@ -30,7 +30,19 @@ public struct BitletExpireTime: Comparable {
         self.rawValue = rawValue
     }
     
+    public init(withSeconds: Int) {
+        self.rawValue = TimeInterval(withSeconds)
+    }
 
+    public init(withMinutes: Int) {
+        self.rawValue = TimeInterval(withMinutes * 60)
+    }
+
+    public init(withHours: Int) {
+        self.rawValue = TimeInterval(withHours * 3600)
+    }
+
+    
     // --
     // MARK: Utility functions
     // --

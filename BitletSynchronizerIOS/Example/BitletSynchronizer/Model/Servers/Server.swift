@@ -53,68 +53,31 @@ class Server: Mappable {
     // MARK: Bitlet integration
     // --
     
-    class func bitlet(serverId: String) -> BitletClass {
-        return Settings.serverAddress?.count ?? 0 > 0 ? BitletClass(serverId) : MockedBitletClass(serverId)
+    class func cacheKey(_ serverId: String) -> String {
+        return "/servers/" + serverId
     }
     
-    class BitletClass: BitletHandler {
-        
-        typealias BitletData = Server
-        
-        let cacheKey: String
-        
-        private let serverId: String
-        
-        init(_ serverId: String) {
-            cacheKey = "/servers/" + serverId
-            self.serverId = serverId
-        }
-        
-        func load(observer: BitletObserver<BitletData>) {
-            if let serverAddress = Settings.serverAddress, serverAddress.count > 0 {
-                Alamofire.request(serverAddress + "/servers/" + serverId).responseObject { (response: DataResponse<Server>) in
-                    if let server = response.value {
-                        observer.bitlet = server
-                        observer.bitletExpireTime = .minutesFromNow(10)
-                    } else if let error = response.error {
-                        observer.error = error
-                    }
-                    observer.finish()
-                }
-            }
-        }
-        
-    }
-
-    class MockedBitletClass: BitletClass {
-        
-        override func load(observer: BitletObserver<BitletData>) {
-            let mockedJson: [String: Any] = [
-                "id": "mocked",
-                "name": "Mock server",
-                "description": "Internal mocked data",
-                "os": "Unknown",
-                "os_version": "1.0",
-                "location": "Home",
-                "data_traffic": [
-                    "amount": 2.0,
-                    "unit": "GB",
-                    "label": "2.0 GB"
-                ],
-                "server_load": [
-                    "amount": 10,
-                    "unit": "percent",
-                    "label": "10%"
-                ],
-                "enabled": true
-            ]
-            if let server = Mapper<Server>().map(JSONObject: mockedJson) {
-                observer.bitlet = server
-                observer.bitletExpireTime = .minutesFromNow(10)
-            }
-            observer.finish()
-        }
-        
+    class func bitlet(serverId: String) -> SimpleBitlet<Server> {
+        let mockedJson: [String: Any] = [
+            "id": "mocked",
+            "name": "Mock server",
+            "description": "Internal mocked data",
+            "os": "Unknown",
+            "os_version": "1.0",
+            "location": "Home",
+            "data_traffic": [
+                "amount": 2.0,
+                "unit": "GB",
+                "label": "2.0 GB"
+            ],
+            "server_load": [
+                "amount": 10,
+                "unit": "percent",
+                "label": "10%"
+            ],
+            "enabled": true
+        ]
+        return SimpleBitlet<Server>(path: "/servers/\(serverId)", expireTime: .init(withMinutes: 10), mockedJson: mockedJson)
     }
 
 }
