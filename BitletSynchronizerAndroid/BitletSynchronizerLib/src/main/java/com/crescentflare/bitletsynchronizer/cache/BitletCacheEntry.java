@@ -145,10 +145,14 @@ public class BitletCacheEntry<T>
 
     public enum State
     {
+        // Used to store state
         Unavailable,
         Loading,
         Ready,
-        Refreshing
+        Refreshing,
+
+        // Used only for checking
+        LoadingOrRefreshing
     }
 
 

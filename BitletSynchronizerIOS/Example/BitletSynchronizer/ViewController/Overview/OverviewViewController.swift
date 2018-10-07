@@ -100,7 +100,7 @@ class OverviewViewController: UITableViewController {
     
     @objc @IBAction func pulledToRefresh() {
         loadData(forced: true)
-        if BitletSynchronizer.shared.cacheState(forKey: Usage.bitlet().cacheKey) == .loading || BitletSynchronizer.shared.cacheState(forKey: ServerList.bitlet().cacheKey) == .loading {
+        if BitletSynchronizer.shared.anyCacheInState(.loading, forKeys: [Usage.bitlet().cacheKey, ServerList.bitlet().cacheKey]) {
             refreshCellItems()
         }
     }
@@ -112,14 +112,13 @@ class OverviewViewController: UITableViewController {
     
     private func loadData(forced: Bool) {
         // Load usage
-        var callsBusy = 2
+        let checkCaches = [Usage.bitlet().cacheKey, ServerList.bitlet().cacheKey]
         BitletSynchronizer.shared.loadBitlet(Usage.bitlet(), cacheKey: Usage.bitlet().cacheKey, forced: forced, completion: { usage, error in
             if let error = error {
                 self.showErrorToast(error)
             }
             self.refreshCellItems()
-            callsBusy -= 1
-            if callsBusy <= 0 && forced {
+            if forced && !BitletSynchronizer.shared.anyCacheInState(.loadingOrRefreshing, forKeys: checkCaches) {
                 self.refreshControl?.endRefreshing()
             }
         })
@@ -130,8 +129,7 @@ class OverviewViewController: UITableViewController {
                 self.showErrorToast(error)
             }
             self.refreshCellItems()
-            callsBusy -= 1
-            if callsBusy <= 0 && forced {
+            if forced && !BitletSynchronizer.shared.anyCacheInState(.loadingOrRefreshing, forKeys: checkCaches) {
                 self.refreshControl?.endRefreshing()
             }
         })

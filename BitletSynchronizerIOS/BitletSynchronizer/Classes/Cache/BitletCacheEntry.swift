@@ -8,11 +8,15 @@
 
 public enum BitletCacheState {
     
+    // Used to store state
     case unavailable
     case loading
     case ready
     case refreshing
     
+    // Only used for checking
+    case loadingOrRefreshing
+
 }
 
 public class BitletCacheEntry<BitletData> {

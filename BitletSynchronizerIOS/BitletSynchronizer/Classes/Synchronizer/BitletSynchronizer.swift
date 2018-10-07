@@ -77,6 +77,16 @@ public class BitletSynchronizer {
         return cache.getEntry(forKey: forKey)?.state ?? .unavailable
     }
     
+    public func anyCacheInState(_ checkState: BitletCacheState, forKeys: [String]) -> Bool {
+        for key in forKeys {
+            let state = cacheState(forKey: key)
+            if state == checkState || ((state == .loading || state == .refreshing) && checkState == .loadingOrRefreshing) {
+                return true
+            }
+        }
+        return false
+    }
+
     public func cacheEntry<BitletData>(forKey: String, andType: BitletData.Type) -> BitletCacheEntry<BitletData> {
         let cacheEntry = BitletCacheEntry<BitletData>(handler: DummyBitletHandler())
         if let checkEntry = cache.getEntry(forKey: forKey), let bitletData = checkEntry.bitletData as? BitletData {

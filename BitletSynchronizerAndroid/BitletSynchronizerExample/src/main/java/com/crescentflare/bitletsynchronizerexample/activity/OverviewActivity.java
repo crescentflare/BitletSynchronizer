@@ -37,7 +37,6 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     // ---
 
     private SwipeRefreshLayout refresher = null;
-    private int refreshCallsBusy = 0;
 
 
     // ---
@@ -140,7 +139,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
     private void loadData(final boolean forced)
     {
         // Load usage
-        refreshCallsBusy = 2;
+        final String[] checkCaches = new String[]{ Usage.cacheKey(), ServerList.cacheKey() };
         BitletSynchronizer.instance.load(Usage.bitletInstance(), Usage.cacheKey(), forced, new BitletResultObserver.SimpleCompletionListener<Usage>()
         {
             @Override
@@ -153,8 +152,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
                         Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
                     refreshUsage();
-                    refreshCallsBusy--;
-                    if (refreshCallsBusy <= 0 && forced)
+                    if (forced && !BitletSynchronizer.instance.anyCacheInState(BitletCacheEntry.State.LoadingOrRefreshing, checkCaches))
                     {
                         refresher.setRefreshing(false);
                     }
@@ -175,8 +173,7 @@ public class OverviewActivity extends AppCompatActivity implements SwipeRefreshL
                         Toast.makeText(OverviewActivity.this, getString(R.string.error_generic_title) + ":\n" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
                     refreshServerList();
-                    refreshCallsBusy--;
-                    if (refreshCallsBusy <= 0 && forced)
+                    if (forced && !BitletSynchronizer.instance.anyCacheInState(BitletCacheEntry.State.LoadingOrRefreshing, checkCaches))
                     {
                         refresher.setRefreshing(false);
                     }

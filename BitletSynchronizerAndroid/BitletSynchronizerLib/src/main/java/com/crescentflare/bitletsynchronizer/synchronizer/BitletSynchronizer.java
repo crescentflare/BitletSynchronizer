@@ -126,6 +126,35 @@ public class BitletSynchronizer
         return null;
     }
 
+    public BitletCacheEntry.State getCacheState(String cacheKey)
+    {
+        if (cache != null && cache.getEntry(cacheKey) != null && cache.getEntry(cacheKey).getState() != null)
+        {
+            return cache.getEntry(cacheKey).getState();
+        }
+        return BitletCacheEntry.State.Unavailable;
+    }
+
+    public boolean anyCacheInState(BitletCacheEntry.State checkState, String[] cacheKeys)
+    {
+        if (cache != null)
+        {
+            for (String cacheKey : cacheKeys)
+            {
+                BitletCacheEntry.State state = getCacheState(cacheKey);
+                if (state == checkState || ((state == BitletCacheEntry.State.Loading || state == BitletCacheEntry.State.Refreshing) && checkState == BitletCacheEntry.State.LoadingOrRefreshing))
+                {
+                    return true;
+                }
+            }
+        }
+        else if (checkState == BitletCacheEntry.State.Unavailable)
+        {
+            return true;
+        }
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> BitletCacheEntry<T> getCacheEntry(String cacheKey, Class<T> classType)
     {
@@ -148,15 +177,6 @@ public class BitletSynchronizer
             }
         }
         return cacheEntry;
-    }
-
-    public BitletCacheEntry.State getCacheState(String cacheKey)
-    {
-        if (cache != null && cache.getEntry(cacheKey) != null && cache.getEntry(cacheKey).getState() != null)
-        {
-            return cache.getEntry(cacheKey).getState();
-        }
-        return BitletCacheEntry.State.Unavailable;
     }
 
     public void clearCache()
