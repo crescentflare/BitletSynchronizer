@@ -9,6 +9,6 @@ import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
 public interface BitletCache
 {
     void createEntryIfNeeded(String key, BitletHandler handler);
-    BitletCacheEntry getEntry(String key);
+    BitletCacheEntry<Object> getEntry(String key);
     void clear(String filter, boolean recursive);
 }

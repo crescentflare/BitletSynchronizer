@@ -42,7 +42,7 @@ class ServerDetailViewController: UITableViewController {
     // --
     
     private func loadData(forced: Bool) {
-        BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), cacheKey: Server.bitlet(serverId: serverId ?? "").cacheKey, forced: forced, completion: { server, error in
+        BitletSynchronizer.shared.loadBitlet(Server.bitlet(serverId: serverId ?? ""), cacheKey: Server.cacheKey(serverId ?? ""), forced: forced, completion: { server, error in
             if let error = error {
                 self.showErrorToast(error)
             }
@@ -63,7 +63,7 @@ class ServerDetailViewController: UITableViewController {
     
     private func refreshCellItems() {
         cellItems = []
-        if let server = BitletSynchronizer.shared.cachedBitlet(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) as? Server {
+        if let server = BitletSynchronizer.shared.cachedBitlet(forKey: Server.cacheKey(serverId ?? "")) as? Server {
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_NAME", comment: ""), andValue: server.name ?? ""))
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_DESCRIPTION", comment: ""), andValue: server.description ?? ""))
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_OPERATING_SYSTEM", comment: ""), andValue: (server.os ?? "") + " " + (server.osVersion ?? "")))
@@ -71,7 +71,7 @@ class ServerDetailViewController: UITableViewController {
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_DATA_TRAFFIC", comment: ""), andValue: server.dataTraffic?.label ?? ""))
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_SERVER_LOAD", comment: ""), andValue: server.serverLoad?.label ?? ""))
             cellItems.append(ServerDetailCellItem(withLabel: NSLocalizedString("SERVER_DETAILS_ENABLED", comment: ""), andValue: NSLocalizedString((server.enabled ?? false) ? "SERVER_DETAILS_ENABLED_ON" : "SERVER_DETAILS_ENABLED_OFF", comment: "")))
-        } else if BitletSynchronizer.shared.cacheState(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) == .loading {
+        } else if BitletSynchronizer.shared.cacheState(forKey: Server.cacheKey(serverId ?? "")) == .loading {
             cellItems.append(ServerDetailCellItem(withLoadingText: NSLocalizedString("SERVER_DETAILS_LOADING", comment: "")))
         } else {
             cellItems.append(ServerDetailCellItem(withErrorText: NSLocalizedString("SERVER_DETAILS_ERROR", comment: "")))
@@ -90,7 +90,7 @@ class ServerDetailViewController: UITableViewController {
     
     @objc @IBAction func pulledToRefresh() {
         loadData(forced: true)
-        if BitletSynchronizer.shared.cacheState(forKey: Server.bitlet(serverId: serverId ?? "").cacheKey) == .loading {
+        if BitletSynchronizer.shared.cacheState(forKey: Server.cacheKey(serverId ?? "")) == .loading {
             refreshCellItems()
         }
     }

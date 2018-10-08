@@ -1,6 +1,7 @@
 package com.crescentflare.bitletsynchronizer.synchronizer;
 
 import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
+import com.crescentflare.bitletsynchronizer.bitlet.BitletObserver;
 import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
 import com.crescentflare.bitletsynchronizer.cache.BitletCache;
 import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
@@ -132,6 +133,50 @@ public class BitletSynchronizer
             return cache.getEntry(cacheKey).getState();
         }
         return BitletCacheEntry.State.Unavailable;
+    }
+
+    public boolean anyCacheInState(BitletCacheEntry.State checkState, String[] cacheKeys)
+    {
+        if (cache != null)
+        {
+            for (String cacheKey : cacheKeys)
+            {
+                BitletCacheEntry.State state = getCacheState(cacheKey);
+                if (state == checkState || ((state == BitletCacheEntry.State.Loading || state == BitletCacheEntry.State.Refreshing) && checkState == BitletCacheEntry.State.LoadingOrRefreshing))
+                {
+                    return true;
+                }
+            }
+        }
+        else if (checkState == BitletCacheEntry.State.Unavailable)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> BitletCacheEntry<T> getCacheEntry(String cacheKey, Class<T> classType)
+    {
+        BitletCacheEntry<T> cacheEntry = new BitletCacheEntry<>(new BitletHandler<T>()
+        {
+            @Override
+            public void load(BitletObserver<T> observer)
+            {
+                // No implementation
+            }
+        });
+        if (cache != null)
+        {
+            BitletCacheEntry<Object> checkEntry = cache.getEntry(cacheKey);
+            if (checkEntry != null && classType.isInstance(checkEntry.getBitletData()))
+            {
+                cacheEntry.setState(checkEntry.getState());
+                cacheEntry.setBitletData((T)checkEntry.getBitletData());
+                cacheEntry.setBitletExpireTime(checkEntry.getBitletExpireTime());
+            }
+        }
+        return cacheEntry;
     }
 
     public void clearCache()

@@ -17,7 +17,7 @@ public class BitletMemoryCache implements BitletCache
     // Members
     // ---
 
-    private Map<String, BitletCacheEntry> cacheEntries = new HashMap<>();
+    private Map<String, BitletCacheEntry<Object>> cacheEntries = new HashMap<>();
 
 
     // ---
@@ -35,7 +35,7 @@ public class BitletMemoryCache implements BitletCache
     }
 
     @Override
-    public BitletCacheEntry getEntry(String key)
+    public BitletCacheEntry<Object> getEntry(String key)
     {
         return cacheEntries.get(key);
     }

@@ -9,7 +9,7 @@
 public protocol BitletCache {
     
     func createEntryIfNeeded(forKey: String, handler: BaseBitletHandler)
-    func getEntry(forKey: String) -> BitletCacheEntry?
+    func getEntry(forKey: String) -> BitletCacheEntry<Any>?
     func clear(filter: String, recursive: Bool)
     
 }
@@ -20,7 +20,7 @@ public class BitletMemoryCache: BitletCache {
     // MARK: Members
     // --
 
-    private var cacheEntries = [String: BitletCacheEntry]()
+    private var cacheEntries = [String: BitletCacheEntry<Any>]()
     
 
     // --
@@ -33,7 +33,7 @@ public class BitletMemoryCache: BitletCache {
         }
     }
     
-    public func getEntry(forKey: String) -> BitletCacheEntry? {
+    public func getEntry(forKey: String) -> BitletCacheEntry<Any>? {
         return cacheEntries[forKey]
     }
     

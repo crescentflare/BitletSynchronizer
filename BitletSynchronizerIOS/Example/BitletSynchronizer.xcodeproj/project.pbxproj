@@ -20,6 +20,9 @@
 		040BCB6B21348DEE00EA80F7 /* UsageUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6A21348DEE00EA80F7 /* UsageUnit.swift */; };
 		040BCB6E21348E9A00EA80F7 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6D21348E9A00EA80F7 /* Server.swift */; };
 		040BCB7021348F9300EA80F7 /* ServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6F21348F9300EA80F7 /* ServerList.swift */; };
+		044D340C216A70EE00BA4B7F /* SimpleBitlet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D340B216A70EE00BA4B7F /* SimpleBitlet.swift */; };
+		044D340F216A75F800BA4B7F /* Data+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D340E216A75F800BA4B7F /* Data+MD5.swift */; };
+		044D3411216A7CB000BA4B7F /* SimpleArrayBitlet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D3410216A7CB000BA4B7F /* SimpleArrayBitlet.swift */; };
 		046063F4212494A800EBADD6 /* BitletSynchronizer.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 046063F2212494A700EBADD6 /* BitletSynchronizer.podspec */; };
 		046063F5212494A800EBADD6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 046063F3212494A700EBADD6 /* README.md */; };
 		046063FA212494CD00EBADD6 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046063F7212494CD00EBADD6 /* Session.swift */; };
@@ -65,6 +68,9 @@
 		040BCB6A21348DEE00EA80F7 /* UsageUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsageUnit.swift; sourceTree = "<group>"; };
 		040BCB6D21348E9A00EA80F7 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		040BCB6F21348F9300EA80F7 /* ServerList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerList.swift; sourceTree = "<group>"; };
+		044D340B216A70EE00BA4B7F /* SimpleBitlet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleBitlet.swift; sourceTree = "<group>"; };
+		044D340E216A75F800BA4B7F /* Data+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+MD5.swift"; sourceTree = "<group>"; };
+		044D3410216A7CB000BA4B7F /* SimpleArrayBitlet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleArrayBitlet.swift; sourceTree = "<group>"; };
 		046063F2212494A700EBADD6 /* BitletSynchronizer.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BitletSynchronizer.podspec; path = ../../BitletSynchronizer.podspec; sourceTree = "<group>"; };
 		046063F3212494A700EBADD6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		046063F7212494CD00EBADD6 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -146,6 +152,7 @@
 		040BCB6121344C4900EA80F7 /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				044D340D216A75F800BA4B7F /* Extensions */,
 				040BCB6221344C4900EA80F7 /* Settings */,
 			);
 			path = Infrastructure;
@@ -178,11 +185,29 @@
 			path = Servers;
 			sourceTree = "<group>";
 		};
+		044D340A216A70EE00BA4B7F /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				044D3410216A7CB000BA4B7F /* SimpleArrayBitlet.swift */,
+				044D340B216A70EE00BA4B7F /* SimpleBitlet.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		044D340D216A75F800BA4B7F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				044D340E216A75F800BA4B7F /* Data+MD5.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		046063F6212494CD00EBADD6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				040BCB6C21348E9A00EA80F7 /* Servers */,
 				040BCB5C213447AF00EA80F7 /* Session */,
+				044D340A216A70EE00BA4B7F /* Shared */,
 				040BCB65213488C200EA80F7 /* Usage */,
 			);
 			path = Model;
@@ -365,11 +390,11 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1000;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1000;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
@@ -488,6 +513,8 @@
 			files = (
 				04CD63E0214D3CE600D5B240 /* ServerDetailCellItem.swift in Sources */,
 				04021B712132D9E600B474B2 /* ServerDetailViewController.swift in Sources */,
+				044D340C216A70EE00BA4B7F /* SimpleBitlet.swift in Sources */,
+				044D3411216A7CB000BA4B7F /* SimpleArrayBitlet.swift in Sources */,
 				047B469D2131E7AB008E4798 /* OverviewCell.swift in Sources */,
 				047B4691213188D4008E4798 /* CustomTextField.swift in Sources */,
 				040BCB6E21348E9A00EA80F7 /* Server.swift in Sources */,
@@ -503,6 +530,7 @@
 				047B46982131D8D8008E4798 /* OverviewViewController.swift in Sources */,
 				040BCB67213488C200EA80F7 /* Usage.swift in Sources */,
 				046063FA212494CD00EBADD6 /* Session.swift in Sources */,
+				044D340F216A75F800BA4B7F /* Data+MD5.swift in Sources */,
 				040BCB602134493E00EA80F7 /* SessionPermission.swift in Sources */,
 				040BCB6921348C5600EA80F7 /* UsageItem.swift in Sources */,
 				040BCB6B21348DEE00EA80F7 /* UsageUnit.swift in Sources */,
@@ -666,8 +694,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -681,8 +708,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -702,8 +728,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitletSynchronizer_Example.app/BitletSynchronizer_Example";
 			};
 			name = Debug;
@@ -720,8 +745,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitletSynchronizer_Example.app/BitletSynchronizer_Example";
 			};
 			name = Release;

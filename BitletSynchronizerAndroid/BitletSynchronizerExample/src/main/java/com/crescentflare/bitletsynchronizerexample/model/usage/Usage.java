@@ -1,18 +1,11 @@
 package com.crescentflare.bitletsynchronizerexample.model.usage;
 
-import android.text.TextUtils;
-
-import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
-import com.crescentflare.bitletsynchronizer.bitlet.BitletObserver;
-import com.crescentflare.bitletsynchronizerexample.Settings;
-import com.crescentflare.bitletsynchronizerexample.network.Api;
+import com.crescentflare.bitletsynchronizerexample.MapUtil;
+import com.crescentflare.bitletsynchronizerexample.model.shared.SimpleBitlet;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Map;
 
 /**
  * Usage model: usage overview
@@ -43,65 +36,22 @@ public class Usage
         return "/usage";
     }
 
-    public static BitletHandler<Usage> bitletInstance()
+    public static SimpleBitlet<Usage> bitletInstance()
     {
-        if (TextUtils.isEmpty(Settings.instance.getServerAddress()))
-        {
-            return mockedBitletInstance();
-        }
-        return new BitletHandler<Usage>()
-        {
-            @Override
-            public void load(final BitletObserver<Usage> observer)
-            {
-                Api.getInstance(Settings.instance.getServerAddress()).usage().getUsage().enqueue(new Callback<Usage>()
-                {
-                    @Override
-                    public void onResponse(Call<Usage> call, Response<Usage> response)
-                    {
-                        observer.setBitletExpireTime(System.currentTimeMillis() + 30 * 1000);
-                        observer.setBitlet(response.body());
-                        observer.finish();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Usage> call, Throwable exception)
-                    {
-                        observer.setException(exception);
-                        observer.finish();
-                    }
-                });
-            }
-        };
-    }
-
-    private static BitletHandler<Usage> mockedBitletInstance()
-    {
-        return new BitletHandler<Usage>()
-        {
-            @Override
-            public void load(final BitletObserver<Usage> observer)
-            {
-                // Mock object
-                Usage usage = new Usage();
-                UsageItem dataTraffic = new UsageItem();
-                UsageItem serverLoad = new UsageItem();
-                dataTraffic.setAmount(2.0f);
-                dataTraffic.setUnit(UsageUnit.GB);
-                dataTraffic.setLabel("2.0 GB");
-                serverLoad.setAmount(10.0f);
-                serverLoad.setUnit(UsageUnit.Percent);
-                serverLoad.setLabel("10%");
-                usage.setLastUpdate(new Date());
-                usage.setDataTraffic(dataTraffic);
-                usage.setServerLoad(serverLoad);
-
-                // Inform observer
-                observer.setBitletExpireTime(System.currentTimeMillis() + 30 * 1000);
-                observer.setBitlet(usage);
-                observer.finish();
-            }
-        };
+        Map<String, Object> mockedData = MapUtil.newMap(
+                "data_traffic", MapUtil.newMap(
+                        "amount", 2.0,
+                        "unit", "GB",
+                        "label", "2.0 GB"
+                ),
+                "server_load", MapUtil.newMap(
+                        "amount", 10,
+                        "unit", "percent",
+                        "label", "10%"
+                ),
+                "last_update", "2001-01-01T00:00:00.000Z"
+        );
+        return new SimpleBitlet<>("/usage", 30 * 1000, mockedData, Usage.class);
     }
 
 

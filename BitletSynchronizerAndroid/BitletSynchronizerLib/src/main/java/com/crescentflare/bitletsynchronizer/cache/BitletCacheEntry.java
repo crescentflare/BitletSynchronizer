@@ -10,24 +10,24 @@ import java.util.List;
  * Bitlet Synchronizer cache: a cache entry
  * Manages the data and state of a single entry in the bitlet cache
  */
-public class BitletCacheEntry
+public class BitletCacheEntry<T>
 {
     // ---
     // Members
     // ---
 
     private State state = State.Unavailable;
-    private Object bitletData;
+    private T bitletData;
     private long bitletExpireTime = -1;
-    private BitletHandler<Object> handler;
-    private BitletCacheObserver loadingObserver;
+    private BitletHandler<T> handler;
+    private BitletCacheObserver<T> loadingObserver;
 
 
     // ---
     // Initialization
     // ---
 
-    public BitletCacheEntry(BitletHandler<Object> handler)
+    public BitletCacheEntry(BitletHandler<T> handler)
     {
         this.handler = handler;
     }
@@ -37,12 +37,12 @@ public class BitletCacheEntry
     // Loading
     // ---
 
-    public void load(BitletObserver<Object> observer)
+    public void load(BitletObserver<T> observer)
     {
         load(false, observer);
     }
 
-    public void load(boolean forced, BitletObserver<Object> observer)
+    public void load(boolean forced, BitletObserver<T> observer)
     {
         if (!forced && bitletData != null && !isExpired())
         {
@@ -51,7 +51,7 @@ public class BitletCacheEntry
         boolean alreadyLoading = true;
         if (loadingObserver == null)
         {
-            loadingObserver = new BitletCacheObserver(new Runnable()
+            loadingObserver = new BitletCacheObserver<>(new Runnable()
             {
                 @Override
                 public void run()
@@ -99,9 +99,29 @@ public class BitletCacheEntry
         return state;
     }
 
-    public Object getBitletData()
+    public void setState(State state)
+    {
+        this.state = state;
+    }
+
+    public T getBitletData()
     {
         return bitletData;
+    }
+
+    public void setBitletData(T bitletData)
+    {
+        this.bitletData = bitletData;
+    }
+
+    public long getBitletExpireTime()
+    {
+        return bitletExpireTime;
+    }
+
+    public void setBitletExpireTime(long bitletExpireTime)
+    {
+        this.bitletExpireTime = bitletExpireTime;
     }
 
     public boolean isExpired()
@@ -125,10 +145,14 @@ public class BitletCacheEntry
 
     public enum State
     {
+        // Used to store state
         Unavailable,
         Loading,
         Ready,
-        Refreshing
+        Refreshing,
+
+        // Used only for checking
+        LoadingOrRefreshing
     }
 
 
@@ -136,13 +160,13 @@ public class BitletCacheEntry
     // Custom cache observer
     // ---
 
-    private static class BitletCacheObserver implements BitletObserver<Object>
+    private static class BitletCacheObserver<T> implements BitletObserver<T>
     {
-        private Object bitletData = null;
+        private T bitletData = null;
         private String bitletHash = null;
         private long bitletExpireTime = -1;
         private Throwable exception = null;
-        private List<BitletObserver<Object>> includedObservers = new ArrayList<>();
+        private List<BitletObserver<T>> includedObservers = new ArrayList<>();
         private Runnable completionRunnable;
 
         public BitletCacheObserver(Runnable completionRunnable)
@@ -151,10 +175,10 @@ public class BitletCacheEntry
         }
 
         @Override
-        public void setBitlet(Object data)
+        public void setBitlet(T data)
         {
             bitletData = data;
-            for (BitletObserver<Object> observer : includedObservers)
+            for (BitletObserver<T> observer : includedObservers)
             {
                 observer.setBitlet(data);
             }
@@ -164,7 +188,7 @@ public class BitletCacheEntry
         public void setBitletHash(String hash)
         {
             bitletHash = hash;
-            for (BitletObserver<Object> observer : includedObservers)
+            for (BitletObserver<T> observer : includedObservers)
             {
                 observer.setBitletHash(hash);
             }
@@ -174,7 +198,7 @@ public class BitletCacheEntry
         public void setBitletExpireTime(long expireTime)
         {
             bitletExpireTime = expireTime;
-            for (BitletObserver<Object> observer : includedObservers)
+            for (BitletObserver<T> observer : includedObservers)
             {
                 observer.setBitletExpireTime(expireTime);
             }
@@ -184,7 +208,7 @@ public class BitletCacheEntry
         public void setException(Throwable exception)
         {
             this.exception = exception;
-            for (BitletObserver<Object> observer : includedObservers)
+            for (BitletObserver<T> observer : includedObservers)
             {
                 observer.setException(exception);
             }
@@ -194,13 +218,13 @@ public class BitletCacheEntry
         public void finish()
         {
             completionRunnable.run();
-            for (BitletObserver<Object> observer : includedObservers)
+            for (BitletObserver<T> observer : includedObservers)
             {
                 observer.finish();
             }
         }
 
-        public void includeObserver(BitletObserver<Object> observer)
+        public void includeObserver(BitletObserver<T> observer)
         {
             includedObservers.add(observer);
             if (bitletData != null)
@@ -221,7 +245,7 @@ public class BitletCacheEntry
             }
         }
 
-        public Object getBitletData()
+        public T getBitletData()
         {
             return bitletData;
         }

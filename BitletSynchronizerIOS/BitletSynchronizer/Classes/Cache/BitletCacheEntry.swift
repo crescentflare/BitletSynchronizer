@@ -8,21 +8,25 @@
 
 public enum BitletCacheState {
     
+    // Used to store state
     case unavailable
     case loading
     case ready
     case refreshing
     
+    // Only used for checking
+    case loadingOrRefreshing
+
 }
 
-public class BitletCacheEntry {
+public class BitletCacheEntry<BitletData> {
     
     // --
     // MARK: Members
     // --
 
     public var state = BitletCacheState.unavailable
-    public var bitletData: Any?
+    public var bitletData: BitletData?
     public var bitletExpireTime: BitletExpireTime?
     private let handler: BaseBitletHandler
     private var loadingObserver: BitletCacheObserver?
@@ -48,11 +52,12 @@ public class BitletCacheEntry {
         var alreadyLoading = true
         if loadingObserver == nil {
             loadingObserver = BitletCacheObserver(completion: {
-                if self.loadingObserver?.bitletData == nil && self.loadingObserver?.error == nil {
+                let checkBitletData = self.loadingObserver?.bitletData as? BitletData
+                if checkBitletData == nil && self.loadingObserver?.error == nil {
                     self.loadingObserver?.error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Unknown bitlet error"])
                 }
                 if self.loadingObserver?.error == nil {
-                    self.bitletData = self.loadingObserver?.bitletData ?? self.bitletData
+                    self.bitletData = checkBitletData ?? self.bitletData
                     self.bitletExpireTime = self.loadingObserver?.bitletExpireTime ?? self.bitletExpireTime
                     self.state = .ready
                 } else {

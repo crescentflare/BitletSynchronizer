@@ -12,65 +12,46 @@ import Alamofire
 import ObjectMapper
 import AlamofireObjectMapper
 
-class ServerList {
+class ServerList: ArrayModel {
+
+    // --
+    // MARK: Set type of array
+    // --
+    
+    typealias ArrayType = Server
+
 
     // --
     // MARK: Members
     // --
     
-    var servers: [Server] = []
+    var itemList: [Server] = []
 
     
     // --
     // MARK: Bitlet integration
     // --
     
-    class func bitlet() -> BitletClass {
-        return Settings.serverAddress?.count ?? 0 > 0 ? BitletClass() : MockedBitletClass()
-    }
+    static let cacheKey = "/servers"
     
-    class BitletClass: BitletHandler {
-
-        typealias BitletData = ServerList
-        
-        let cacheKey = "/servers"
-
-        func load(observer: BitletObserver<BitletData>) {
-            if let serverAddress = Settings.serverAddress, serverAddress.count > 0 {
-                Alamofire.request(serverAddress + "/servers").responseArray { (response: DataResponse<[Server]>) in
-                    if let servers = response.value {
-                        let serverList = ServerList()
-                        serverList.servers = servers
-                        observer.bitlet = serverList
-                        observer.bitletExpireTime = .minutesFromNow(10)
-                    } else if let error = response.error {
-                        observer.error = error
-                    }
-                    observer.finish()
-                }
-            }
-        }
-        
-    }
-    
-    class MockedBitletClass: BitletClass {
-        
-        override func load(observer: BitletObserver<BitletData>) {
-            let mockedJson: [String: Any] = [
+    class func bitlet() -> SimpleArrayBitlet<ServerList> {
+        let mockedJson: [[String: Any]] = [
+            [
                 "id": "mocked",
                 "name": "Mock server",
                 "location": "Home",
                 "enabled": true
             ]
-            if let server = Mapper<Server>().map(JSONObject: mockedJson) {
-                let serverList = ServerList()
-                serverList.servers = [server]
-                observer.bitlet = serverList
-                observer.bitletExpireTime = .minutesFromNow(10)
-            }
-            observer.finish()
-        }
-        
+        ]
+        return SimpleArrayBitlet<ServerList>(path: "/servers", expireTime: .init(withMinutes: 10), mockedJson: mockedJson)
+    }
+
+    
+    // --
+    // MARK: Initialization
+    // --
+    
+    required init() {
     }
 
 }
