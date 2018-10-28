@@ -23,6 +23,14 @@ public class BitletSynchronizer {
     
 
     // --
+    // MARK: Initialization
+    // --
+    
+    public init() {
+    }
+    
+
+    // --
     // MARK: Loading
     // --
 
@@ -65,6 +73,17 @@ public class BitletSynchronizer {
     }
 
     
+    // --
+    // MARK: Operations
+    // --
+    
+    public func startOperation(_ operation: BitletOperation, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) {
+        if !operation.start(bitletSynchronizer: self, completion: completion) {
+            completion?(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Operation could not be started"]), true)
+        }
+    }
+    
+
     // --
     // MARK: Cache control
     // --
