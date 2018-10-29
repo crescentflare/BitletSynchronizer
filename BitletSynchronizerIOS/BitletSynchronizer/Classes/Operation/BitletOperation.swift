@@ -35,7 +35,7 @@ public class BitletOperationBase: BitletOperation {
     // MARK: Base implementation
     // --
 
-    public func start(bitletSynchronizer: BitletSynchronizer, completion: ((Error?, Bool) -> Void)?) -> Bool {
+    public func start(bitletSynchronizer: BitletSynchronizer, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) -> Bool {
         if running {
             return false
         }
@@ -185,12 +185,12 @@ public class BitletOperationSequence: BitletOperationBase {
             if !requestCancel && itemIndex + 1 < items.count {
                 itemIndex += 1
                 if items[itemIndex].enabled {
-                    items[itemIndex].run { error in
-                        self.error = error
-                        if self.error != nil {
-                            self.cancel()
+                    items[itemIndex].run { [weak self] error in
+                        self?.error = error
+                        if self?.error != nil {
+                            self?.cancel()
                         }
-                        self.next()
+                        self?.next()
                     }
                 } else {
                     next()
@@ -220,14 +220,17 @@ public class BitletOperationGroup: BitletOperationBase {
     override func afterStart() {
         for item in items {
             if item.enabled {
-                item.run { error in
-                    self.error = error
-                    if self.error != nil {
-                        self.cancel()
+                item.run { [weak self] error in
+                    self?.error = error
+                    if self?.error != nil {
+                        self?.cancel()
                     }
-                    self.checkCompletion()
+                    self?.checkCompletion()
                 }
             }
+        }
+        if items.count == 0 {
+            complete()
         }
     }
     
