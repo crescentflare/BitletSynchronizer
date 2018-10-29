@@ -40,10 +40,10 @@ public class BitletOperationBase: BitletOperation {
             return false
         }
         retainSelf = self
-        running = true
-        requestCancel = false
         self.bitletSynchronizer = bitletSynchronizer
         self.completion = completion
+        requestCancel = false
+        running = true
         afterStart()
         return true
     }
@@ -65,6 +65,8 @@ public class BitletOperationBase: BitletOperation {
         if running {
             running = false
             completion?(error, requestCancel)
+            completion = nil
+            bitletSynchronizer = nil
             retainSelf = nil
         }
     }
@@ -74,29 +76,32 @@ public class BitletOperationBase: BitletOperation {
     // MARK: Add operation items
     // --
 
-    public func addBitletLoad<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: @escaping ((_ bitlet: Handler.BitletData?, _ error: Error?, _ operation: BitletOperation) -> Void)) {
-        weak var weakSelf = self
-        add(item: { itemCompletion in
-            if let bitletSynchronizer = weakSelf?.bitletSynchronizer {
+    public func addBitletLoad<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: @escaping ((_ bitlet: Handler.BitletData?, _ error: Error?, _ operation: BitletOperationBase) -> Void)) {
+        add(item: { [weak self] itemCompletion in
+            if let bitletSynchronizer = self?.bitletSynchronizer {
                 if let cacheKey = cacheKey, !bitletSynchronizer.cacheEntry(forKey: cacheKey, andType: Handler.BitletData.self).expired() && !forced {
                     itemCompletion(nil)
                 } else {
                     bitletSynchronizer.loadBitlet(bitletHandler, cacheKey: cacheKey, forced: forced, completion: { bitlet, error in
-                        if let operation = weakSelf {
+                        if let operation = self {
                             completion(bitlet, error, operation)
                             itemCompletion(error)
                         }
                     })
                 }
-            } else if let operation = weakSelf {
+            } else if let operation = self {
                 operation.complete()
             }
         }, cacheKey: cacheKey)
     }
     
-    public func add(operation: BitletOperation, completion: @escaping (_ error: Error?, _ canceled: Bool) -> Void) {
+    public func add(operation: BitletOperation, completion: @escaping (_ error: Error?, _ canceled: Bool, _ operation: BitletOperationBase) -> Void) {
         if let bitletSynchronizer = bitletSynchronizer {
-            items.append(BitletOperationNestedItem(operation: operation, bitletSynchronizer: bitletSynchronizer, completion: completion))
+            items.append(BitletOperationNestedItem(operation: operation, bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error, canceled in
+                if let operation = self {
+                    completion(error, canceled, operation)
+                }
+            }))
         } else {
             complete()
         }

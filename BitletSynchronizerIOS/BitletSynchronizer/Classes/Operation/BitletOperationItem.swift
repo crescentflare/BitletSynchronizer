@@ -45,8 +45,8 @@ class BitletOperationClosureItem : BitletOperationItem {
 
     func run(completion: @escaping (_ error: Error?) -> Void) {
         running = true
-        itemClosure { error in
-            self.running = false
+        itemClosure { [weak self] error in
+            self?.running = false
             completion(error)
         }
     }
@@ -87,13 +87,13 @@ class BitletOperationNestedItem : BitletOperationItem {
 
     func run(completion: @escaping (_ error: Error?) -> Void) {
         running = true
-        let canStart = operation.start(bitletSynchronizer: bitletSynchronizer, completion: { error, canceled in
+        let canStart = operation.start(bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error, canceled in
             var completeError = error
-            self.running = false
+            self?.running = false
             if error == nil && canceled {
                 completeError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Nested operation canceled"])
             }
-            self.itemCompletion(error, canceled)
+            self?.itemCompletion(error, canceled)
             completion(completeError)
         })
         if !canStart {
