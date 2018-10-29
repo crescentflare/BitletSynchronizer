@@ -27,7 +27,7 @@ public class BitletOperationBase: BitletOperation {
     var bitletSynchronizer: BitletSynchronizer?
     var completion: ((_ error: Error?, _ canceled: Bool) -> Void)?
     var items = [BitletOperationItem]()
-    var retainSelf: BitletOperation?
+    var retainSelfWhileRunning: BitletOperation?
     var error: Error?
 
     
@@ -39,7 +39,7 @@ public class BitletOperationBase: BitletOperation {
         if running {
             return false
         }
-        retainSelf = self
+        retainSelfWhileRunning = self
         self.bitletSynchronizer = bitletSynchronizer
         self.completion = completion
         requestCancel = false
@@ -67,7 +67,7 @@ public class BitletOperationBase: BitletOperation {
             completion?(error, requestCancel)
             completion = nil
             bitletSynchronizer = nil
-            retainSelf = nil
+            retainSelfWhileRunning = nil
         }
     }
     
