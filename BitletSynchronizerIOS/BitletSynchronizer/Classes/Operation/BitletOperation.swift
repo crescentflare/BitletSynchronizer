@@ -77,22 +77,15 @@ public class BitletOperationBase: BitletOperation {
     // --
 
     public func addBitletLoad<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: @escaping ((_ bitlet: Handler.BitletData?, _ error: Error?, _ operation: BitletOperationBase) -> Void)) {
-        add(item: { [weak self] itemCompletion in
-            if let bitletSynchronizer = self?.bitletSynchronizer {
-                if let cacheKey = cacheKey, !bitletSynchronizer.cacheEntry(forKey: cacheKey, andType: Handler.BitletData.self).expired() && !forced {
-                    itemCompletion(nil)
-                } else {
-                    bitletSynchronizer.loadBitlet(bitletHandler, cacheKey: cacheKey, forced: forced, completion: { bitlet, error in
-                        if let operation = self {
-                            completion(bitlet, error, operation)
-                            itemCompletion(error)
-                        }
-                    })
+        if let bitletSynchronizer = bitletSynchronizer {
+            items.append(BitletOperationLoadItem(bitletHandler: bitletHandler, cacheKey: cacheKey, forced: forced, bitletSynchronizer: bitletSynchronizer, completion: { [weak self] bitlet, error in
+                if let operation = self {
+                    completion(bitlet, error, operation)
                 }
-            } else if let operation = self {
-                operation.complete()
-            }
-        }, cacheKey: cacheKey)
+            }))
+        } else {
+            complete()
+        }
     }
     
     public func add(operation: BitletOperation, completion: @escaping (_ error: Error?, _ canceled: Bool, _ operation: BitletOperationBase) -> Void) {
@@ -107,10 +100,6 @@ public class BitletOperationBase: BitletOperation {
         }
     }
     
-    public func add(item: @escaping (_ itemCompletion: @escaping (_ error: Error?) -> Void) -> Void, cacheKey: String? = nil) {
-        items.append(BitletOperationClosureItem(item, cacheKey: cacheKey))
-    }
-    
 
     // --
     // MARK: Cache check
@@ -119,7 +108,7 @@ public class BitletOperationBase: BitletOperation {
     public func allCacheKeys() -> [String] {
         var cacheKeys = [String]()
         for item in items {
-            if let closureItem = item as? BitletOperationClosureItem, let cacheKey = closureItem.cacheKey {
+            if let cacheItem = item as? BitletOperationCacheItem, let cacheKey = cacheItem.cacheKey {
                 cacheKeys.append(cacheKey)
             } else if let nestedItem = item as? BitletOperationNestedItem, let baseOperation = nestedItem.operation as? BitletOperationBase {
                 cacheKeys.append(contentsOf: baseOperation.allCacheKeys())
@@ -132,7 +121,7 @@ public class BitletOperationBase: BitletOperation {
         var cacheKeys = [String]()
         for item in items {
             if item.enabled {
-                if let closureItem = item as? BitletOperationClosureItem, let cacheKey = closureItem.cacheKey {
+                if let cacheItem = item as? BitletOperationCacheItem, let cacheKey = cacheItem.cacheKey {
                     cacheKeys.append(cacheKey)
                 } else if let nestedItem = item as? BitletOperationNestedItem, let baseOperation = nestedItem.operation as? BitletOperationBase {
                     cacheKeys.append(contentsOf: baseOperation.includedCacheKeys())
@@ -144,7 +133,7 @@ public class BitletOperationBase: BitletOperation {
     
     public func setCacheKeyIncluded(_ cacheKey: String, _ included: Bool) {
         for var item in items {
-            if let closureItem = item as? BitletOperationClosureItem, closureItem.cacheKey == cacheKey {
+            if let cacheItem = item as? BitletOperationCacheItem, cacheItem.cacheKey == cacheKey {
                 item.enabled = included
             } else if let nestedItem = item as? BitletOperationNestedItem, let baseOperation = nestedItem.operation as? BitletOperationBase {
                 baseOperation.setCacheKeyIncluded(cacheKey, included)

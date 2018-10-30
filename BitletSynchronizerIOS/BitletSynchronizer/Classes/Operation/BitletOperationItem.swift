@@ -17,47 +17,64 @@ public protocol BitletOperationItem {
     
 }
 
-class BitletOperationClosureItem : BitletOperationItem {
+protocol BitletOperationCacheItem: BitletOperationItem {
+    
+    var cacheKey: String? { get }
+    
+}
+
+class BitletOperationLoadItem<Handler: BitletHandler>: BitletOperationCacheItem {
     
     // --
-    // MARK: Closure members
+    // MARK: Load item members
     // --
 
-    private let itemClosure: (@escaping (_ error: Error?) -> Void) -> Void
+    private let bitletSynchronizer: BitletSynchronizer
+    private let bitletHandler: Handler
+    private let forced: Bool
+    private let itemCompletion: (_ bitletItem: Handler.BitletData?, _ error: Error?) -> Void
     private var running = false
     let cacheKey: String?
     var enabled = true
     
 
     // --
-    // MARK: Closure initialization
+    // MARK: Load item initialization
     // --
 
-    init(_ itemClosure: @escaping (@escaping (_ error: Error?) -> Void) -> Void, cacheKey: String? = nil) {
-        self.itemClosure = itemClosure
+    init(bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, bitletSynchronizer: BitletSynchronizer, completion: @escaping (_ bitletItem: Handler.BitletData?, _ error: Error?) -> Void) {
+        self.bitletHandler = bitletHandler
         self.cacheKey = cacheKey
+        self.forced = forced
+        self.bitletSynchronizer = bitletSynchronizer
+        self.itemCompletion = completion
     }
     
 
     // --
-    // MARK: Closure running
+    // MARK: Load item running
     // --
 
-    func run(completion: @escaping (_ error: Error?) -> Void) {
-        running = true
-        itemClosure { [weak self] error in
-            self?.running = false
-            completion(error)
+    func run(completion: @escaping (Error?) -> Void) {
+        if let cacheKey = cacheKey, !bitletSynchronizer.cacheEntry(forKey: cacheKey, andType: Handler.BitletData.self).expired() && !forced {
+            completion(nil)
+        } else {
+            running = true
+            bitletSynchronizer.loadBitlet(bitletHandler, cacheKey: cacheKey, forced: true, completion: { [weak self] bitlet, error in
+                self?.running = false
+                self?.itemCompletion(bitlet, error)
+                completion(error)
+            })
         }
     }
     
     func isRunning() -> Bool {
         return running
     }
-    
+
 }
 
-class BitletOperationNestedItem : BitletOperationItem {
+class BitletOperationNestedItem: BitletOperationItem {
     
     // --
     // MARK: Nested item members
@@ -98,6 +115,7 @@ class BitletOperationNestedItem : BitletOperationItem {
         })
         if !canStart {
             let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Nested operation could not be started"])
+            running = false
             itemCompletion(error, false)
             completion(error)
         }
