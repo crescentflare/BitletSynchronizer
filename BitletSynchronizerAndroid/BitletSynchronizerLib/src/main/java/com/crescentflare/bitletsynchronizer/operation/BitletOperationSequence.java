@@ -1,5 +1,7 @@
 package com.crescentflare.bitletsynchronizer.operation;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Bitlet Synchronizer operation: an operation sequence
  * Operation sequences do one call after the other (while waiting for the previous to finish)
@@ -33,7 +35,7 @@ public class BitletOperationSequence extends BitletOperationBase
                 itemIndex++;
                 if (items.get(itemIndex).isEnabled())
                 {
-                    items.get(itemIndex).run(new BitletOperationItem.CompletionListener()
+                    items.get(itemIndex).run(bitletSynchronizer, new BitletOperationItem.CompletionListener()
                     {
                         @Override
                         public void onComplete(Throwable exception)

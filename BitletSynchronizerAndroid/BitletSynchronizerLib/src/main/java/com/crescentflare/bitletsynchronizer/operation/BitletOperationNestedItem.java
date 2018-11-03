@@ -13,8 +13,7 @@ public class BitletOperationNestedItem implements BitletOperationItem
     // --
 
     private BitletOperation operation;
-    private BitletSynchronizer bitletSynchronizer;
-    private BitletOperation.CompletionListener itemCompletionListener;
+    private CompletionListener itemCompletionListener;
     private boolean running = false;
     private boolean enabled = true;
 
@@ -23,10 +22,9 @@ public class BitletOperationNestedItem implements BitletOperationItem
     // Initialization
     // ---
 
-    public BitletOperationNestedItem(BitletOperation operation, BitletSynchronizer bitletSynchronizer, BitletOperation.CompletionListener listener)
+    public BitletOperationNestedItem(BitletOperation operation, CompletionListener listener)
     {
         this.operation = operation;
-        this.bitletSynchronizer = bitletSynchronizer;
         this.itemCompletionListener = listener;
     }
 
@@ -36,7 +34,7 @@ public class BitletOperationNestedItem implements BitletOperationItem
     // ---
 
     @Override
-    public void run(final BitletOperationItem.CompletionListener listener)
+    public void run(BitletSynchronizer bitletSynchronizer, final BitletOperationItem.CompletionListener listener)
     {
         running = true;
         boolean canStart = operation.start(bitletSynchronizer, new BitletOperation.CompletionListener()

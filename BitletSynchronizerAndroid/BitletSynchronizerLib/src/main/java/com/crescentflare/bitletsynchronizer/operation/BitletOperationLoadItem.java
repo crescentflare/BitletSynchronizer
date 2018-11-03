@@ -14,7 +14,6 @@ public class BitletOperationLoadItem<T> implements BitletOperationItem
     // Members
     // --
 
-    private BitletSynchronizer bitletSynchronizer;
     private BitletHandler<T> bitletHandler;
     private boolean forced;
     private CompletionListener<T> itemCompletionListener;
@@ -27,12 +26,11 @@ public class BitletOperationLoadItem<T> implements BitletOperationItem
     // Initialization
     // ---
 
-    public BitletOperationLoadItem(BitletHandler<T> handler, String cacheKey, boolean forced, BitletSynchronizer bitletSynchronizer, CompletionListener<T> listener)
+    public BitletOperationLoadItem(BitletHandler<T> handler, String cacheKey, boolean forced, CompletionListener<T> listener)
     {
         this.bitletHandler = handler;
         this.cacheKey = cacheKey;
         this.forced = forced;
-        this.bitletSynchronizer = bitletSynchronizer;
         this.itemCompletionListener = listener;
     }
 
@@ -42,7 +40,7 @@ public class BitletOperationLoadItem<T> implements BitletOperationItem
     // ---
 
     @Override
-    public void run(final BitletOperationItem.CompletionListener listener)
+    public void run(BitletSynchronizer bitletSynchronizer, final BitletOperationItem.CompletionListener listener)
     {
         if (cacheKey != null && !bitletSynchronizer.getCacheEntry(cacheKey, Object.class).isExpired() && !forced)
         {

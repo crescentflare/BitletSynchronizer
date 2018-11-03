@@ -18,7 +18,7 @@ public abstract class BitletOperationBase implements BitletOperation
 
     protected boolean running = false;
     protected boolean requestCancel = false;
-    private BitletSynchronizer bitletSynchronizer;
+    protected BitletSynchronizer bitletSynchronizer;
     private BitletOperation.CompletionListener completionListener;
     protected List<BitletOperationItem> items = new ArrayList<>();
     protected Throwable exception;
@@ -87,46 +87,32 @@ public abstract class BitletOperationBase implements BitletOperation
 
     public <T> void addBitletLoad(BitletHandler<T> bitletHandler, String cacheKey, boolean forced, final LoadCompletionListener<T> listener)
     {
-        if (bitletSynchronizer != null)
+        items.add(new BitletOperationLoadItem<T>(bitletHandler, cacheKey, forced, new BitletOperationLoadItem.CompletionListener<T>()
         {
-            items.add(new BitletOperationLoadItem<T>(bitletHandler, cacheKey, forced, bitletSynchronizer, new BitletOperationLoadItem.CompletionListener<T>()
+            @Override
+            public void onComplete(T bitlet, Throwable exception)
             {
-                @Override
-                public void onComplete(T bitlet, Throwable exception)
+                if (listener != null)
                 {
-                    if (listener != null)
-                    {
-                        listener.onComplete(bitlet, exception, BitletOperationBase.this);
-                    }
+                    listener.onComplete(bitlet, exception, BitletOperationBase.this);
                 }
-            }));
-        }
-        else
-        {
-            complete();
-        }
+            }
+        }));
     }
 
     public void addOperation(BitletOperation operation, final NestedCompletionListener listener)
     {
-        if (bitletSynchronizer != null)
+        items.add(new BitletOperationNestedItem(operation, new BitletOperationNestedItem.CompletionListener()
         {
-            items.add(new BitletOperationNestedItem(operation, bitletSynchronizer, new CompletionListener()
+            @Override
+            public void onComplete(Throwable exception, boolean canceled)
             {
-                @Override
-                public void onComplete(Throwable exception, boolean canceled)
+                if (listener != null)
                 {
-                    if (listener != null)
-                    {
-                        listener.onComplete(exception, canceled, BitletOperationBase.this);
-                    }
+                    listener.onComplete(exception, canceled, BitletOperationBase.this);
                 }
-            }));
-        }
-        else
-        {
-            complete();
-        }
+            }
+        }));
     }
 
 
@@ -215,12 +201,12 @@ public abstract class BitletOperationBase implements BitletOperation
     // Completion listeners
     // ---
 
-    interface LoadCompletionListener<T>
+    public interface LoadCompletionListener<T>
     {
         void onComplete(T bitlet, Throwable exception, BitletOperationBase operation);
     }
 
-    interface NestedCompletionListener
+    public interface NestedCompletionListener
     {
         void onComplete(Throwable exception, boolean canceled, BitletOperationBase operation);
     }
