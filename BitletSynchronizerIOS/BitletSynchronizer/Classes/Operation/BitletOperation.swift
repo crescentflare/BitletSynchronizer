@@ -77,27 +77,19 @@ public class BitletOperationBase: BitletOperation {
     // --
 
     public func addBitletLoad<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: @escaping ((_ bitlet: Handler.BitletData?, _ error: Error?, _ operation: BitletOperationBase) -> Void)) {
-        if let bitletSynchronizer = bitletSynchronizer {
-            items.append(BitletOperationLoadItem(bitletHandler: bitletHandler, cacheKey: cacheKey, forced: forced, bitletSynchronizer: bitletSynchronizer, completion: { [weak self] bitlet, error in
-                if let operation = self {
-                    completion(bitlet, error, operation)
-                }
-            }))
-        } else {
-            complete()
-        }
+        items.append(BitletOperationLoadItem(bitletHandler: bitletHandler, cacheKey: cacheKey, forced: forced, completion: { [weak self] bitlet, error in
+            if let operation = self {
+                completion(bitlet, error, operation)
+            }
+        }))
     }
     
     public func add(operation: BitletOperation, completion: @escaping (_ error: Error?, _ canceled: Bool, _ operation: BitletOperationBase) -> Void) {
-        if let bitletSynchronizer = bitletSynchronizer {
-            items.append(BitletOperationNestedItem(operation: operation, bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error, canceled in
-                if let operation = self {
-                    completion(error, canceled, operation)
-                }
-            }))
-        } else {
-            complete()
-        }
+        items.append(BitletOperationNestedItem(operation: operation, completion: { [weak self] error, canceled in
+            if let operation = self {
+                completion(error, canceled, operation)
+            }
+        }))
     }
     
 
@@ -173,14 +165,14 @@ public class BitletOperationSequence: BitletOperationBase {
         if running {
             if !requestCancel && itemIndex + 1 < items.count {
                 itemIndex += 1
-                if items[itemIndex].enabled {
-                    items[itemIndex].run { [weak self] error in
+                if let bitletSynchronizer = bitletSynchronizer, items[itemIndex].enabled {
+                    items[itemIndex].run(bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error in
                         self?.error = error
                         if self?.error != nil {
                             self?.cancel()
                         }
                         self?.next()
-                    }
+                    })
                 } else {
                     next()
                 }
@@ -208,17 +200,17 @@ public class BitletOperationGroup: BitletOperationBase {
 
     override func afterStart() {
         for item in items {
-            if item.enabled {
-                item.run { [weak self] error in
+            if let bitletSynchronizer = bitletSynchronizer, item.enabled {
+                item.run(bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error in
                     self?.error = error
                     if self?.error != nil {
                         self?.cancel()
                     }
                     self?.checkCompletion()
-                }
+                })
             }
         }
-        if items.count == 0 {
+        if items.count == 0 || bitletSynchronizer == nil {
             complete()
         }
     }
