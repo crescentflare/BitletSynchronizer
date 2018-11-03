@@ -6,6 +6,7 @@ import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
 import com.crescentflare.bitletsynchronizer.cache.BitletCache;
 import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
 import com.crescentflare.bitletsynchronizer.cache.BitletMemoryCache;
+import com.crescentflare.bitletsynchronizer.operation.BitletOperation;
 
 /**
  * Bitlet Synchronizer synchronizer: synchronizes bitlets
@@ -98,6 +99,19 @@ public class BitletSynchronizer
         else
         {
             bitletHandler.load(new BitletResultObserver<>(completionListener));
+        }
+    }
+
+
+    // ---
+    // Operations
+    // ---
+
+    public void startOperation(BitletOperation operation, BitletOperation.CompletionListener listener)
+    {
+        if (!operation.start(this, listener))
+        {
+            listener.onComplete(new Exception("Operation could not be started"), true);
         }
     }
 
