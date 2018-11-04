@@ -18,7 +18,9 @@ public class BitletCacheEntry<T>
 
     private State state = State.Unavailable;
     private T bitletData;
+    private String bitletHash;
     private long bitletExpireTime = -1;
+    private long bitletHashUpdatedTime = -1;
     private BitletHandler<T> handler;
     private BitletCacheObserver<T> loadingObserver;
 
@@ -66,10 +68,12 @@ public class BitletCacheEntry<T>
                         {
                             bitletData = loadingObserver.getBitletData();
                         }
+                        bitletHash = loadingObserver.getBitletHash();
                         if (loadingObserver.getBitletExpireTime() >= 0)
                         {
                             bitletExpireTime = loadingObserver.getBitletExpireTime();
                         }
+                        bitletHashUpdatedTime = bitletHash != null ? System.currentTimeMillis() : -1;
                         state = State.Ready;
                     }
                     else
@@ -117,6 +121,16 @@ public class BitletCacheEntry<T>
         this.bitletData = bitletData;
     }
 
+    public String getBitletHash()
+    {
+        return bitletHash;
+    }
+
+    public void setBitletHash(String bitletHash)
+    {
+        this.bitletHash = bitletHash;
+    }
+
     public long getBitletExpireTime()
     {
         return bitletExpireTime;
@@ -125,6 +139,16 @@ public class BitletCacheEntry<T>
     public void setBitletExpireTime(long bitletExpireTime)
     {
         this.bitletExpireTime = bitletExpireTime;
+    }
+
+    public long getBitletHashUpdatedTime()
+    {
+        return bitletHashUpdatedTime;
+    }
+
+    public void setBitletHashUpdatedTime(long bitletHashUpdatedTime)
+    {
+        this.bitletHashUpdatedTime = bitletHashUpdatedTime;
     }
 
     public boolean isExpired()
