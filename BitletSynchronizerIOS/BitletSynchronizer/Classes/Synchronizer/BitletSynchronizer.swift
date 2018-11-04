@@ -23,48 +23,67 @@ public class BitletSynchronizer {
     
 
     // --
+    // MARK: Initialization
+    // --
+    
+    public init() {
+    }
+    
+
+    // --
     // MARK: Loading
     // --
 
-    public func loadBitlet<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, success: @escaping ((_ bitlet: Handler.BitletData) -> Void), failure: @escaping ((_ error: Error) -> Void)) {
+    public func loadBitlet<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, success: ((_ bitlet: Handler.BitletData) -> Void)?, failure: ((_ error: Error) -> Void)?) {
         if let cacheKey = cacheKey {
             cache.createEntryIfNeeded(forKey: cacheKey, handler: bitletHandler)
             if let entry = cache.getEntry(forKey: cacheKey) {
                 entry.load(forced: forced, observer: BitletResultObserver<Handler.BitletData>(success: { data in
-                    success(data)
+                    success?(data)
                 }, failure: { error in
-                    failure(error)
+                    failure?(error)
                 }))
             } else {
-                failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Unknown caching error"]))
+                failure?(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Unknown caching error"]))
             }
         } else {
             bitletHandler.load(observer: BitletResultObserver<Handler.BitletData>(success: { data in
-                success(data)
+                success?(data)
             }, failure: { error in
-                failure(error)
+                failure?(error)
             }))
         }
     }
     
-    public func loadBitlet<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: @escaping ((_ bitlet: Handler.BitletData?, _ error: Error?) -> Void)) {
+    public func loadBitlet<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: ((_ bitlet: Handler.BitletData?, _ error: Error?) -> Void)?) {
         if let cacheKey = cacheKey {
             cache.createEntryIfNeeded(forKey: cacheKey, handler: bitletHandler)
             if let entry = cache.getEntry(forKey: cacheKey) {
                 entry.load(forced: forced, observer: BitletResultObserver<Handler.BitletData>(completion: { data, error in
-                    completion(data, error)
+                    completion?(data, error)
                 }))
             } else {
-                completion(nil, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Unknown caching error"]))
+                completion?(nil, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Unknown caching error"]))
             }
         } else {
             bitletHandler.load(observer: BitletResultObserver<Handler.BitletData>(completion: { data, error in
-                completion(data, error)
+                completion?(data, error)
             }))
         }
     }
 
     
+    // --
+    // MARK: Operations
+    // --
+    
+    public func startOperation(_ operation: BitletOperation, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) {
+        if !operation.start(bitletSynchronizer: self, completion: completion) {
+            completion?(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Operation could not be started"]), true)
+        }
+    }
+    
+
     // --
     // MARK: Cache control
     // --

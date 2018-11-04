@@ -27,7 +27,9 @@ public class BitletCacheEntry<BitletData> {
 
     public var state = BitletCacheState.unavailable
     public var bitletData: BitletData?
+    public var bitletHash: String?
     public var bitletExpireTime: BitletExpireTime?
+    public var bitletHashUpdatedTime: BitletExpireTime?
     private let handler: BaseBitletHandler
     private var loadingObserver: BitletCacheObserver?
     
@@ -58,7 +60,9 @@ public class BitletCacheEntry<BitletData> {
                 }
                 if self.loadingObserver?.error == nil {
                     self.bitletData = checkBitletData ?? self.bitletData
+                    self.bitletHash = self.loadingObserver?.bitletHash
                     self.bitletExpireTime = self.loadingObserver?.bitletExpireTime ?? self.bitletExpireTime
+                    self.bitletHashUpdatedTime = self.bitletHash != nil ? .now() : nil
                     self.state = .ready
                 } else {
                     self.state = self.state == .refreshing ? .ready : .unavailable
