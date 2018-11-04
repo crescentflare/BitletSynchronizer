@@ -37,7 +37,7 @@ public class BitletOperationNestedItem implements BitletOperationItem
     public void run(BitletSynchronizer bitletSynchronizer, final BitletOperationItem.CompletionListener listener)
     {
         running = true;
-        boolean canStart = operation.start(bitletSynchronizer, new BitletOperation.CompletionListener()
+        boolean canStart = operation != null && operation.start(bitletSynchronizer, new BitletOperation.CompletionListener()
         {
             @Override
             public void onComplete(Throwable exception, boolean canceled)

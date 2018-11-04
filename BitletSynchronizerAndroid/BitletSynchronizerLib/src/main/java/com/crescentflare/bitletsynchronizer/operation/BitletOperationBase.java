@@ -165,7 +165,7 @@ public abstract class BitletOperationBase implements BitletOperation
                     BitletOperation operation = ((BitletOperationNestedItem)item).getOperation();
                     if (operation instanceof BitletOperationBase)
                     {
-                        cacheKeys.addAll(((BitletOperationBase)operation).getAllCacheKeys());
+                        cacheKeys.addAll(((BitletOperationBase)operation).getIncludedCacheKeys());
                     }
                 }
             }
@@ -187,7 +187,7 @@ public abstract class BitletOperationBase implements BitletOperation
             }
             else if (item instanceof BitletOperationNestedItem)
             {
-                BitletOperation operation = ((BitletOperationNestedItem) item).getOperation();
+                BitletOperation operation = ((BitletOperationNestedItem)item).getOperation();
                 if (operation instanceof BitletOperationBase)
                 {
                     ((BitletOperationBase)operation).setCacheKeyIncluded(cacheKey, included);

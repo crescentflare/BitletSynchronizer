@@ -81,7 +81,10 @@ public class BitletCacheEntry<T>
             });
             alreadyLoading = false;
         }
-        loadingObserver.includeObserver(observer);
+        if (observer != null)
+        {
+            loadingObserver.includeObserver(observer);
+        }
         if (!alreadyLoading)
         {
             state = state == State.Unavailable ? State.Loading : State.Refreshing;

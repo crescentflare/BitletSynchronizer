@@ -54,13 +54,19 @@ public class BitletSynchronizer
                 @Override
                 public void onSuccess(Object bitlet)
                 {
-                    completionListener.onSuccess((T)bitlet);
+                    if (completionListener != null)
+                    {
+                        completionListener.onSuccess((T) bitlet);
+                    }
                 }
 
                 @Override
                 public void onError(Throwable exception)
                 {
-                    completionListener.onError(exception);
+                    if (completionListener != null)
+                    {
+                        completionListener.onError(exception);
+                    }
                 }
             }));
         }
@@ -92,7 +98,10 @@ public class BitletSynchronizer
                 @Override
                 public void onFinish(Object bitlet, Throwable exception)
                 {
-                    completionListener.onFinish((T)bitlet, exception);
+                    if (completionListener != null)
+                    {
+                        completionListener.onFinish((T) bitlet, exception);
+                    }
                 }
             }));
         }
@@ -109,7 +118,7 @@ public class BitletSynchronizer
 
     public void startOperation(BitletOperation operation, BitletOperation.CompletionListener listener)
     {
-        if (!operation.start(this, listener))
+        if (operation == null || !operation.start(this, listener))
         {
             listener.onComplete(new Exception("Operation could not be started"), true);
         }
