@@ -76,18 +76,18 @@ public class BitletOperationBase: BitletOperation {
     // MARK: Add operation items
     // --
 
-    public func addBitletLoad<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: @escaping ((_ bitlet: Handler.BitletData?, _ error: Error?, _ operation: BitletOperationBase) -> Void)) {
+    public func addBitletLoad<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: ((_ bitlet: Handler.BitletData?, _ error: Error?, _ operation: BitletOperationBase) -> Void)?) {
         items.append(BitletOperationLoadItem(bitletHandler: bitletHandler, cacheKey: cacheKey, forced: forced, completion: { [weak self] bitlet, error in
             if let operation = self {
-                completion(bitlet, error, operation)
+                completion?(bitlet, error, operation)
             }
         }))
     }
     
-    public func add(operation: BitletOperation, completion: @escaping (_ error: Error?, _ canceled: Bool, _ operation: BitletOperationBase) -> Void) {
+    public func add(operation: BitletOperation, completion: ((_ error: Error?, _ canceled: Bool, _ operation: BitletOperationBase) -> Void)?) {
         items.append(BitletOperationNestedItem(operation: operation, completion: { [weak self] error, canceled in
             if let operation = self {
-                completion(error, canceled, operation)
+                completion?(error, canceled, operation)
             }
         }))
     }

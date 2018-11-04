@@ -31,7 +31,7 @@ class BitletOperationLoadItem<Handler: BitletHandler>: BitletOperationCacheItem 
 
     private let bitletHandler: Handler
     private let forced: Bool
-    private let itemCompletion: (_ bitletItem: Handler.BitletData?, _ error: Error?) -> Void
+    private let itemCompletion: ((_ bitletItem: Handler.BitletData?, _ error: Error?) -> Void)?
     private var running = false
     let cacheKey: String?
     var enabled = true
@@ -41,7 +41,7 @@ class BitletOperationLoadItem<Handler: BitletHandler>: BitletOperationCacheItem 
     // MARK: Load item initialization
     // --
 
-    init(bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: @escaping (_ bitletItem: Handler.BitletData?, _ error: Error?) -> Void) {
+    init(bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: ((_ bitletItem: Handler.BitletData?, _ error: Error?) -> Void)?) {
         self.bitletHandler = bitletHandler
         self.cacheKey = cacheKey
         self.forced = forced
@@ -60,7 +60,7 @@ class BitletOperationLoadItem<Handler: BitletHandler>: BitletOperationCacheItem 
             running = true
             bitletSynchronizer.loadBitlet(bitletHandler, cacheKey: cacheKey, forced: true, completion: { [weak self] bitlet, error in
                 self?.running = false
-                self?.itemCompletion(bitlet, error)
+                self?.itemCompletion?(bitlet, error)
                 completion(error)
             })
         }
@@ -79,7 +79,7 @@ class BitletOperationNestedItem: BitletOperationItem {
     // --
 
     let operation: BitletOperation
-    private let itemCompletion: (_ error: Error?, _ canceled: Bool) -> Void
+    private let itemCompletion: ((_ error: Error?, _ canceled: Bool) -> Void)?
     private var running = false
     var enabled = true
     
@@ -88,7 +88,7 @@ class BitletOperationNestedItem: BitletOperationItem {
     // MARK: Nested item initialization
     // --
 
-    init(operation: BitletOperation, completion: @escaping (_ error: Error?, _ canceled: Bool) -> Void) {
+    init(operation: BitletOperation, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) {
         self.operation = operation
         self.itemCompletion = completion
     }
@@ -106,13 +106,13 @@ class BitletOperationNestedItem: BitletOperationItem {
             if error == nil && canceled {
                 completeError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Nested operation canceled"])
             }
-            self?.itemCompletion(error, canceled)
+            self?.itemCompletion?(error, canceled)
             completion(completeError)
         })
         if !canStart {
             let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Nested operation could not be started"])
             running = false
-            itemCompletion(error, false)
+            itemCompletion?(error, false)
             completion(error)
         }
     }
