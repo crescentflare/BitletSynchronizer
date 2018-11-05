@@ -3,7 +3,7 @@ PODS:
   - AlamofireObjectMapper (5.1.0):
     - Alamofire (~> 4.1)
     - ObjectMapper (~> 3.3)
-  - BitletSynchronizer (0.3.0)
+  - BitletSynchronizer (0.3.1)
   - ObjectMapper (3.3.0)
   - Toast-Swift (4.0.0)
 
@@ -27,7 +27,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   AlamofireObjectMapper: 3395e698901d8b0e6f48b7d0c43bd47875325102
-  BitletSynchronizer: 49588c9e9dae60f5684aff51f5925316793bb95b
+  BitletSynchronizer: bb7b93d95c7b9877d9042c2d1cc771e718e86745
   ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
   Toast-Swift: 594b5c5e5129f15438e410207e43287f027b3c00
 
