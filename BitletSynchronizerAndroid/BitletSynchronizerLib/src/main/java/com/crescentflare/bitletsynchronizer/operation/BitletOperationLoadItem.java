@@ -2,6 +2,7 @@ package com.crescentflare.bitletsynchronizer.operation;
 
 import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
 import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
+import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
 import com.crescentflare.bitletsynchronizer.synchronizer.BitletSynchronizer;
 
 /**
@@ -42,7 +43,13 @@ public class BitletOperationLoadItem<T> implements BitletOperationItem
     @Override
     public void run(BitletSynchronizer bitletSynchronizer, final BitletOperationItem.CompletionListener listener)
     {
-        if (cacheKey != null && !bitletSynchronizer.getCacheEntry(cacheKey, Object.class).isExpired() && !forced)
+        boolean skipsLoading = false;
+        if (cacheKey != null)
+        {
+            BitletCacheEntry<Object> cacheEntry = bitletSynchronizer.getCacheEntry(cacheKey, Object.class);
+            skipsLoading = !forced && cacheEntry.getBitletData() != null && !cacheEntry.isExpired();
+        }
+        if (skipsLoading)
         {
             if (listener != null)
             {

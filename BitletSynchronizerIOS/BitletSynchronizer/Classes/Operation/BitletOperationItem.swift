@@ -54,7 +54,12 @@ class BitletOperationLoadItem<Handler: BitletHandler>: BitletOperationCacheItem 
     // --
 
     func run(bitletSynchronizer: BitletSynchronizer, completion: @escaping (Error?) -> Void) {
-        if let cacheKey = cacheKey, !bitletSynchronizer.cacheEntry(forKey: cacheKey, andType: Handler.BitletData.self).expired() && !forced {
+        var skipsLoading = false
+        if let cacheKey = cacheKey {
+            let cacheEntry = bitletSynchronizer.cacheEntry(forKey: cacheKey, andType: Handler.BitletData.self)
+            skipsLoading = !forced && cacheEntry.bitletData != nil && !cacheEntry.expired()
+        }
+        if skipsLoading {
             completion(nil)
         } else {
             running = true
