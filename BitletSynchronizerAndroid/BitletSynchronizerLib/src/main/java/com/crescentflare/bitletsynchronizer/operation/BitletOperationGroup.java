@@ -22,7 +22,10 @@ public class BitletOperationGroup extends BitletOperationBase
                     @Override
                     public void onComplete(Throwable exception)
                     {
-                        BitletOperationGroup.this.exception = exception;
+                        if (!BitletOperationGroup.this.requestCancel)
+                        {
+                            BitletOperationGroup.this.exception = exception;
+                        }
                         if (BitletOperationGroup.this.exception != null)
                         {
                             cancel();
@@ -51,7 +54,7 @@ public class BitletOperationGroup extends BitletOperationBase
                     break;
                 }
             }
-            if (requestCancel || !itemRunning)
+            if (!itemRunning)
             {
                 complete();
             }

@@ -202,7 +202,9 @@ public class BitletOperationGroup: BitletOperationBase {
         for item in items {
             if let bitletSynchronizer = bitletSynchronizer, item.enabled {
                 item.run(bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error in
-                    self?.error = error
+                    if !(self?.requestCancel ?? true) {
+                        self?.error = error
+                    }
                     if self?.error != nil {
                         self?.cancel()
                     }
@@ -224,7 +226,7 @@ public class BitletOperationGroup: BitletOperationBase {
                     break
                 }
             }
-            if requestCancel || !itemRunning {
+            if !itemRunning {
                 complete()
             }
         }
