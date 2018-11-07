@@ -20,6 +20,7 @@ public abstract class BitletOperationBase implements BitletOperation
     protected boolean requestCancel = false;
     protected BitletSynchronizer bitletSynchronizer;
     private BitletOperation.CompletionListener completionListener;
+    protected boolean forceAll = false;
     protected List<BitletOperationItem> items = new ArrayList<>();
     protected Throwable exception;
 
@@ -29,7 +30,7 @@ public abstract class BitletOperationBase implements BitletOperation
     // ---
 
     @Override
-    public boolean start(BitletSynchronizer bitletSynchronizer, BitletOperation.CompletionListener listener)
+    public boolean start(BitletSynchronizer bitletSynchronizer, boolean forceAll, BitletOperation.CompletionListener listener)
     {
         if (running)
         {
@@ -37,6 +38,7 @@ public abstract class BitletOperationBase implements BitletOperation
         }
         this.bitletSynchronizer = bitletSynchronizer;
         this.completionListener = listener;
+        this.forceAll = forceAll;
         requestCancel = false;
         running = true;
         afterStart();

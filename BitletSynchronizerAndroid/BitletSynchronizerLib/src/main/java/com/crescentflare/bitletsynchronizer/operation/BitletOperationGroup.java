@@ -17,7 +17,7 @@ public class BitletOperationGroup extends BitletOperationBase
         {
             if (item.isEnabled())
             {
-                item.run(bitletSynchronizer, new BitletOperationItem.CompletionListener()
+                item.run(bitletSynchronizer, forceAll, new BitletOperationItem.CompletionListener()
                 {
                     @Override
                     public void onComplete(Throwable exception)

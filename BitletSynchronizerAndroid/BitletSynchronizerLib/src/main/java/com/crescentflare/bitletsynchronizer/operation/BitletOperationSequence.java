@@ -35,7 +35,7 @@ public class BitletOperationSequence extends BitletOperationBase
                 itemIndex++;
                 if (items.get(itemIndex).isEnabled())
                 {
-                    items.get(itemIndex).run(bitletSynchronizer, new BitletOperationItem.CompletionListener()
+                    items.get(itemIndex).run(bitletSynchronizer, forceAll, new BitletOperationItem.CompletionListener()
                     {
                         @Override
                         public void onComplete(Throwable exception)
