@@ -11,7 +11,7 @@
 
 public protocol BitletOperation {
     
-    func start(bitletSynchronizer: BitletSynchronizer, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) -> Bool
+    func start(bitletSynchronizer: BitletSynchronizer, forceAll: Bool, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) -> Bool
     func cancel()
     
 }
@@ -26,6 +26,7 @@ public class BitletOperationBase: BitletOperation {
     var requestCancel = false
     var bitletSynchronizer: BitletSynchronizer?
     var completion: ((_ error: Error?, _ canceled: Bool) -> Void)?
+    var forceAll: Bool = false
     var items = [BitletOperationItem]()
     var retainSelfWhileRunning: BitletOperation?
     var error: Error?
@@ -35,13 +36,14 @@ public class BitletOperationBase: BitletOperation {
     // MARK: Base implementation
     // --
 
-    public func start(bitletSynchronizer: BitletSynchronizer, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) -> Bool {
+    public func start(bitletSynchronizer: BitletSynchronizer, forceAll: Bool, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) -> Bool {
         if running {
             return false
         }
         retainSelfWhileRunning = self
         self.bitletSynchronizer = bitletSynchronizer
         self.completion = completion
+        self.forceAll = forceAll
         requestCancel = false
         running = true
         afterStart()
@@ -166,7 +168,7 @@ public class BitletOperationSequence: BitletOperationBase {
             if !requestCancel && itemIndex + 1 < items.count {
                 itemIndex += 1
                 if let bitletSynchronizer = bitletSynchronizer, items[itemIndex].enabled {
-                    items[itemIndex].run(bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error in
+                    items[itemIndex].run(bitletSynchronizer: bitletSynchronizer, forceOverride: forceAll, completion: { [weak self] error in
                         self?.error = error
                         if self?.error != nil {
                             self?.cancel()
@@ -201,8 +203,10 @@ public class BitletOperationGroup: BitletOperationBase {
     override func afterStart() {
         for item in items {
             if let bitletSynchronizer = bitletSynchronizer, item.enabled {
-                item.run(bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error in
-                    self?.error = error
+                item.run(bitletSynchronizer: bitletSynchronizer, forceOverride: forceAll, completion: { [weak self] error in
+                    if !(self?.requestCancel ?? true) {
+                        self?.error = error
+                    }
                     if self?.error != nil {
                         self?.cancel()
                     }
@@ -224,7 +228,7 @@ public class BitletOperationGroup: BitletOperationBase {
                     break
                 }
             }
-            if requestCancel || !itemRunning {
+            if !itemRunning {
                 complete()
             }
         }

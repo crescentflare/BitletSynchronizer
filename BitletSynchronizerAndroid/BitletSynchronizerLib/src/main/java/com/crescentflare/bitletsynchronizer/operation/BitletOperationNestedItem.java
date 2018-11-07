@@ -34,10 +34,10 @@ public class BitletOperationNestedItem implements BitletOperationItem
     // ---
 
     @Override
-    public void run(BitletSynchronizer bitletSynchronizer, final BitletOperationItem.CompletionListener listener)
+    public void run(BitletSynchronizer bitletSynchronizer, boolean forceOverride, final BitletOperationItem.CompletionListener listener)
     {
         running = true;
-        boolean canStart = operation != null && operation.start(bitletSynchronizer, new BitletOperation.CompletionListener()
+        boolean canStart = operation != null && operation.start(bitletSynchronizer, forceOverride, new BitletOperation.CompletionListener()
         {
             @Override
             public void onComplete(Throwable exception, boolean canceled)

@@ -12,7 +12,7 @@ public protocol BitletOperationItem {
     
     var enabled: Bool { get set }
     
-    func run(bitletSynchronizer: BitletSynchronizer, completion: @escaping (_ error: Error?) -> Void)
+    func run(bitletSynchronizer: BitletSynchronizer, forceOverride: Bool, completion: @escaping (_ error: Error?) -> Void)
     func isRunning() -> Bool
     
 }
@@ -53,11 +53,12 @@ class BitletOperationLoadItem<Handler: BitletHandler>: BitletOperationCacheItem 
     // MARK: Load item running
     // --
 
-    func run(bitletSynchronizer: BitletSynchronizer, completion: @escaping (Error?) -> Void) {
+    func run(bitletSynchronizer: BitletSynchronizer, forceOverride: Bool, completion: @escaping (Error?) -> Void) {
         var skipsLoading = false
+        let applyForce = forced || forceOverride
         if let cacheKey = cacheKey {
             let cacheEntry = bitletSynchronizer.cacheEntry(forKey: cacheKey, andType: Handler.BitletData.self)
-            skipsLoading = !forced && cacheEntry.bitletData != nil && !cacheEntry.expired()
+            skipsLoading = !applyForce && cacheEntry.bitletData != nil && !cacheEntry.expired()
         }
         if skipsLoading {
             completion(nil)
@@ -103,9 +104,9 @@ class BitletOperationNestedItem: BitletOperationItem {
     // MARK: Nested item running
     // --
 
-    func run(bitletSynchronizer: BitletSynchronizer, completion: @escaping (_ error: Error?) -> Void) {
+    func run(bitletSynchronizer: BitletSynchronizer, forceOverride: Bool, completion: @escaping (_ error: Error?) -> Void) {
         running = true
-        let canStart = operation.start(bitletSynchronizer: bitletSynchronizer, completion: { [weak self] error, canceled in
+        let canStart = operation.start(bitletSynchronizer: bitletSynchronizer, forceAll: forceOverride, completion: { [weak self] error, canceled in
             var completeError = error
             self?.running = false
             if error == nil && canceled {

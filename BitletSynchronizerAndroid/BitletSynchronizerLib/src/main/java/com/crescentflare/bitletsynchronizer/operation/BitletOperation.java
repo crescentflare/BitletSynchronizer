@@ -9,7 +9,7 @@ import com.crescentflare.bitletsynchronizer.synchronizer.BitletSynchronizer;
  */
 public interface BitletOperation
 {
-    boolean start(BitletSynchronizer bitletSynchronizer, CompletionListener listener);
+    boolean start(BitletSynchronizer bitletSynchronizer, boolean forceAll, CompletionListener listener);
     void cancel();
 
     interface CompletionListener

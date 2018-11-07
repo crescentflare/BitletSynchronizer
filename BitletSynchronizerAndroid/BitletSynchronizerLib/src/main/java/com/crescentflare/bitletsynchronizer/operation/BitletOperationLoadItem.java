@@ -41,13 +41,14 @@ public class BitletOperationLoadItem<T> implements BitletOperationItem
     // ---
 
     @Override
-    public void run(BitletSynchronizer bitletSynchronizer, final BitletOperationItem.CompletionListener listener)
+    public void run(BitletSynchronizer bitletSynchronizer, boolean forceOverride, final BitletOperationItem.CompletionListener listener)
     {
         boolean skipsLoading = false;
+        boolean applyForce = forced || forceOverride;
         if (cacheKey != null)
         {
             BitletCacheEntry<Object> cacheEntry = bitletSynchronizer.getCacheEntry(cacheKey, Object.class);
-            skipsLoading = !forced && cacheEntry.getBitletData() != null && !cacheEntry.isExpired();
+            skipsLoading = !applyForce && cacheEntry.getBitletData() != null && !cacheEntry.isExpired();
         }
         if (skipsLoading)
         {

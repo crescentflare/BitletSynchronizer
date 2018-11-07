@@ -17,12 +17,15 @@ public class BitletOperationGroup extends BitletOperationBase
         {
             if (item.isEnabled())
             {
-                item.run(bitletSynchronizer, new BitletOperationItem.CompletionListener()
+                item.run(bitletSynchronizer, forceAll, new BitletOperationItem.CompletionListener()
                 {
                     @Override
                     public void onComplete(Throwable exception)
                     {
-                        BitletOperationGroup.this.exception = exception;
+                        if (!BitletOperationGroup.this.requestCancel)
+                        {
+                            BitletOperationGroup.this.exception = exception;
+                        }
                         if (BitletOperationGroup.this.exception != null)
                         {
                             cancel();
@@ -51,7 +54,7 @@ public class BitletOperationGroup extends BitletOperationBase
                     break;
                 }
             }
-            if (requestCancel || !itemRunning)
+            if (!itemRunning)
             {
                 complete();
             }

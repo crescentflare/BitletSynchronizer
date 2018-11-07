@@ -8,7 +8,7 @@ import com.crescentflare.bitletsynchronizer.synchronizer.BitletSynchronizer;
  */
 public interface BitletOperationItem
 {
-    void run(BitletSynchronizer bitletSynchronizer, CompletionListener listener);
+    void run(BitletSynchronizer bitletSynchronizer, boolean forceOverride, CompletionListener listener);
     boolean isRunning();
     boolean isEnabled();
     void setEnabled(boolean enabled);

@@ -118,7 +118,12 @@ public class BitletSynchronizer
 
     public void startOperation(BitletOperation operation, BitletOperation.CompletionListener listener)
     {
-        if (operation == null || !operation.start(this, listener))
+        startOperation(operation, false, listener);
+    }
+
+    public void startOperation(BitletOperation operation, boolean forceAll, BitletOperation.CompletionListener listener)
+    {
+        if (operation == null || !operation.start(this, forceAll, listener))
         {
             listener.onComplete(new Exception("Operation could not be started"), true);
         }
