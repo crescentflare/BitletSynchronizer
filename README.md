@@ -25,7 +25,7 @@ The library has been designed to be generic, and not depend on any existing libr
 The library is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod "BitletSynchronizer", '~> 0.3.2'
+pod "BitletSynchronizer", '~> 0.3.3'
 ```
 
 The above version is for Swift 4.2. For older Swift versions use the following:
@@ -37,7 +37,7 @@ The above version is for Swift 4.2. For older Swift versions use the following:
 When using gradle, the library can easily be imported into the build.gradle file of your project. Add the following dependency:
 
 ```
-compile 'com.crescentflare.bitletsynchronizer:BitletSynchronizerLib:0.3.2'
+compile 'com.crescentflare.bitletsynchronizer:BitletSynchronizerLib:0.3.3'
 ```
 
 Make sure that jcenter is added as a repository.
