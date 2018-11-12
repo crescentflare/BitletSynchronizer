@@ -1,5 +1,7 @@
 package com.crescentflare.bitletsynchronizer.operation;
 
+import android.os.Handler;
+
 import com.crescentflare.bitletsynchronizer.synchronizer.BitletSynchronizer;
 
 /**
@@ -60,16 +62,23 @@ public class BitletOperationNestedItem implements BitletOperationItem
         });
         if (!canStart)
         {
-            Throwable exception = new Exception("Nested operation could not be started");
-            running = false;
-            if (itemCompletionListener != null)
+            new Handler().postDelayed(new Runnable()
             {
-                itemCompletionListener.onComplete(exception, false);
-            }
-            if (listener != null)
-            {
-                listener.onComplete(exception);
-            }
+                @Override
+                public void run()
+                {
+                    Throwable exception = new Exception("Nested operation could not be started");
+                    running = false;
+                    if (itemCompletionListener != null)
+                    {
+                        itemCompletionListener.onComplete(exception, false);
+                    }
+                    if (listener != null)
+                    {
+                        listener.onComplete(exception);
+                    }
+                }
+            }, 1);
         }
     }
 

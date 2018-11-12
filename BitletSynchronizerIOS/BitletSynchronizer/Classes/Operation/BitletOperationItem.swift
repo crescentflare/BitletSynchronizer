@@ -61,7 +61,11 @@ class BitletOperationLoadItem<Handler: BitletHandler>: BitletOperationCacheItem 
             skipsLoading = !applyForce && cacheEntry.bitletData != nil && !cacheEntry.expired()
         }
         if skipsLoading {
-            completion(nil)
+            running = true
+            DispatchQueue.main.async { [weak self] in
+                self?.running = false
+                completion(nil)
+            }
         } else {
             running = true
             bitletSynchronizer.loadBitlet(bitletHandler, cacheKey: cacheKey, forced: true, completion: { [weak self] bitlet, error in
@@ -116,10 +120,12 @@ class BitletOperationNestedItem: BitletOperationItem {
             completion(completeError)
         })
         if !canStart {
-            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Nested operation could not be started"])
-            running = false
-            itemCompletion?(error, false)
-            completion(error)
+            DispatchQueue.main.async { [weak self] in
+                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Nested operation could not be started"])
+                self?.running = false
+                self?.itemCompletion?(error, false)
+                completion(error)
+            }
         }
     }
     
