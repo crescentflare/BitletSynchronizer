@@ -1,5 +1,7 @@
 package com.crescentflare.bitletsynchronizer.operation;
 
+import android.os.Handler;
+
 import com.crescentflare.bitletsynchronizer.bitlet.BitletHandler;
 import com.crescentflare.bitletsynchronizer.bitlet.BitletResultObserver;
 import com.crescentflare.bitletsynchronizer.cache.BitletCacheEntry;
@@ -54,7 +56,16 @@ public class BitletOperationLoadItem<T> implements BitletOperationItem
         {
             if (listener != null)
             {
-                listener.onComplete(null);
+                running = true;
+                new Handler().postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        running = false;
+                        listener.onComplete(null);
+                    }
+                }, 1);
             }
         }
         else
