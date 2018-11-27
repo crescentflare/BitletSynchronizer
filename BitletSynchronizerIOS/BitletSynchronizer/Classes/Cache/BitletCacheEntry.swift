@@ -30,7 +30,7 @@ public class BitletCacheEntry<BitletData> {
     public var bitletHash: String?
     public var bitletExpireTime: BitletExpireTime?
     public var bitletHashUpdatedTime: BitletExpireTime?
-    private let handler: BaseBitletHandler
+    private var handler: BaseBitletHandler
     private var loadingObserver: BitletCacheObserver?
     
 
@@ -39,6 +39,10 @@ public class BitletCacheEntry<BitletData> {
     // --
 
     init(handler: BaseBitletHandler) {
+        self.handler = handler
+    }
+    
+    func updateHandler(_ handler: BaseBitletHandler) {
         self.handler = handler
     }
     

@@ -48,6 +48,7 @@ public class BitletSynchronizer
         if (cache != null && cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
+            cache.updateEntry(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
             entry.load(forced, new BitletResultObserver<>(new BitletResultObserver.CompletionListener<Object>()
             {
@@ -92,6 +93,7 @@ public class BitletSynchronizer
         if (cache != null && cacheKey != null)
         {
             cache.createEntryIfNeeded(cacheKey, bitletHandler);
+            cache.updateEntry(cacheKey, bitletHandler);
             BitletCacheEntry entry = cache.getEntry(cacheKey);
             entry.load(forced, new BitletResultObserver<>(new BitletResultObserver.SimpleCompletionListener<Object>()
             {

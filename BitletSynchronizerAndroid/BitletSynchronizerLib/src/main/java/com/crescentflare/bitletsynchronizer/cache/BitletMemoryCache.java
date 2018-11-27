@@ -34,6 +34,17 @@ public class BitletMemoryCache implements BitletCache
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void updateEntry(String key, BitletHandler handler)
+    {
+        BitletCacheEntry entry = cacheEntries.get(key);
+        if (entry != null)
+        {
+            entry.updateHandler(handler);
+        }
+    }
+
     @Override
     public BitletCacheEntry<Object> getEntry(String key)
     {
