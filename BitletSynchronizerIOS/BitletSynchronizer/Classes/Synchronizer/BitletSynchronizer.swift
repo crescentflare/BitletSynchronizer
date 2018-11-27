@@ -37,6 +37,7 @@ public class BitletSynchronizer {
     public func loadBitlet<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, success: ((_ bitlet: Handler.BitletData) -> Void)?, failure: ((_ error: Error) -> Void)?) {
         if let cacheKey = cacheKey {
             cache.createEntryIfNeeded(forKey: cacheKey, handler: bitletHandler)
+            cache.updateEntry(forKey: cacheKey, handler: bitletHandler)
             if let entry = cache.getEntry(forKey: cacheKey) {
                 entry.load(forced: forced, observer: BitletResultObserver<Handler.BitletData>(success: { data in
                     success?(data)
@@ -58,6 +59,7 @@ public class BitletSynchronizer {
     public func loadBitlet<Handler: BitletHandler>(_ bitletHandler: Handler, cacheKey: String? = nil, forced: Bool = false, completion: ((_ bitlet: Handler.BitletData?, _ error: Error?) -> Void)?) {
         if let cacheKey = cacheKey {
             cache.createEntryIfNeeded(forKey: cacheKey, handler: bitletHandler)
+            cache.updateEntry(forKey: cacheKey, handler: bitletHandler)
             if let entry = cache.getEntry(forKey: cacheKey) {
                 entry.load(forced: forced, observer: BitletResultObserver<Handler.BitletData>(completion: { data, error in
                     completion?(data, error)

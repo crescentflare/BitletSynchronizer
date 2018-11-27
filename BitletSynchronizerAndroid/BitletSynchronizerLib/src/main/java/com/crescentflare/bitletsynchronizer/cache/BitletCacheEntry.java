@@ -34,6 +34,11 @@ public class BitletCacheEntry<T>
         this.handler = handler;
     }
 
+    public void updateHandler(BitletHandler<T> handler)
+    {
+        this.handler = handler;
+    }
+
 
     // ---
     // Loading
