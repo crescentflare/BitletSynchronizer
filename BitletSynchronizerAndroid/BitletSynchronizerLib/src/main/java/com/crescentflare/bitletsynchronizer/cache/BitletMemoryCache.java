@@ -105,6 +105,6 @@ public class BitletMemoryCache implements BitletCache
                 return false;
             }
         }
-        return true;
+        return filter.length <= itemComponents.length;
     }
 }
