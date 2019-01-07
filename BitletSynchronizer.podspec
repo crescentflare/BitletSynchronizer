@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BitletSynchronizer'
-  s.version          = '0.3.4'
+  s.version          = '0.3.5'
   s.summary          = 'BitletSynchronizer makes it easy to handle online data for both Android and iOS.'
 
 # This description is used to generate tags and improve search results.
