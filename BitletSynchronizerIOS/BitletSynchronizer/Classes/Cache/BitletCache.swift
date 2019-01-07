@@ -23,7 +23,15 @@ public class BitletMemoryCache: BitletCache {
 
     private var cacheEntries = [String: BitletCacheEntry<Any>]()
     
+    
+    // --
+    // MARK: Initialization
+    // --
 
+    public init() {
+    }
+    
+    
     // --
     // MARK: Cache access
     // --
@@ -75,7 +83,7 @@ public class BitletMemoryCache: BitletCache {
                 return false
             }
         }
-        return true
+        return filter.count <= itemComponents.count
     }
     
 }
