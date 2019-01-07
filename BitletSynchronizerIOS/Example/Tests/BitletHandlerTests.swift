@@ -8,7 +8,7 @@
 import XCTest
 import BitletSynchronizer
 
-class Tests: XCTestCase {
+class BitletHandlerTests: XCTestCase {
     
     func testLoad() {
         BitletHandlerSample(generateValue: "Test").load(observer: BitletResultObserver { bitlet, error in

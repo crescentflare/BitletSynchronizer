@@ -20,6 +20,7 @@
 		040BCB6B21348DEE00EA80F7 /* UsageUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6A21348DEE00EA80F7 /* UsageUnit.swift */; };
 		040BCB6E21348E9A00EA80F7 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6D21348E9A00EA80F7 /* Server.swift */; };
 		040BCB7021348F9300EA80F7 /* ServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040BCB6F21348F9300EA80F7 /* ServerList.swift */; };
+		0445285A21E3A9E9006E4103 /* BitletCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0445285821E3A828006E4103 /* BitletCacheTests.swift */; };
 		044D340C216A70EE00BA4B7F /* SimpleBitlet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D340B216A70EE00BA4B7F /* SimpleBitlet.swift */; };
 		044D340F216A75F800BA4B7F /* Data+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D340E216A75F800BA4B7F /* Data+MD5.swift */; };
 		044D3411216A7CB000BA4B7F /* SimpleArrayBitlet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D3410216A7CB000BA4B7F /* SimpleArrayBitlet.swift */; };
@@ -68,6 +69,7 @@
 		040BCB6A21348DEE00EA80F7 /* UsageUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsageUnit.swift; sourceTree = "<group>"; };
 		040BCB6D21348E9A00EA80F7 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		040BCB6F21348F9300EA80F7 /* ServerList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerList.swift; sourceTree = "<group>"; };
+		0445285821E3A828006E4103 /* BitletCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitletCacheTests.swift; sourceTree = "<group>"; };
 		044D340B216A70EE00BA4B7F /* SimpleBitlet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleBitlet.swift; sourceTree = "<group>"; };
 		044D340E216A75F800BA4B7F /* Data+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+MD5.swift"; sourceTree = "<group>"; };
 		044D3410216A7CB000BA4B7F /* SimpleArrayBitlet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleArrayBitlet.swift; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				0445285821E3A828006E4103 /* BitletCacheTests.swift */,
 				046063FC212494F100EBADD6 /* BitletHandlerTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
@@ -543,6 +546,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0445285A21E3A9E9006E4103 /* BitletCacheTests.swift in Sources */,
 				04606401212496B200EBADD6 /* BitletHandlerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
