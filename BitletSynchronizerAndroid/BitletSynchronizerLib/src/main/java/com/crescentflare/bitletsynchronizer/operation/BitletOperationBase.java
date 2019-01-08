@@ -212,4 +212,20 @@ public abstract class BitletOperationBase implements BitletOperation
     {
         void onComplete(Throwable exception, boolean canceled, BitletOperationBase operation);
     }
+
+
+    // ---
+    // Duplication helper
+    // ---
+
+    protected void duplicateBaseProperties(BitletOperationBase operation)
+    {
+        operation.running = running;
+        operation.requestCancel = requestCancel;
+        operation.bitletSynchronizer = bitletSynchronizer;
+        operation.completionListener = completionListener;
+        operation.forceAll = forceAll;
+        operation.items = new ArrayList<>(items);
+        operation.exception = exception;
+    }
 }
