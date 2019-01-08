@@ -60,4 +60,18 @@ public class BitletOperationSequence extends BitletOperationBase
             }
         }
     }
+
+
+    // ---
+    // Duplication
+    // ---
+
+    @Override
+    public BitletOperation duplicate()
+    {
+        BitletOperationSequence sequence = new BitletOperationSequence();
+        sequence.itemIndex = itemIndex;
+        duplicateBaseProperties(sequence);
+        return sequence;
+    }
 }

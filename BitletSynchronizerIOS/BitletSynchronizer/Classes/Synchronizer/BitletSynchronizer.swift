@@ -80,7 +80,7 @@ public class BitletSynchronizer {
     // --
     
     public func startOperation(_ operation: BitletOperation, forceAll: Bool = false, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) {
-        if !operation.start(bitletSynchronizer: self, forceAll: forceAll, completion: completion) {
+        if !operation.duplicate().start(bitletSynchronizer: self, forceAll: forceAll, completion: completion) {
             completion?(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Operation could not be started"]), true)
         }
     }

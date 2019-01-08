@@ -60,4 +60,17 @@ public class BitletOperationGroup extends BitletOperationBase
             }
         }
     }
+
+
+    // ---
+    // Duplication
+    // ---
+
+    @Override
+    public BitletOperation duplicate()
+    {
+        BitletOperationGroup group = new BitletOperationGroup();
+        duplicateBaseProperties(group);
+        return group;
+    }
 }

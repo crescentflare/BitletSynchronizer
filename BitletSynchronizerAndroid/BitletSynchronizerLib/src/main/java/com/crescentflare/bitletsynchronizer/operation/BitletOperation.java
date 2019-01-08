@@ -11,6 +11,7 @@ public interface BitletOperation
 {
     boolean start(BitletSynchronizer bitletSynchronizer, boolean forceAll, CompletionListener listener);
     void cancel();
+    BitletOperation duplicate();
 
     interface CompletionListener
     {

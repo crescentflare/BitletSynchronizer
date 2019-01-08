@@ -13,6 +13,7 @@ public protocol BitletOperation {
     
     func start(bitletSynchronizer: BitletSynchronizer, forceAll: Bool, completion: ((_ error: Error?, _ canceled: Bool) -> Void)?) -> Bool
     func cancel()
+    func duplicate() -> BitletOperation
     
 }
 
@@ -135,6 +136,28 @@ public class BitletOperationBase: BitletOperation {
         }
     }
     
+
+    // ---
+    // MARK: Duplication helper
+    // ---
+    
+    func duplicateBaseProperties(operation: BitletOperationBase) {
+        operation.running = running
+        operation.requestCancel = requestCancel
+        operation.bitletSynchronizer = bitletSynchronizer
+        operation.completion = completion
+        operation.forceAll = forceAll
+        operation.items = items
+        operation.retainSelfWhileRunning = retainSelfWhileRunning
+        operation.error = error
+    }
+    
+    public func duplicate() -> BitletOperation {
+        let base = BitletOperationBase()
+        duplicateBaseProperties(operation: base)
+        return base
+    }
+
 }
 
 public class BitletOperationSequence: BitletOperationBase {
@@ -183,7 +206,19 @@ public class BitletOperationSequence: BitletOperationBase {
             }
         }
     }
+
+
+    // ---
+    // MARK: Sequence duplication
+    // ---
     
+    public override func duplicate() -> BitletOperation {
+        let sequence = BitletOperationSequence()
+        sequence.itemIndex = itemIndex
+        duplicateBaseProperties(operation: sequence)
+        return sequence
+    }
+
 }
 
 public class BitletOperationGroup: BitletOperationBase {
@@ -232,6 +267,17 @@ public class BitletOperationGroup: BitletOperationBase {
                 complete()
             }
         }
+    }
+    
+
+    // ---
+    // MARK: Group duplication
+    // ---
+    
+    public override func duplicate() -> BitletOperation {
+        let group = BitletOperationGroup()
+        duplicateBaseProperties(operation: group)
+        return group
     }
     
 }
