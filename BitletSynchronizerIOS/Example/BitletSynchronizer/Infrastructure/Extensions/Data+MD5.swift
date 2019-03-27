@@ -12,19 +12,15 @@ import CommonCrypto
 extension Data {
 
     func md5() -> String {
-        // Setup data variable to hold the md5 hash
-        var digest = Data(count: Int(CC_MD5_DIGEST_LENGTH))
-        
         // Generate hash
-        _ = digest.withUnsafeMutableBytes { (digestBytes: UnsafeMutablePointer<UInt8>) in
-            self.withUnsafeBytes { (messageBytes: UnsafePointer<UInt8>) in
-                let length = CC_LONG(self.count)
-                CC_MD5(messageBytes, length, digestBytes)
-            }
+        let hash = self.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> [UInt8] in
+            var hash = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+            CC_MD5(bytes.baseAddress, CC_LONG(self.count), &hash)
+            return hash
         }
-        
+
         // Return md5 hash string formatted as hexadecimal
-        return digest.map { String(format: "%02hhx", $0) }.joined()
+        return hash.map { String(format: "%02hhx", $0) }.joined()
     }
 
 }

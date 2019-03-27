@@ -25,7 +25,7 @@ The library has been designed to be generic, and not depend on any existing libr
 The library is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod "BitletSynchronizer", '~> 0.3.7'
+pod "BitletSynchronizer", '~> 0.3.8'
 ```
 
 The above version is for Swift 5.0. For older Swift versions use the following:
