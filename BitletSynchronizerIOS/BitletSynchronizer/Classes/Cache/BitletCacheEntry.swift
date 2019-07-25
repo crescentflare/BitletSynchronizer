@@ -58,7 +58,7 @@ public class BitletCacheEntry<BitletData> {
         var alreadyLoading = true
         if loadingObserver == nil {
             loadingObserver = BitletCacheObserver(completion: {
-                let checkBitletData = self.loadingObserver?.bitletData as? BitletData
+                let checkBitletData = self.loadingObserver?.bitletData != nil ? self.loadingObserver?.bitletData as? BitletData : nil
                 if checkBitletData == nil && self.loadingObserver?.error == nil {
                     self.loadingObserver?.error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Unknown bitlet error"])
                 }
