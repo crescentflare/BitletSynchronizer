@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BitletSynchronizer'
-  s.version          = '0.3.8'
+  s.version          = '0.3.9'
   s.swift_version    = '5.0'
   s.summary          = 'BitletSynchronizer makes it easy to handle online data for both Android and iOS.'
 

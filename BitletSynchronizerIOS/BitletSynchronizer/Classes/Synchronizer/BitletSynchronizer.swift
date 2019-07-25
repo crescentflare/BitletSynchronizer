@@ -110,9 +110,9 @@ public class BitletSynchronizer {
 
     public func cacheEntry<BitletData>(forKey: String, andType: BitletData.Type) -> BitletCacheEntry<BitletData> {
         let cacheEntry = BitletCacheEntry<BitletData>(handler: DummyBitletHandler())
-        if let checkEntry = cache.getEntry(forKey: forKey), let bitletData = checkEntry.bitletData as? BitletData {
+        if let checkEntry = cache.getEntry(forKey: forKey), checkEntry.bitletData != nil {
             cacheEntry.state = checkEntry.state
-            cacheEntry.bitletData = bitletData
+            cacheEntry.bitletData = checkEntry.bitletData as? BitletData
             cacheEntry.bitletExpireTime = checkEntry.bitletExpireTime
         }
         return cacheEntry
