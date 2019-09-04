@@ -1,7 +1,6 @@
 package com.crescentflare.bitletsynchronizer.bitlet;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
