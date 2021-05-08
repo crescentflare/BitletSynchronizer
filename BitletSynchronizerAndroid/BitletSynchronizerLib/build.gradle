@@ -44,3 +44,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.json:org.json:2.0'
 }
+
+apply from: "publish-mavencentral.gradle"
