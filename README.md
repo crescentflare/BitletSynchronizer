@@ -3,7 +3,9 @@
 [![CI Status](http://img.shields.io/travis/crescentflare/BitletSynchronizer.svg?style=flat)](https://travis-ci.org/crescentflare/BitletSynchronizer)
 [![License](https://img.shields.io/cocoapods/l/BitletSynchronizer.svg?style=flat)](http://cocoapods.org/pods/BitletSynchronizer)
 [![Version](https://img.shields.io/cocoapods/v/BitletSynchronizer.svg?style=flat)](http://cocoapods.org/pods/BitletSynchronizer)
+
 [![Version](https://img.shields.io/bintray/v/crescentflare/maven/BitletSynchronizerLib.svg?style=flat)](https://bintray.com/crescentflare/maven/BitletSynchronizerLib)
+[![Version](https://img.shields.io/maven-central/v/com.crescentflare.bitletsynchronizer/BitletSynchronizerLib.svg?style=flat)](https://repo1.maven.org/maven2/com/crescentflare/bitletsynchronizer/BitletSynchronizerLib)
 
 Bitlet Synchronizer is a project to improve handling of data in iOS and Android applications. The goal is to provide a simple way to fetch and cache data from one or multiple sources without having to program these manually. Later on, it will also able modify and push the data back, as long as there is an API supporting it.
 
@@ -38,10 +40,8 @@ The above version is for Swift 5.0. For older Swift versions use the following:
 When using gradle, the library can easily be imported into the build.gradle file of your project. Add the following dependency:
 
 ```
-compile 'com.crescentflare.bitletsynchronizer:BitletSynchronizerLib:0.3.6'
+compile 'com.crescentflare.bitletsynchronizer:BitletSynchronizerLib:0.3.9'
 ```
-
-Make sure that jcenter is added as a repository.
 
 
 ### Example
